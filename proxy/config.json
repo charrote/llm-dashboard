@@ -1,0 +1,16 @@
+{
+  "lmStudioUrl": "http://host.docker.internal:1234",
+  "enableAPIKey": true,
+  "enableLog": false,
+  "promptOptimization": {
+    "enabled": false,
+    "threshold": 8192,
+    "strategy": "preserve",
+    "logRetentionDays": 30
+  },
+  "lmAuthEnabled": false,
+  "lmAuthValue": "sk-lm-Qwgo0fsU:03usFUHghwG9mBZCQJSh",
+  "simCostEnabled": true,
+  "simPromptCost": 0.2,
+  "simCompletionCost": 2
+}

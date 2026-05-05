@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenCode 接入指南</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%); }
+  </style>
+</head>
+<body class="min-h-screen py-8 px-4">
+  <div class="max-w-3xl mx-auto">
+    <div class="bg-gray-800 rounded-2xl p-8 shadow-2xl">
+      <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold text-white">OpenCode 接入Uantek模型指南</h1>
+        <a href="/apikey-search" class="text-blue-400 hover:text-blue-300 text-sm">← 返回查询</a>
+      </div>
+
+      <div class="flex gap-2 mb-6">
+        <a href="/roocode-guide" class="px-4 py-2 rounded-lg text-sm bg-gray-700 hover:bg-gray-600 transition">Roocode</a>
+        <a href="/opencode-guide" class="px-4 py-2 rounded-lg text-sm bg-blue-600 text-white">OpenCode</a>
+        <a href="/openclaw-guide" class="px-4 py-2 rounded-lg text-sm bg-gray-700 hover:bg-gray-600 transition">OpenCLAW</a>
+      </div>
+      
+      <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4 mb-6">
+          <h3 class="text-blue-400 font-semibold mb-2">配置地址与模型说明</h3>
+          <div class="font-mono text-sm space-y-1">
+            <p><span class="text-gray-400">地址：</span><span class="text-blue-300">http://nat.ywapi.com:9234/v1</span></p>
+            <p><span class="text-gray-400">模型：</span><span class="text-blue-300">UantekDEV0</span></p>
+          </div>
+        </div>
+
+        <div class="space-y-6 text-gray-300">
+        <div class="bg-gray-700/50 rounded-lg p-4">
+          <h2 class="text-lg font-semibold text-white mb-2">什么是 OpenCode？</h2>
+          <p>OpenCode 是一款 AI 代码编辑器，提供智能代码补全、代码解释、代码生成等功能。</p>
+        </div>
+
+        <div>
+          <h2 class="text-lg font-semibold text-white mb-3">第一步：下载 OpenCode</h2>
+          <div class="bg-gray-700/50 rounded-lg p-4 space-y-2 text-sm">
+            <p>1. 访问 OpenCode 官网或 GitHub 下载最新版本</p>
+            <p>2. 安装并启动 OpenCode</p>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-lg font-semibold text-white mb-3">第二步：获取 APIKey</h2>
+          <div class="bg-gray-700/50 rounded-lg p-4">
+            <p>在查询页面获取您的专属 APIKey：</p>
+            <a href="/apikey-search" class="text-blue-400 hover:underline mt-2 inline-block">→ 前往查询 APIKey</a>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-lg font-semibold text-white mb-3">第三步：配置 OpenCode</h2>
+          <div class="bg-gray-700/50 rounded-lg p-4">
+            <p class="mb-3">1. 打开设置界面（Settings）</p>
+            <p class="mb-3">2. 找到 AI / LLM 设置项</p>
+            <p class="mb-3">3. 配置 <strong class="text-white">API Endpoint</strong> 和 <strong class="text-white">API Key</strong></p>
+            
+            <div class="bg-gray-900 rounded-lg p-4 mt-4 font-mono text-sm">
+              <p class="text-green-400 mb-2">// 配置示例</p>
+              <p class="text-gray-400">// API Endpoint:</p>
+              <p class="text-blue-300">http://nat.ywapi.com:9234/v1</p>
+              <p class="text-gray-400 mt-2">// API Key:</p>
+              <p class="text-blue-300">ux-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-lg font-semibold text-white mb-3">第四步：开始使用</h2>
+          <div class="bg-gray-700/50 rounded-lg p-4 space-y-2 text-sm">
+            <p>配置完成后，即可开始使用 AI 辅助编程。</p>
+            <ul class="list-disc list-inside space-y-1 text-gray-400">
+              <li>输入代码时自动获取补全建议</li>
+              <li>使用快捷键触发 AI 助手</li>
+              <li>支持代码解释和生成</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
+          <h3 class="text-yellow-400 font-semibold mb-2">常见问题</h3>
+          <div class="space-y-2 text-sm">
+            <p><strong class="text-white">Q: 连接失败怎么办？</strong></p>
+            <p>A: 检查 API Endpoint 是否正确，确保服务器地址可访问。</p>
+            <p><strong class="text-white">Q: 没有补全提示？</strong></p>
+            <p>A: 确认 APIKey 正确且未过期，检查网络连接。</p>
+            <p><strong class="text-white">Q: 其他相似工具？</strong></p>
+            <p>A: Roo、Cline、Continue 等使用方法一样，配置相同的 API Endpoint 和 API Key 即可。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

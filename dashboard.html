@@ -1,0 +1,1637 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uantek LM 监控仪表盘</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .live-indicator { animation: pulse 2s infinite; }
+    .scrollbar-thin::-webkit-scrollbar { width: 6px; }
+    .scrollbar-thin::-webkit-scrollbar-track { background: #1f2937; }
+    .scrollbar-thin::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 3px; }
+  </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+  <div id="app" class="container mx-auto px-4 py-6">
+    <!-- Header -->
+    <header class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-white">Uantek LM 监控仪表盘</h1>
+        <p class="text-gray-400 text-sm">实时请求监控与统计分析</p>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-lg">
+          <span class="w-3 h-3 bg-green-500 rounded-full live-indicator"></span>
+          <span class="text-sm text-gray-300">实时更新中</span>
+        </div>
+        <button onclick="openConfig()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm transition">
+          设置
+        </button>
+        <button onclick="openLogs()" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg text-sm transition">
+          查看日志
+        </button>
+        <button onclick="openApiKeyManager()" class="bg-cyan-600 hover:bg-cyan-700 px-4 py-2 rounded-lg text-sm transition">
+          APIKey管理
+        </button>
+        <a href="/apikey-search" target="_blank" class="bg-orange-600 hover:bg-orange-700 px-4 py-2 rounded-lg text-sm transition inline-block">
+          APIKey查询
+        </a>
+        <button onclick="openPromptOptimization()" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg text-sm transition">
+          请求优化
+        </button>
+      </div>
+    </header>
+
+    <!-- Config Modal -->
+    <div id="configModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+      <div class="bg-gray-800 rounded-xl p-6 w-full max-w-md mx-4">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-bold">模型设置</h2>
+          <button onclick="closeConfig()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+        </div>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm text-gray-400 mb-2">模型地址</label>
+            <input type="text" id="lmStudioUrl" placeholder="http://192.168.x.x:1234" 
+                   class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:border-blue-500 focus:outline-none">
+            <p class="text-xs text-gray-500 mt-1">Docker部署时使用: http://host.docker.internal:1234</p>
+          </div>
+          <div class="flex items-center justify-between">
+            <label class="text-sm text-gray-400">启用 APIKey</label>
+            <button id="useApiKeyToggle" onclick="toggleApiKey()" class="w-12 h-6 rounded-full bg-blue-600 transition relative">
+              <span class="absolute w-5 h-5 bg-white rounded-full top-0.5 left-6 transition"></span>
+            </button>
+          </div>
+          <p class="text-xs text-gray-500">启用后才会拦截不在APIKey列表中的请求</p>
+          <div class="flex items-center justify-between">
+            <label class="text-sm text-gray-400">LM Auth</label>
+            <button id="lmAuthToggle" onclick="toggleLmAuth()" class="w-12 h-6 rounded-full bg-gray-600 transition relative">
+              <span class="absolute w-5 h-5 bg-white rounded-full top-0.5 left-0.5 transition"></span>
+            </button>
+          </div>
+          <input type="text" id="lmAuthInput" placeholder="输入 LM Auth 值"
+                 class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:border-blue-500 focus:outline-none mt-2">
+          <p class="text-xs text-gray-500 mt-1">开启后作为LMStudio的API Key传递</p>
+          <div class="flex items-center justify-between">
+            <label class="text-sm text-gray-400">启用请求日志</label>
+            <button id="enableLogToggle" onclick="toggleLog()" class="w-12 h-6 rounded-full bg-gray-600 transition relative">
+              <span class="absolute w-5 h-5 bg-white rounded-full top-0.5 left-0.5 transition"></span>
+            </button>
+          </div>
+          <p class="text-xs text-gray-500">启用后会在控制台输出请求转发日志</p>
+          <div class="border-t border-gray-700 pt-4 mt-4">
+            <div class="flex items-center justify-between mb-3">
+              <label class="text-sm text-gray-400">启用模拟成本</label>
+              <button id="simCostToggle" onclick="toggleSimCost()" class="w-12 h-6 rounded-full bg-gray-600 transition relative">
+                <span class="absolute w-5 h-5 bg-white rounded-full top-0.5 left-0.5 transition"></span>
+              </button>
+            </div>
+            <p class="text-xs text-gray-500 mb-3">启用后会在仪表盘显示模拟成本（人民币）</p>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm text-gray-400 mb-2">输入成本 (元/1M token)</label>
+                <input type="number" id="simPromptCost" step="0.01" min="0" 
+                       class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:border-blue-500 focus:outline-none">
+              </div>
+              <div>
+                <label class="block text-sm text-gray-400 mb-2">输出成本 (元/1M token)</label>
+<input type="number" id="simCompletionCost" step="0.01" min="0" 
+                       class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:border-blue-500 focus:outline-none">
+              </div>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="testConnection()" id="testBtn" class="flex-1 bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg text-sm transition">
+              测试连接
+            </button>
+            <button onclick="saveConfig()" class="flex-1 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm transition">
+              保存
+            </button>
+          </div>
+          <div id="testResult" class="hidden p-3 rounded-lg text-sm"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Prompt Optimization Modal -->
+    <div id="promptOptModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+      <div class="bg-gray-800 rounded-xl p-6 w-full max-w-md mx-4">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-bold">请求优化配置</h2>
+          <button onclick="closePromptOptimization()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+        </div>
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <label class="text-sm text-gray-400">启用优化</label>
+            <button id="promptOptToggle" onclick="togglePromptOpt()" class="w-12 h-6 rounded-full bg-gray-600 transition relative">
+              <span class="absolute w-5 h-5 bg-white rounded-full top-0.5 left-0.5 transition"></span>
+            </button>
+          </div>
+          <div>
+            <label class="block text-sm text-gray-400 mb-2">Prompt 阈值 (tokens)</label>
+            <input type="number" id="promptThreshold" min="4096" 
+                   class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:border-blue-500 focus:outline-none">
+            <p class="text-xs text-gray-500 mt-1">最低 4096 tokens</p>
+          </div>
+          <div>
+            <label class="block text-sm text-gray-400 mb-2">优化策略</label>
+            <div class="space-y-2">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="strategy" value="preserve" class="text-blue-500">
+                <span class="text-sm">保留关键信息 <span class="text-gray-500">(70%, 3条)</span></span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="strategy" value="compress" class="text-blue-500">
+                <span class="text-sm">压缩率优先 <span class="text-gray-500">(50%, 1条)</span></span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="strategy" value="balance" class="text-blue-500">
+                <span class="text-sm">均衡 <span class="text-gray-500">(60%, 2条)</span></span>
+              </label>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm text-gray-400 mb-2">日志保留天数</label>
+            <input type="number" id="logRetention" min="1" 
+                   class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:border-blue-500 focus:outline-none">
+          </div>
+          <button onclick="savePromptConfig()" class="w-full bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm transition">
+            保存
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- APIKey Manager Modal -->
+    <div id="apiKeyModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+      <div class="bg-gray-800 rounded-xl p-6 w-full max-w-4xl mx-4 max-h-[80vh] flex flex-col">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-bold">APIKey 管理</h2>
+          <button onclick="closeApiKeyManager()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+        </div>
+        <div class="mb-4 p-4 bg-gray-700/50 rounded-lg">
+          <h3 class="text-sm font-semibold mb-3">新增 APIKey</h3>
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+            <input type="text" id="newUserName" placeholder="用户名" 
+                   class="bg-gray-600 border border-gray-500 rounded-lg px-3 py-2 text-white text-sm focus:border-blue-500 focus:outline-none">
+            <input type="text" id="newUserId" placeholder="UserId" 
+                   class="bg-gray-600 border border-gray-500 rounded-lg px-3 py-2 text-white text-sm focus:border-blue-500 focus:outline-none">
+            <input type="text" id="newPhone" placeholder="电话号码" 
+                   class="bg-gray-600 border border-gray-500 rounded-lg px-3 py-2 text-white text-sm focus:border-blue-500 focus:outline-none">
+            <button onclick="addApiKey()" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg text-sm transition">
+              添加
+            </button>
+          </div>
+        </div>
+        <div class="flex-1 overflow-hidden">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-gray-400 border-b border-gray-700">
+                <th class="text-left py-2 px-3">用户名</th>
+                <th class="text-left py-2 px-3 cursor-help" title="点击APIKey复制">APIKey <span class="text-gray-500 text-xs">ℹ</span></th>
+                <th class="text-left py-2 px-3">UserId</th>
+                <th class="text-left py-2 px-3">电话号码</th>
+                <th class="text-center py-2 px-3">状态</th>
+                <th class="text-left py-2 px-3">新建日期</th>
+                <th class="text-left py-2 px-3">最后调用</th>
+                <th class="text-center py-2 px-3">操作</th>
+              </tr>
+            </thead>
+            <tbody id="apiKeyList" class="scrollbar-thin max-h-96 overflow-y-auto">
+              <tr><td colspan="7" class="text-center py-4 text-gray-500">暂无数据</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Logs Modal -->
+    <div id="logsModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+      <div class="bg-gray-800 rounded-xl p-6 w-full max-w-4xl mx-4 max-h-[80vh] flex flex-col">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-bold">历史日志</h2>
+          <button onclick="closeLogs()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+        </div>
+        <div id="logsList" class="grid grid-cols-7 gap-2 mb-4 max-h-[200px] overflow-y-auto scrollbar-thin">
+          <div class="text-gray-500 text-center py-4 col-span-7">加载中...</div>
+        </div>
+        <div id="logDetail" class="flex-1 overflow-hidden hidden">
+          <div class="flex items-center justify-between mb-2">
+            <h3 id="logDetailTitle" class="text-lg font-semibold"></h3>
+            <button onclick="closeLogDetail()" class="text-sm text-gray-400 hover:text-white">返回列表</button>
+          </div>
+          <div id="logStats" class="grid grid-cols-4 gap-4 mb-4 p-4 bg-gray-700/50 rounded-lg"></div>
+          <div id="logRequests" class="font-mono text-xs space-y-1 max-h-[300px] overflow-y-auto scrollbar-thin"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-6">
+      <div class="bg-gray-800 rounded-xl p-4">
+        <div class="text-gray-400 text-sm mb-1">总请求数</div>
+        <div id="totalRequests" class="text-2xl font-bold text-white">0</div>
+      </div>
+      <div class="bg-gray-800 rounded-xl p-4">
+        <div class="text-gray-400 text-sm mb-1">错误请求</div>
+        <div id="totalErrors" class="text-2xl font-bold text-red-400">0</div>
+      </div>
+      <div class="bg-gray-800 rounded-xl p-4">
+        <div class="text-gray-400 text-sm mb-1">Prompt Tokens</div>
+        <div id="promptTokens" class="text-2xl font-bold text-blue-400">0</div>
+        <div id="promptCost" class="text-sm text-yellow-400 mt-1"></div>
+      </div>
+      <div class="bg-gray-800 rounded-xl p-4">
+        <div class="text-gray-400 text-sm mb-1">Completion Tokens</div>
+        <div id="completionTokens" class="text-2xl font-bold text-green-400">0</div>
+        <div id="completionCost" class="text-sm text-yellow-400 mt-1"></div>
+      </div>
+      <div class="bg-gray-800 rounded-xl p-4">
+        <div class="text-gray-400 text-sm mb-1">平均延迟</div>
+        <div id="avgLatency" class="text-2xl font-bold text-yellow-400">0ms</div>
+      </div>
+      <div class="bg-gray-800 rounded-xl p-4">
+        <div class="text-gray-400 text-sm mb-1">活跃模型</div>
+        <div class="flex items-start gap-4">
+          <div id="activeModels" class="text-2xl font-bold text-purple-400">0</div>
+          <div id="activeModelsList" class="flex-1 text-sm space-y-1"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-10">
+      <div class="bg-gray-800 rounded-xl p-4">
+        <h3 class="text-lg font-semibold mb-4">用量趋势</h3>
+        <canvas id="weeklyTrendChart" height="180"></canvas>
+      </div>
+      <div class="bg-gray-800 rounded-xl p-4">
+        <h3 class="text-lg font-semibold mb-4">24小时请求分布</h3>
+        <canvas id="hourlyChart" height="180"></canvas>
+      </div>
+      <div class="bg-gray-800 rounded-xl p-4">
+        <h3 class="text-lg font-semibold mb-4">今日概览</h3>
+        <div id="todayOverview" class="space-y-3">
+          <div class="flex justify-between"><span class="text-gray-400">活跃用户</span><span id="activeUsers" class="text-white font-bold">0</span></div>
+          <div class="flex justify-between"><span class="text-gray-400">活跃模型</span><span id="activeModelsCount" class="text-purple-400 font-bold">0</span></div>
+          <div class="flex justify-between"><span class="text-gray-400">总请求</span><span id="totalRequestsCount" class="text-blue-400 font-bold">0</span></div>
+          <div class="flex justify-between"><span class="text-gray-400">错误率</span><span id="errorRate" class="text-red-400 font-bold">0%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tables Row -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-10">
+      <!-- API Key统计 -->
+      <div class="bg-gray-800 rounded-xl p-4">
+        <h3 class="text-lg font-semibold mb-4">API Key 使用统计</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-gray-400 border-b border-gray-700">
+                <th class="text-left py-2 px-3">API Key</th>
+                <th class="text-right py-2 px-3">请求数</th>
+                <th class="text-right py-2 px-3">Tokens</th>
+                <th class="text-right py-2 px-3">错误</th>
+              </tr>
+            </thead>
+            <tbody id="apiKeyTable" class="scrollbar-thin max-h-64 overflow-y-auto">
+              <tr><td colspan="4" class="text-center py-4 text-gray-500">暂无数据</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 模型统计 -->
+      <div class="bg-gray-800 rounded-xl p-4">
+        <h3 class="text-lg font-semibold mb-4">模型使用排行</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-gray-400 border-b border-gray-700">
+                <th class="text-left py-2 px-3">模型</th>
+                <th class="text-right py-2 px-3">请求数</th>
+                <th class="text-right py-2 px-3">Tokens</th>
+                <th class="text-right py-2 px-3">错误</th>
+              </tr>
+            </thead>
+            <tbody id="modelTable" class="scrollbar-thin max-h-64 overflow-y-auto">
+              <tr><td colspan="4" class="text-center py-4 text-gray-500">暂无数据</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 延迟分布 -->
+      <div class="bg-gray-800 rounded-xl p-4">
+        <h3 class="text-lg font-semibold mb-4">延迟分布</h3>
+        <div id="latencyStats" class="space-y-3">
+          <div class="flex justify-between"><span class="text-gray-400">平均延迟</span><span id="latencyAvg" class="text-yellow-400 font-bold">0ms</span></div>
+          <div class="flex justify-between"><span class="text-gray-400">最小延迟</span><span id="latencyMin" class="text-green-400 font-bold">0ms</span></div>
+          <div class="flex justify-between"><span class="text-gray-400">最大延迟</span><span id="latencyMax" class="text-red-400 font-bold">0ms</span></div>
+        </div>
+        <canvas id="latencyChart" height="120" class="mt-4"></canvas>
+      </div>
+    </div>
+
+    <!-- 用户统计报表 -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-10">
+      <div class="bg-gray-800 rounded-xl p-4">
+        <h3 class="text-lg font-semibold mb-4">用户排名</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-gray-400 border-b border-gray-700">
+                <th class="text-left py-2 px-3">排名</th>
+                <th class="text-left py-2 px-3">用户</th>
+                <th class="text-right py-2 px-3">请求数</th>
+                <th class="text-right py-2 px-3">Tokens</th>
+              </tr>
+            </thead>
+            <tbody id="userRankingTable" class="scrollbar-thin max-h-48 overflow-y-auto">
+              <tr><td colspan="4" class="text-center py-4 text-gray-500">暂无数据</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="bg-gray-800 rounded-xl p-4">
+        <h3 class="text-lg font-semibold mb-4">模型平均响应时间</h3>
+        <canvas id="modelLatencyChart" height="180"></canvas>
+      </div>
+      <div class="bg-gray-800 rounded-xl p-4">
+        <h3 class="text-lg font-semibold mb-4">模型性能指标</h3>
+        <div id="modelPerformance" class="grid grid-cols-3 gap-4">
+          <div class="bg-gray-700/50 rounded-lg p-3 text-center">
+            <div class="text-sm text-gray-400 mb-1">TTFT</div>
+            <div class="text-xs text-gray-500 mb-1">首token时间</div>
+            <div id="perfTtft" class="text-xl font-bold text-blue-400">-</div>
+          </div>
+          <div class="bg-gray-700/50 rounded-lg p-3 text-center">
+            <div class="text-sm text-gray-400 mb-1">TPOT</div>
+            <div class="text-xs text-gray-500 mb-1">每token时间</div>
+            <div id="perfTpot" class="text-xl font-bold text-green-400">-</div>
+          </div>
+          <div class="bg-gray-700/50 rounded-lg p-3 text-center">
+            <div class="text-sm text-gray-400 mb-1">TPS</div>
+            <div class="text-xs text-gray-500 mb-1">token/秒</div>
+            <div id="perfTps" class="text-xl font-bold text-purple-400">-</div>
+          </div>
+        </div>
+        <canvas id="modelPerformanceChart" height="180" class="mt-4"></canvas>
+      </div>
+    </div>
+
+    <!-- Cost Trend Chart -->
+    <div class="bg-gray-800 rounded-xl p-4 mb-6">
+      <div class="flex items-center justify-between mb-2">
+        <h3 class="text-lg font-semibold">成本趋势（模拟预估）</h3>
+        <span id="costAvg" class="text-yellow-400 font-bold"></span>
+      </div>
+      <canvas id="costTrendChart" height="120"></canvas>
+    </div>
+
+    <!-- 实时日志 -->
+    <div class="mt-6 bg-gray-800 rounded-xl p-4">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold">日志</h3>
+        <div class="flex gap-2">
+          <button id="tabLive" onclick="switchTab('live')" class="px-4 py-1.5 rounded-lg text-sm bg-blue-600 text-white">实时日志</button>
+          <button id="tabErrors" onclick="switchTab('errors')" class="px-4 py-1.5 rounded-lg text-sm bg-gray-700 hover:bg-gray-600 transition">错误日志</button>
+        </div>
+      </div>
+      <div id="liveLogPanel">
+        <div class="flex justify-end mb-2">
+          <button onclick="loadMoreRequests()" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm transition">加载更多</button>
+        </div>
+        <div id="requestLog" class="font-mono text-xs space-y-1 max-h-80 overflow-y-auto scrollbar-thin">
+          <div class="text-gray-500 text-center py-8">等待请求...</div>
+        </div>
+      </div>
+      <div id="errorLogPanel" class="hidden">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-4">
+            <label class="flex items-center gap-2 text-sm text-gray-400">
+              <input type="checkbox" id="filterUnresolved" onchange="fetchErrorLogs()" class="rounded">
+              只看未解决
+            </label>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="clearResolvedErrors()" class="px-3 py-1 bg-yellow-600 hover:bg-yellow-700 rounded text-sm transition">清除已解决</button>
+            <button onclick="clearAllErrors()" class="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-sm transition">清空全部</button>
+          </div>
+        </div>
+        <div id="errorLog" class="font-mono text-xs space-y-2 max-h-80 overflow-y-auto scrollbar-thin">
+          <div class="text-gray-500 text-center py-8">暂无错误日志</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = window.location.origin + '/api';
+    let hourlyChart, modelLatencyChart, modelPerformanceChart, latencyChart, weeklyTrendChart, costTrendChart;
+    let lastRequestCount = 0;
+    let currentTab = 'live';
+    let requestOffset = 0;
+    const REQUEST_PAGE_SIZE = 50;
+    let appConfig = { simCostEnabled: false, simPromptCost: 0, simCompletionCost: 0 };
+
+    function formatNumber(num) {
+      if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+      if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+      return num.toString();
+    }
+
+    function maskApiKey(key) {
+      if (!key || key.length < 8) return key;
+      return key.substring(0, 6) + '****' + key.substring(key.length - 4);
+    }
+
+    function formatTime(isoString) {
+      return new Date(isoString).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Asia/Shanghai' });
+    }
+
+    function getStatusColor(status) {
+      if (status >= 500) return 'text-red-400';
+      if (status >= 400) return 'text-yellow-400';
+      if (status >= 200) return 'text-green-400';
+      return 'text-gray-400';
+    }
+
+    function initCharts() {
+      const hourlyCtx = document.getElementById('hourlyChart').getContext('2d');
+      hourlyChart = new Chart(hourlyCtx, {
+        type: 'bar',
+        data: {
+          labels: Array.from({length: 24}, (_, i) => `${i}:00`),
+          datasets: [{
+            label: '请求数',
+            data: new Array(24).fill(0),
+            backgroundColor: 'rgba(59, 130, 246, 0.6)',
+            borderColor: 'rgba(59, 130, 246, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#9ca3af' } },
+            x: { grid: { display: false }, ticks: { color: '#9ca3af', maxRotation: 0 } }
+          }
+        }
+      });
+
+      const weeklyCtx = document.getElementById('weeklyTrendChart').getContext('2d');
+      weeklyTrendChart = new Chart(weeklyCtx, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: 'Prompt Tokens',
+              data: [],
+              borderColor: 'rgba(59, 130, 246, 1)',
+              backgroundColor: 'rgba(59, 130, 246, 0.1)',
+              fill: true,
+              tension: 0.3
+            },
+            {
+              label: 'Completion Tokens',
+              data: [],
+              borderColor: 'rgba(34, 197, 94, 1)',
+              backgroundColor: 'rgba(34, 197, 94, 0.1)',
+              fill: true,
+              tension: 0.3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { position: 'bottom', labels: { color: '#9ca3af' } } },
+          scales: {
+            y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#9ca3af', callback: v => formatNumber(v) } },
+            x: { grid: { display: false }, ticks: { color: '#9ca3af' } }
+          }
+        }
+      });
+
+      const costCtx = document.getElementById('costTrendChart').getContext('2d');
+      costTrendChart = new Chart(costCtx, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [{
+            label: '模拟成本',
+            data: [],
+            borderColor: 'rgba(34, 197, 94, 1)',
+            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#9ca3af', callback: v => '￥' + v.toFixed(0) } },
+            x: { grid: { display: false }, ticks: { color: '#9ca3af', maxRotation: 0 } }
+          }
+        }
+      });
+
+      const modelLatencyCtx = document.getElementById('modelLatencyChart').getContext('2d');
+      modelLatencyChart = new Chart(modelLatencyCtx, {
+        type: 'bar',
+        data: {
+          labels: [],
+          datasets: [{
+            label: '平均响应时间 (ms)',
+            data: [],
+            backgroundColor: 'rgba(59, 130, 246, 0.8)',
+            borderWidth: 0,
+            borderRadius: 4
+          }, {
+            label: '平均上下文长度',
+            data: [],
+            backgroundColor: 'rgba(168, 85, 247, 0.8)',
+            borderWidth: 0,
+            borderRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          indexAxis: 'y',
+          plugins: { legend: { position: 'bottom', labels: { color: '#9ca3af' } } },
+          scales: {
+            x: { 
+              grid: { color: 'rgba(255,255,255,0.1)' },
+              ticks: { color: '#9ca3af' }
+            },
+            y: { 
+              grid: { display: false },
+              ticks: { color: '#9ca3af' }
+            }
+          }
+        }
+      });
+
+      const modelPerformanceCtx = document.getElementById('modelPerformanceChart').getContext('2d');
+      modelPerformanceChart = new Chart(modelPerformanceCtx, {
+        type: 'bar',
+        data: {
+          labels: [],
+          datasets: [{
+            label: 'TPS(token/s)',
+            data: [],
+            backgroundColor: 'rgba(168, 85, 247, 0.8)',
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          indexAxis: 'y',
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#9ca3af' } },
+            y: { grid: { display: false }, ticks: { color: '#9ca3af' } }
+          }
+        }
+      });
+
+      const latencyCtx = document.getElementById('latencyChart').getContext('2d');
+      latencyChart = new Chart(latencyCtx, {
+        type: 'bar',
+        data: {
+          labels: ['<100ms', '100-500ms', '500ms-1s', '1s-3s', '>3s'],
+          datasets: [{
+            label: '请求数',
+            data: [0, 0, 0, 0, 0],
+            backgroundColor: [
+              'rgba(34, 197, 94, 0.8)',
+              'rgba(59, 130, 246, 0.8)',
+              'rgba(234, 179, 8, 0.8)',
+              'rgba(249, 115, 22, 0.8)',
+              'rgba(239, 68, 68, 0.8)'
+            ],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#9ca3af' } },
+            x: { grid: { display: false }, ticks: { color: '#9ca3af' } }
+          }
+        }
+      });
+    }
+
+    async function fetchStats() {
+      try {
+        const response = await fetch(`${API_BASE}/stats`);
+        if (!response.ok) throw new Error('Failed to fetch stats');
+        return await response.json();
+      } catch (error) {
+        console.error('Fetch error:', error);
+        return null;
+      }
+    }
+
+    async function fetchUserStats() {
+      try {
+        const response = await fetch(`${API_BASE}/user-stats`);
+        if (!response.ok) throw new Error('Failed to fetch user stats');
+        return await response.json();
+      } catch (error) {
+        console.error('Fetch user stats error:', error);
+        return null;
+      }
+    }
+
+    async function fetchModelLatency() {
+      try {
+        const response = await fetch(`${API_BASE}/model-latency`);
+        if (!response.ok) throw new Error('Failed to fetch model latency');
+        return await response.json();
+      } catch (error) {
+        console.error('Fetch model latency error:', error);
+        return [];
+      }
+    }
+
+    async function fetchWeeklyTrend() {
+      try {
+        const response = await fetch(`${API_BASE}/weekly-trend`);
+        if (!response.ok) throw new Error('Failed to fetch weekly trend');
+        return await response.json();
+      } catch (error) {
+        console.error('Fetch weekly trend error:', error);
+        return [];
+      }
+    }
+
+    async function fetchRequests(offset = 0, reset = false) {
+      try {
+        const response = await fetch(`${API_BASE}/requests?limit=${REQUEST_PAGE_SIZE}&offset=${offset}`);
+        if (!response.ok) throw new Error('Failed to fetch requests');
+        return await response.json();
+      } catch (error) {
+        console.error('Fetch error:', error);
+        return [];
+      }
+    }
+
+    let cachedRequests = [];
+
+    async function loadMoreRequests() {
+      const requests = await fetchRequests(requestOffset);
+      if (requests.length > 0) {
+        cachedRequests = [...cachedRequests, ...requests];
+        requestOffset += requests.length;
+        updateRequestLog(cachedRequests, false);
+      }
+    }
+
+    async function updateUI(stats) {
+      if (!stats) return;
+
+      document.getElementById('totalRequests').textContent = formatNumber(stats.totalRequestCount || stats.requests?.length || 0);
+      document.getElementById('totalErrors').textContent = formatNumber(stats.errors || 0);
+      document.getElementById('promptTokens').textContent = formatNumber(stats.totalTokens?.prompt || 0);
+      document.getElementById('completionTokens').textContent = formatNumber(stats.totalTokens?.completion || 0);
+      
+      window.__promptTokens = stats.totalTokens?.prompt || 0;
+      window.__completionTokens = stats.totalTokens?.completion || 0;
+      updateSimCostDisplay();
+      
+      const latency = stats.latency || {};
+      const avgLatency = latency.count > 0 ? Math.round(latency.sum / latency.count) : 0;
+      document.getElementById('avgLatency').textContent = `${avgLatency}ms`;
+      
+      const modelCount = Object.keys(stats.byModel || {}).length;
+      document.getElementById('activeModels').textContent = modelCount;
+      
+      const topModels = Object.entries(stats.byModel || {})
+        .sort((a, b) => b[1].requests - a[1].requests)
+        .slice(0, 3);
+      const listEl = document.getElementById('activeModelsList');
+      if (topModels.length > 0) {
+        listEl.innerHTML = topModels.map(([model, data]) => `
+          <div class="text-purple-300 truncate" title="${model}">${model.length > 20 ? model.substring(0, 20) + '...' : model}</div>
+        `).join('');
+      } else {
+        listEl.innerHTML = '';
+      }
+
+      // Update hourly chart
+      if (stats.hourlyStats && hourlyChart) {
+        const hourlyData = stats.hourlyStats.map(h => h.requests);
+        hourlyChart.data.datasets[0].data = hourlyData;
+        hourlyChart.update('none');
+      }
+
+      // Update today overview
+      const activeUsers = Object.keys(stats.byApiKey || {}).length;
+      const activeModels = Object.keys(stats.byModel || {}).length;
+      const totalRequests = stats.totalRequestCount || stats.requests?.length || 0;
+      const errorRate = totalRequests > 0 ? ((stats.errors || 0) / totalRequests * 100).toFixed(1) : 0;
+      document.getElementById('activeUsers').textContent = activeUsers;
+      document.getElementById('activeModelsCount').textContent = activeModels;
+      document.getElementById('totalRequestsCount').textContent = formatNumber(totalRequests);
+      document.getElementById('errorRate').textContent = errorRate + '%';
+
+      // Update weekly trend chart
+      const weeklyData = await fetchWeeklyTrend();
+      if (weeklyData.length > 0 && weeklyTrendChart) {
+        weeklyTrendChart.data.labels = weeklyData.map(d => d.label);
+        weeklyTrendChart.data.datasets[0].data = weeklyData.map(d => d.promptTokens);
+        weeklyTrendChart.data.datasets[1].data = weeklyData.map(d => d.completionTokens);
+        weeklyTrendChart.update('none');
+      }
+
+      // Update cost trend chart
+      if (weeklyData.length > 0 && costTrendChart && appConfig.simCostEnabled) {
+        const costs = weeklyData.map(d => d.cost || 0);
+        const avg = costs.reduce((a, b) => a + b, 0) / costs.length;
+        costTrendChart.data.labels = weeklyData.map(d => d.label);
+        costTrendChart.data.datasets[0].data = costs;
+        if (costTrendChart.data.datasets.length > 1) {
+          costTrendChart.data.datasets[1].data = Array(30).fill(avg);
+        } else {
+          costTrendChart.data.datasets.push({
+            label: '均值',
+            data: Array(30).fill(avg),
+            borderColor: 'rgba(251, 191, 36, 0.8)',
+            borderWidth: 2,
+            borderDash: [5, 5],
+            pointRadius: 0,
+            fill: false,
+            tension: 0
+          });
+        }
+        costTrendChart.update('none');
+        document.getElementById('costAvg').textContent = `￥${avg.toFixed(2)}/天`;
+        document.getElementById('costAvg').style.color = 'rgba(251, 191, 36, 0.8)';
+      } else {
+        costTrendChart.data.labels = [];
+        costTrendChart.data.datasets[0].data = [];
+        costTrendChart.update('none');
+        document.getElementById('costAvg').textContent = '';
+      }
+
+      // Update API Key table
+      const apiKeyTable = document.getElementById('apiKeyTable');
+      const byApiKey = stats.byApiKey || {};
+      const apiKeys = Object.entries(byApiKey).sort((a, b) => b[1].requests - a[1].requests);
+      
+      if (apiKeys.length > 0) {
+        apiKeyTable.innerHTML = apiKeys.map(([key, data]) => `
+          <tr class="border-b border-gray-700/50 hover:bg-gray-700/30">
+            <td class="py-2 px-3 text-blue-400 truncate max-w-[150px]" title="${key}">${key}</td>
+            <td class="py-2 px-3 text-right">${formatNumber(data.requests)}</td>
+            <td class="py-2 px-3 text-right">${formatNumber(data.tokens)}</td>
+            <td class="py-2 px-3 text-right ${data.errors > 0 ? 'text-red-400' : ''}">${data.errors}</td>
+          </tr>
+        `).join('');
+      }
+
+      // Update model table
+      const modelTable = document.getElementById('modelTable');
+      const byModel = stats.byModel || {};
+      const models = Object.entries(byModel).sort((a, b) => b[1].requests - a[1].requests);
+      
+      if (models.length > 0) {
+        modelTable.innerHTML = models.map(([model, data]) => `
+          <tr class="border-b border-gray-700/50 hover:bg-gray-700/30">
+            <td class="py-2 px-3 text-green-400 truncate max-w-[200px]" title="${model}">${model}</td>
+            <td class="py-2 px-3 text-right">${formatNumber(data.requests)}</td>
+            <td class="py-2 px-3 text-right">${formatNumber(data.tokens)}</td>
+            <td class="py-2 px-3 text-right ${data.errors > 0 ? 'text-red-400' : ''}">${data.errors}</td>
+          </tr>
+        `).join('');
+      }
+
+      // Update request log
+      updateRequestLog(stats.requests, true);
+    }
+
+    async function updateUserStats(userStats, stats) {
+      if (!userStats) {
+        return;
+      }
+      
+      const rankingTable = document.getElementById('userRankingTable');
+      if (userStats.ranking && userStats.ranking.length > 0) {
+        rankingTable.innerHTML = userStats.ranking.map((user, index) => `
+          <tr class="border-b border-gray-700/50 hover:bg-gray-700/30">
+            <td class="py-2 px-3 text-center">${index + 1}</td>
+            <td class="py-2 px-3">${user.userName}</td>
+            <td class="py-2 px-3 text-right">${formatNumber(user.requests)}</td>
+            <td class="py-2 px-3 text-right">${formatNumber(user.tokens)}</td>
+          </tr>
+        `).join('');
+      } else {
+        rankingTable.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-gray-500">暂无数据</td></tr>';
+      }
+
+      // Update model latency chart
+      const modelLatency = await fetchModelLatency();
+      if (modelLatency && modelLatency.length > 0 && modelLatencyChart) {
+        const topModels = modelLatency.slice(0, 8);
+        modelLatencyChart.data.labels = topModels.map(m => m.modelName.length > 15 ? m.modelName.substring(0, 15) + '...' : m.modelName);
+        modelLatencyChart.data.datasets[0].data = topModels.map(m => m.avgLatency);
+        modelLatencyChart.data.datasets[1].data = topModels.map(m => m.avgContextLength);
+        modelLatencyChart.update('none');
+      }
+
+      // Update model performance chart
+      if (stats && stats.byModel && modelPerformanceChart) {
+        const modelData = Object.entries(stats.byModel)
+          .sort((a, b) => b[1].tokens - a[1].tokens)
+          .slice(0, 8);
+        modelPerformanceChart.data.labels = modelData.map(m => m[0].length > 12 ? m[0].substring(0, 12) + '...' : m[0]);
+        
+        const avgTtft = modelData.map(m => {
+          const ttft = m[1].ttft;
+          return ttft && ttft.count > 0 ? Math.round(ttft.sum / ttft.count) : 0;
+        });
+        const avgTpot = modelData.map(m => {
+          const tpot = m[1].tpot;
+          return tpot && tpot.count > 0 ? Math.round(tpot.sum / tpot.count) : 0;
+        });
+        
+        const globalTtft = avgTtft.reduce((a, b) => a + b, 0) / (avgTtft.filter(x => x > 0).length || 1);
+        const globalTpot = avgTpot.reduce((a, b) => a + b, 0) / (avgTpot.filter(x => x > 0).length || 1);
+        
+        document.getElementById('perfTtft').textContent = globalTtft > 0 ? Math.round(globalTtft) + 'ms' : '-';
+        document.getElementById('perfTpot').textContent = globalTpot > 0 ? Math.round(globalTpot) + 'ms' : '-';
+        document.getElementById('perfTps').textContent = globalTpot > 0 ? (1000 / globalTpot).toFixed(1) : '-';
+        
+        const calcTps = avgTpot.map(tpot => tpot > 0 ? 1000 / tpot : 0);
+        modelPerformanceChart.data.datasets[0].data = calcTps;
+        modelPerformanceChart.update('none');
+      }
+
+      // Update latency chart
+      if (stats && stats.requests && stats.requests.length > 0 && latencyChart) {
+        const latencyDist = [0, 0, 0, 0, 0];
+        stats.requests.forEach(req => {
+          const ms = Math.max(0, req.latency || 0);
+          if (ms < 100) latencyDist[0]++;
+          else if (ms < 500) latencyDist[1]++;
+          else if (ms < 1000) latencyDist[2]++;
+          else if (ms < 3000) latencyDist[3]++;
+          else latencyDist[4]++;
+        });
+        latencyChart.data.datasets[0].data = latencyDist;
+        latencyChart.update('none');
+
+        const latency = stats.latency || {};
+        document.getElementById('latencyAvg').textContent = (latency.count > 0 ? Math.round(latency.sum / latency.count) : 0) + 'ms';
+        document.getElementById('latencyMin').textContent = (latency.min === Infinity || latency.min < 0 ? 0 : latency.min) + 'ms';
+        document.getElementById('latencyMax').textContent = (latency.max || 0) + 'ms';
+      }
+    }
+
+    function updateRequestLog(requests, isInitial = false) {
+      const logContainer = document.getElementById('requestLog');
+      if (isInitial) {
+        cachedRequests = requests;
+        requestOffset = requests.length;
+        logContainer.innerHTML = renderRequests(requests);
+      } else {
+        cachedRequests = requests;
+        logContainer.innerHTML = renderRequests(requests);
+      }
+    }
+
+    function renderRequests(requests) {
+      return requests.map(req => `
+        <div class="flex items-center gap-2 p-2 bg-gray-700/50 rounded hover:bg-gray-700">
+          <span class="text-gray-500 w-20">${formatTime(req.timestamp)}</span>
+          <span class="${getStatusColor(req.status)} w-12">${req.status}</span>
+          <span class="text-purple-400 w-8">${req.method}</span>
+          <span class="text-green-400 truncate max-w-[200px]" title="${req.model}">${req.model}</span>
+          <span class="text-gray-400">${formatNumber(req.tokens?.total || 0)} tok</span>
+          <span class="text-yellow-400">${req.latency}ms</span>
+          <span class="text-blue-400 truncate max-w-[120px]" title="${req.apiKey}">${maskApiKey(req.apiKey)}</span>
+          ${req.error ? `<span class="text-red-400 text-xs">${req.error}</span>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      document.getElementById('tabLive').className = tab === 'live' ? 'px-4 py-1.5 rounded-lg text-sm bg-blue-600 text-white' : 'px-4 py-1.5 rounded-lg text-sm bg-gray-700 hover:bg-gray-600 transition';
+      document.getElementById('tabErrors').className = tab === 'errors' ? 'px-4 py-1.5 rounded-lg text-sm bg-blue-600 text-white' : 'px-4 py-1.5 rounded-lg text-sm bg-gray-700 hover:bg-gray-600 transition';
+      document.getElementById('liveLogPanel').classList.toggle('hidden', tab !== 'live');
+      document.getElementById('errorLogPanel').classList.toggle('hidden', tab !== 'errors');
+      if (tab === 'errors') fetchErrorLogs();
+    }
+
+    async function fetchErrorLogs() {
+      try {
+        const unresolved = document.getElementById('filterUnresolved').checked;
+        const response = await fetch(`${API_BASE}/errors?limit=200&unresolved=${unresolved}`);
+        if (!response.ok) throw new Error('Failed to fetch error logs');
+        const logs = await response.json();
+        renderErrorLogs(logs);
+      } catch (error) {
+        console.error('Fetch error logs error:', error);
+      }
+    }
+
+    function renderErrorLogs(logs) {
+      const container = document.getElementById('errorLog');
+      if (!logs || logs.length === 0) {
+        container.innerHTML = '<div class="text-gray-500 text-center py-8">暂无错误日志</div>';
+        return;
+      }
+
+      container.innerHTML = logs.map(log => `
+        <div class="p-3 bg-gray-700/50 rounded-lg ${log.resolved ? 'opacity-50' : ''}">
+          <div class="flex items-start justify-between gap-4">
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="px-2 py-0.5 text-xs rounded ${getErrorTypeColor(log.errorType)}">${log.errorType}</span>
+                <span class="text-gray-500">${formatTime(log.timestamp)}</span>
+                ${log.resolved ? '<span class="px-2 py-0.5 text-xs rounded bg-green-600/30 text-green-400">已解决</span>' : '<span class="px-2 py-0.5 text-xs rounded bg-red-600/30 text-red-400">未解决</span>'}
+              </div>
+              <div class="text-red-400 text-sm mb-1">${escapeHtml(log.errorMessage)}</div>
+              <div class="text-gray-400 text-xs space-x-3">
+                <span class="text-blue-400">${log.method}</span>
+                <span>${log.path}</span>
+                ${log.model ? `<span class="text-green-400">${log.model}</span>` : ''}
+                ${log.latency ? `<span class="text-yellow-400">${Math.max(0, log.latency)}ms</span>` : ''}
+              </div>
+              ${log.apiKey ? `<div class="text-gray-500 text-xs mt-1">API Key: ${log.apiKey.substring(0, 20)}...</div>` : ''}
+            </div>
+            <button onclick="toggleResolved('${log.id}', ${!log.resolved})" class="px-2 py-1 text-xs rounded ${log.resolved ? 'bg-gray-600 hover:bg-gray-500' : 'bg-blue-600 hover:bg-blue-700'} transition">
+              ${log.resolved ? '标记未解决' : '标记已解决'}
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function getErrorTypeColor(type) {
+      const colors = {
+        'NETWORK_ERROR': 'bg-red-600/30 text-red-400',
+        'API_ERROR': 'bg-yellow-600/30 text-yellow-400',
+        'TIMEOUT': 'bg-orange-600/30 text-orange-400',
+        'AUTH_ERROR': 'bg-purple-600/30 text-purple-400'
+      };
+      return colors[type] || 'bg-gray-600/30 text-gray-400';
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    async function toggleResolved(id, resolved) {
+      try {
+        await fetch(`${API_BASE}/errors/${id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ resolved })
+        });
+        fetchErrorLogs();
+      } catch (error) {
+        console.error('Toggle resolved error:', error);
+      }
+    }
+
+    async function clearResolvedErrors() {
+      if (!confirm('确定要清除所有已解决的错误日志吗？')) return;
+      try {
+        await fetch(`${API_BASE}/errors/resolved`, { method: 'DELETE' });
+        fetchErrorLogs();
+      } catch (error) {
+        console.error('Clear resolved errors error:', error);
+      }
+    }
+
+    async function clearAllErrors() {
+      if (!confirm('确定要清空所有错误日志吗？此操作不可恢复！')) return;
+      try {
+        await fetch(`${API_BASE}/errors`, { method: 'DELETE' });
+        fetchErrorLogs();
+      } catch (error) {
+        console.error('Clear all errors error:', error);
+      }
+    }
+
+    async function poll() {
+      const stats = await fetchStats();
+      const userStats = await fetchUserStats();
+      const newRequests = await fetchRequests(0);
+      if (newRequests.length > 0) {
+        cachedRequests = newRequests;
+        requestOffset = newRequests.length;
+        updateRequestLog(cachedRequests);
+      }
+      await updateUI(stats);
+      updateUserStats(userStats, stats);
+      if (currentTab === 'errors') fetchErrorLogs();
+    }
+
+    async function loadConfig() {
+      try {
+        const response = await fetch(`${API_BASE}/config`);
+        const data = await response.json();
+        console.log('loadConfig data:', data);
+        document.getElementById('lmStudioUrl').value = data.lmStudioUrl || '';
+        
+        const toggle = document.getElementById('useApiKeyToggle');
+        if (data.enableAPIKey) {
+          toggle.classList.remove('bg-gray-600');
+          toggle.classList.add('bg-blue-600');
+          toggle.querySelector('span').classList.add('left-6');
+          toggle.querySelector('span').classList.remove('left-0.5');
+        } else {
+          toggle.classList.add('bg-gray-600');
+          toggle.classList.remove('bg-blue-600');
+          toggle.querySelector('span').classList.remove('left-6');
+          toggle.querySelector('span').classList.add('left-0.5');
+        }
+
+        const logToggle = document.getElementById('enableLogToggle');
+        if (data.enableLog) {
+          logToggle.classList.remove('bg-gray-600');
+          logToggle.classList.add('bg-blue-600');
+          logToggle.querySelector('span').classList.add('left-6');
+          logToggle.querySelector('span').classList.remove('left-0.5');
+        } else {
+          logToggle.classList.add('bg-gray-600');
+          logToggle.classList.remove('bg-blue-600');
+          logToggle.querySelector('span').classList.remove('left-6');
+          logToggle.querySelector('span').classList.add('left-0.5');
+        }
+
+        const lmAuthToggle = document.getElementById('lmAuthToggle');
+        if (data.lmAuthEnabled) {
+          lmAuthToggle.classList.remove('bg-gray-600');
+          lmAuthToggle.classList.add('bg-blue-600');
+          lmAuthToggle.querySelector('span').classList.add('left-6');
+          lmAuthToggle.querySelector('span').classList.remove('left-0.5');
+        } else {
+          lmAuthToggle.classList.add('bg-gray-600');
+          lmAuthToggle.classList.remove('bg-blue-600');
+          lmAuthToggle.querySelector('span').classList.remove('left-6');
+          lmAuthToggle.querySelector('span').classList.add('left-0.5');
+        }
+        document.getElementById('lmAuthInput').value = data.lmAuthValue || '';
+        document.getElementById('lmAuthDisplay').textContent = data.lmAuthValue ? maskApiKey(data.lmAuthValue) : '';
+        
+        const simCostToggle = document.getElementById('simCostToggle');
+        if (data.simCostEnabled) {
+          simCostToggle.classList.remove('bg-gray-600');
+          simCostToggle.classList.add('bg-blue-600');
+          simCostToggle.querySelector('span').classList.add('left-6');
+          simCostToggle.querySelector('span').classList.remove('left-0.5');
+        } else {
+          simCostToggle.classList.add('bg-gray-600');
+          simCostToggle.classList.remove('bg-blue-600');
+          simCostToggle.querySelector('span').classList.remove('left-6');
+          simCostToggle.querySelector('span').classList.add('left-0.5');
+        }
+        document.getElementById('simPromptCost').value = data.simPromptCost || '';
+        document.getElementById('simCompletionCost').value = data.simCompletionCost || '';
+        
+        appConfig = {
+          simCostEnabled: data.simCostEnabled || false,
+          simPromptCost: data.simPromptCost || 0,
+          simCompletionCost: data.simCompletionCost || 0
+        };
+      } catch (error) {
+        console.error('Load config error:', error);
+      }
+    }
+
+    async function openConfig() {
+      await loadConfig();
+      document.getElementById('configModal').classList.remove('hidden');
+      document.getElementById('configModal').classList.add('flex');
+      document.getElementById('testResult').classList.add('hidden');
+    }
+
+    async function loadConfigWithoutModal() {
+      try {
+        const response = await fetch(`${API_BASE}/config`);
+        const data = await response.json();
+        appConfig = {
+          simCostEnabled: data.simCostEnabled || false,
+          simPromptCost: data.simPromptCost || 0,
+          simCompletionCost: data.simCompletionCost || 0
+        };
+      } catch (error) {
+        console.error('Load config error:', error);
+      }
+    }
+
+    function toggleApiKey() {
+      const toggle = document.getElementById('useApiKeyToggle');
+      toggle.classList.toggle('bg-blue-600');
+      toggle.classList.toggle('bg-gray-600');
+      toggle.querySelector('span').classList.toggle('left-6');
+      toggle.querySelector('span').classList.toggle('left-0.5');
+    }
+
+function toggleLog() {
+      const toggle = document.getElementById('enableLogToggle');
+      toggle.classList.toggle('bg-blue-600');
+      toggle.classList.toggle('bg-gray-600');
+      toggle.querySelector('span').classList.toggle('left-6');
+      toggle.classList.toggle('left-0.5');
+    }
+
+    function toggleSimCost() {
+      const toggle = document.getElementById('simCostToggle');
+      toggle.classList.toggle('bg-blue-600');
+      toggle.classList.toggle('bg-gray-600');
+      toggle.querySelector('span').classList.toggle('left-6');
+      toggle.querySelector('span').classList.toggle('left-0.5');
+    }
+
+    function updateSimCostDisplay() {
+      const promptTokens = window.__promptTokens || 0;
+      const completionTokens = window.__completionTokens || 0;
+      const promptCostEl = document.getElementById('promptCost');
+      const completionCostEl = document.getElementById('completionCost');
+      
+      if (appConfig.simCostEnabled && (appConfig.simPromptCost > 0 || appConfig.simCompletionCost > 0)) {
+        const promptCost = (promptTokens / 1000000) * appConfig.simPromptCost;
+        const completionCost = (completionTokens / 1000000) * appConfig.simCompletionCost;
+        promptCostEl.textContent = `¥${promptCost.toFixed(2)}`;
+        completionCostEl.textContent = `¥${completionCost.toFixed(2)}`;
+      } else {
+        promptCostEl.textContent = '';
+        completionCostEl.textContent = '';
+      }
+    }
+
+    function toggleLmAuth() {
+      const toggle = document.getElementById('lmAuthToggle');
+      toggle.classList.toggle('bg-blue-600');
+      toggle.classList.toggle('bg-gray-600');
+      toggle.querySelector('span').classList.toggle('left-6');
+      toggle.querySelector('span').classList.toggle('left-0.5');
+    }
+
+    function closeConfig() {
+      document.getElementById('configModal').classList.add('hidden');
+      document.getElementById('configModal').classList.remove('flex');
+    }
+
+    async function testConnection() {
+      const url = document.getElementById('lmStudioUrl').value;
+      const resultDiv = document.getElementById('testResult');
+      const testBtn = document.getElementById('testBtn');
+      
+      resultDiv.classList.remove('hidden', 'bg-green-900/50', 'bg-red-900/50');
+      resultDiv.innerHTML = '<span class="text-yellow-400">测试中...</span>';
+      testBtn.disabled = true;
+      
+      try {
+        const response = await fetch(`${API_BASE}/test`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url })
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+          resultDiv.classList.add('bg-green-900/50');
+          let html = `<span class="text-green-400">✓ ${data.message}</span>`;
+          if (data.models && data.models.length > 0) {
+            html += `<div class="text-gray-400 mt-1">可用模型: ${data.models.slice(0, 3).join(', ')}${data.models.length > 3 ? '...' : ''}</div>`;
+          }
+          resultDiv.innerHTML = html;
+        } else {
+          resultDiv.classList.add('bg-red-900/50');
+          resultDiv.innerHTML = `<span class="text-red-400">✗ ${data.error || '连接失败'}</span>`;
+        }
+      } catch (error) {
+        resultDiv.classList.add('bg-red-900/50');
+        resultDiv.innerHTML = `<span class="text-red-400">✗ ${error.message}</span>`;
+      }
+      
+      testBtn.disabled = false;
+    }
+
+    async function saveConfig() {
+      const url = document.getElementById('lmStudioUrl').value;
+      const useApiKey = document.getElementById('useApiKeyToggle').classList.contains('bg-blue-600');
+      const enableLog = document.getElementById('enableLogToggle').classList.contains('bg-blue-600');
+      const lmAuthEnabled = document.getElementById('lmAuthToggle').classList.contains('bg-blue-600');
+      const lmAuthValue = document.getElementById('lmAuthInput').value;
+      const simCostEnabled = document.getElementById('simCostToggle').classList.contains('bg-blue-600');
+      const simPromptCost = document.getElementById('simPromptCost').value;
+      const simCompletionCost = document.getElementById('simCompletionCost').value;
+      
+      if (!url) {
+        alert('请输入 LM Studio 服务器地址');
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${API_BASE}/config`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+            lmStudioUrl: url,
+            enableAPIKey: useApiKey,
+            enableLog: enableLog,
+            lmAuthEnabled: lmAuthEnabled,
+            lmAuthValue: lmAuthValue,
+            simCostEnabled: simCostEnabled,
+            simPromptCost: simPromptCost,
+            simCompletionCost: simCompletionCost
+          })
+        });
+        
+        if (response.ok) {
+          appConfig = {
+            simCostEnabled: simCostEnabled,
+            simPromptCost: parseFloat(simPromptCost) || 0,
+            simCompletionCost: parseFloat(simCompletionCost) || 0
+          };
+          updateSimCostDisplay();
+          closeConfig();
+        } else {
+          alert('保存失败');
+        }
+      } catch (error) {
+        alert('保存失败: ' + error.message);
+      }
+    }
+
+    async function openApiKeyManager() {
+      document.getElementById('apiKeyModal').classList.remove('hidden');
+      document.getElementById('apiKeyModal').classList.add('flex');
+      await loadApiKeys();
+    }
+
+    function closeApiKeyManager() {
+      document.getElementById('apiKeyModal').classList.add('hidden');
+      document.getElementById('apiKeyModal').classList.remove('flex');
+    }
+
+    async function loadApiKeys() {
+      try {
+        const response = await fetch(`${API_BASE}/apikeys`);
+        const apiKeys = await response.json();
+        renderApiKeys(apiKeys);
+      } catch (error) {
+        console.error('加载 API Keys 失败:', error);
+      }
+    }
+
+    function renderApiKeys(apiKeys) {
+      const container = document.getElementById('apiKeyList');
+      if (!apiKeys || apiKeys.length === 0) {
+        container.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-gray-500">暂无数据</td></tr>';
+        return;
+      }
+
+      container.innerHTML = apiKeys.map(key => `
+        <tr class="border-b border-gray-700/50 hover:bg-gray-700/30">
+          <td class="py-2 px-3">
+            <input type="text" value="${escapeHtml(key.userName)}" 
+              class="bg-transparent text-white w-full max-w-[100px] truncate focus:outline-none focus:border-b focus:border-blue-500"
+              onchange="updateApiKeyField('${key.id}', 'userName', this.value)">
+          </td>
+          <td class="py-2 px-3">
+            <div class="flex items-center gap-2">
+              <span class="text-blue-400 truncate max-w-[120px]" title="${key.apiKey}">${maskApiKey(key.apiKey)}</span>
+              <button onclick="copyApiKey('${key.id}')" class="text-gray-400 hover:text-white text-xs" title="复制APIKey">📋</button>
+            </div>
+          </td>
+          <td class="py-2 px-3">
+            <input type="text" value="${escapeHtml(key.userId || '')}" 
+              class="bg-transparent text-purple-400 w-full max-w-[100px] truncate focus:outline-none focus:border-b focus:border-blue-500"
+              onchange="updateApiKeyField('${key.id}', 'userId', this.value)">
+          </td>
+          <td class="py-2 px-3 text-gray-300" title="${key.phone || ''}">${maskPhone(key.phone)}</td>
+          <td class="py-2 px-3 text-center">
+            <button onclick="toggleApiKeyEnabled('${key.id}', ${!key.enabled})" 
+                    class="w-12 h-6 rounded-full transition relative ${key.enabled ? 'bg-green-600' : 'bg-gray-600'}">
+              <span class="absolute w-5 h-5 bg-white rounded-full top-0.5 ${key.enabled ? 'left-6' : 'left-0.5'} transition"></span>
+            </button>
+          </td>
+          <td class="py-2 px-3 text-gray-400 text-xs">${formatDate(key.createdAt)}</td>
+          <td class="py-2 px-3 text-gray-400 text-xs">${key.lastUsedAt ? formatDate(key.lastUsedAt) : '-'}</td>
+          <td class="py-2 px-3 text-center">
+            <button onclick="deleteApiKey('${key.id}')" class="text-red-400 hover:text-red-300 text-xs">删除</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function updateApiKeyField(id, field, value) {
+      try {
+        const response = await fetch(`${API_BASE}/apikeys/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ [field]: value.trim() })
+        });
+        if (!response.ok) {
+          const data = await response.json();
+          alert(data.error || '更新失败');
+          loadApiKeys();
+        }
+      } catch (error) {
+        alert('更新失败: ' + error.message);
+        loadApiKeys();
+      }
+    }
+
+    function formatDate(isoString) {
+      if (!isoString) return '-';
+      const date = new Date(isoString);
+      return date.toLocaleDateString('zh-CN') + ' ' + date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function maskPhone(phone) {
+      if (!phone) return '-';
+      const digits = phone.replace(/\D/g, '');
+      if (digits.length <= 7) return phone;
+      return digits.slice(0, 3) + '****' + digits.slice(-4);
+    }
+
+    async function addApiKey() {
+      const userName = document.getElementById('newUserName').value.trim();
+      const userId = document.getElementById('newUserId').value.trim();
+      const phone = document.getElementById('newPhone').value.trim();
+
+      if (!userName) {
+        alert('请输入用户名');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/apikeys`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userName, userId, phone })
+        });
+
+        if (response.ok) {
+          const newKey = await response.json();
+          alert(`APIKey 已生成: ${newKey.apiKey}`);
+          document.getElementById('newUserName').value = '';
+          document.getElementById('newUserId').value = '';
+          document.getElementById('newPhone').value = '';
+          await loadApiKeys();
+        } else {
+          const data = await response.json();
+          alert(data.error || '添加失败');
+        }
+      } catch (error) {
+        alert('添加失败: ' + error.message);
+      }
+    }
+
+    async function toggleApiKeyEnabled(id, enabled) {
+      try {
+        const response = await fetch(`${API_BASE}/apikeys/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ enabled })
+        });
+
+        if (response.ok) {
+          await loadApiKeys();
+        }
+      } catch (error) {
+        console.error('更新失败:', error);
+      }
+    }
+
+    async function fetchApiKeys() {
+      const response = await fetch(`${API_BASE}/apikeys`);
+      return await response.json();
+    }
+
+    async function deleteApiKey(id) {
+      if (!confirm('确定要删除这个 APIKey 吗？')) return;
+
+      try {
+        const response = await fetch(`${API_BASE}/apikeys/${id}`, {
+          method: 'DELETE'
+        });
+
+        if (response.ok) {
+          await loadApiKeys();
+        }
+      } catch (error) {
+        alert('删除失败: ' + error.message);
+      }
+    }
+
+    let cachedApiKeys = [];
+
+    function copyApiKey(id) {
+      const key = cachedApiKeys.find(k => k.id === id);
+      if (key && key.apiKey) {
+        try {
+          const textArea = document.createElement('textarea');
+          textArea.value = key.apiKey;
+          textArea.style.position = 'fixed';
+          textArea.style.left = '-9999px';
+          document.body.appendChild(textArea);
+          textArea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textArea);
+          alert('APIKey 已复制到剪贴板');
+        } catch (err) {
+          console.error('复制失败:', err);
+          alert('复制失败');
+        }
+      }
+    }
+
+    async function loadApiKeys() {
+      try {
+        const response = await fetch(`${API_BASE}/apikeys`);
+        cachedApiKeys = await response.json();
+        renderApiKeys(cachedApiKeys);
+      } catch (error) {
+        console.error('Load API keys error:', error);
+      }
+    }
+
+    async function openLogs() {
+      document.getElementById('logsModal').classList.remove('hidden');
+      document.getElementById('logsModal').classList.add('flex');
+      document.getElementById('logDetail').classList.add('hidden');
+      document.getElementById('logsList').classList.remove('hidden');
+      await loadLogsList();
+    }
+
+    function closeLogs() {
+      document.getElementById('logsModal').classList.add('hidden');
+      document.getElementById('logsModal').classList.remove('flex');
+    }
+
+    async function loadLogsList() {
+      const container = document.getElementById('logsList');
+      try {
+        const response = await fetch(`${API_BASE}/logs`);
+        const logs = await response.json();
+        
+        if (logs.length === 0) {
+          container.innerHTML = '<div class="text-gray-500 text-center py-4 col-span-7">暂无历史日志</div>';
+          return;
+        }
+        
+        container.innerHTML = logs.map(log => `
+          <button onclick="loadLogDetail('${log.date}')" class="p-3 bg-gray-700 hover:bg-gray-600 rounded-lg text-center transition">
+            <div class="text-sm text-gray-400">${log.displayDate}</div>
+            <div class="text-lg font-bold text-white">${formatNumber(log.requests)}</div>
+            <div class="text-xs text-gray-500">${formatNumber(log.totalTokens)} tokens</div>
+            ${log.cost > 0 ? `<div class="text-xs text-green-400">￥${log.cost.toFixed(2)}</div>` : ''}
+            ${log.errors > 0 ? `<div class="text-xs text-red-400">${log.errors} errors</div>` : ''}
+          </button>
+        `).join('');
+      } catch (error) {
+        container.innerHTML = '<div class="text-red-400 text-center py-4 col-span-7">加载失败</div>';
+      }
+    }
+
+    async function loadLogDetail(date) {
+      const detailDiv = document.getElementById('logDetail');
+      const listDiv = document.getElementById('logsList');
+      const titleEl = document.getElementById('logDetailTitle');
+      const statsEl = document.getElementById('logStats');
+      const requestsEl = document.getElementById('logRequests');
+      
+      try {
+        const response = await fetch(`${API_BASE}/logs/${date}`);
+        const data = await response.json();
+        
+        titleEl.textContent = `日志详情 - ${data.displayDate}`;
+        
+        const validLatency = data.latency?.count > 0 ? Math.round(Math.max(0, data.latency.sum) / data.latency.count) : 0;
+        statsEl.innerHTML = `
+          <div><div class="text-gray-400 text-sm">请求数</div><div class="text-xl font-bold">${formatNumber(data.requests?.length || 0)}</div></div>
+          <div><div class="text-gray-400 text-sm">错误数</div><div class="text-xl font-bold text-red-400">${data.errors || 0}</div></div>
+          <div><div class="text-gray-400 text-sm">Tokens</div><div class="text-xl font-bold text-blue-400">${formatNumber((data.totalTokens?.prompt || 0) + (data.totalTokens?.completion || 0))}</div></div>
+          <div><div class="text-gray-400 text-sm">平均延迟</div><div class="text-xl font-bold text-yellow-400">${validLatency}ms</div></div>
+        `;
+        
+        const requests = data.requests || [];
+        if (requests.length === 0) {
+          requestsEl.innerHTML = '<div class="text-gray-500 text-center py-4">当日暂无请求记录</div>';
+        } else {
+          requestsEl.innerHTML = requests.slice().reverse().map(req => `
+            <div class="flex items-center gap-2 p-2 bg-gray-700/50 rounded hover:bg-gray-700">
+              <span class="text-gray-500 w-20">${formatTime(req.timestamp)}</span>
+              <span class="${getStatusColor(req.status)} w-12">${req.status}</span>
+              <span class="text-purple-400 w-8">${req.method}</span>
+              <span class="text-green-400 truncate max-w-[200px]" title="${req.model}">${req.model}</span>
+              <span class="text-gray-400">${formatNumber(req.tokens?.total || 0)} tok</span>
+<span class="text-yellow-400">${Math.max(0, req.latency)}ms</span>
+              ${req.error ? `<span class="text-red-400 text-xs truncate max-w-[150px]">${escapeHtml(req.error)}</span>` : ''}
+            </div>
+          `).join('');
+        }
+        
+        listDiv.classList.add('hidden');
+        detailDiv.classList.remove('hidden');
+      } catch (error) {
+        requestsEl.innerHTML = '<div class="text-red-400 text-center py-4">加载失败</div>';
+      }
+    }
+
+    function closeLogDetail() {
+      document.getElementById('logDetail').classList.add('hidden');
+      document.getElementById('logsList').classList.remove('hidden');
+    }
+
+    function setToggle(toggleId, isOn) {
+      const btn = document.getElementById(toggleId);
+      if (isOn) {
+        btn.classList.remove('bg-gray-600');
+        btn.classList.add('bg-blue-600');
+        btn.querySelector('span').classList.remove('left-0.5');
+        btn.querySelector('span').classList.add('left-6');
+      } else {
+        btn.classList.remove('bg-blue-600');
+        btn.classList.add('bg-gray-600');
+        btn.querySelector('span').classList.remove('left-6');
+        btn.querySelector('span').classList.add('left-0.5');
+      }
+    }
+
+    function isToggleOn(toggleId) {
+      const btn = document.getElementById(toggleId);
+      return btn.classList.contains('bg-blue-600');
+    }
+
+    async function loadPromptConfig() {
+      const res = await fetch('/api/prompt-config');
+      return await res.json();
+    }
+
+    async function openPromptOptimization() {
+      const config = await loadPromptConfig();
+      document.getElementById('promptOptModal').classList.remove('hidden');
+      document.getElementById('promptOptModal').classList.add('flex');
+      
+      setToggle('promptOptToggle', config.enabled);
+      document.getElementById('promptThreshold').value = config.threshold || 4096;
+      document.getElementById('logRetention').value = config.logRetentionDays || 30;
+      
+      const strategyRadios = document.querySelectorAll('input[name="strategy"]');
+      strategyRadios.forEach(radio => {
+        radio.checked = radio.value === (config.strategy || 'preserve');
+      });
+    }
+
+    function closePromptOptimization() {
+      document.getElementById('promptOptModal').classList.add('hidden');
+      document.getElementById('promptOptModal').classList.remove('flex');
+    }
+
+    function togglePromptOpt() {
+      const btn = document.getElementById('promptOptToggle');
+      const isOn = btn.classList.contains('bg-blue-600');
+      setToggle('promptOptToggle', !isOn);
+    }
+
+    async function savePromptConfig() {
+      const enabled = isToggleOn('promptOptToggle');
+      const threshold = parseInt(document.getElementById('promptThreshold').value) || 4096;
+      const strategy = document.querySelector('input[name="strategy"]:checked').value;
+      const logRetentionDays = parseInt(document.getElementById('logRetention').value) || 30;
+      
+      if (threshold < 4096) {
+        alert('阈值最低 4096');
+        return;
+      }
+      
+      await fetch('/api/prompt-config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enabled, threshold, strategy, logRetentionDays })
+      });
+      
+      closePromptOptimization();
+    }
+
+    initCharts();
+    loadConfigWithoutModal();
+    poll();
+    setInterval(poll, 2000);
+  </script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>友文开发模型APIKey检索</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%); }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center">
+  <div class="bg-gray-800 rounded-2xl p-8 w-full max-w-md mx-4 shadow-2xl">
+    <div class="text-center mb-6">
+      <h1 class="text-2xl font-bold text-white">APIKey 查询</h1>
+      <p class="text-gray-400 text-sm mt-1">用户名、ID、电话号码 任一条件检索APIKey</p>
+    </div>
+    <div class="space-y-4">
+          <button onclick="window.open('/roocode-guide', '_blank')" class="w-full bg-purple-600 hover:bg-purple-700 px-4 py-3 rounded-lg text-sm transition flex items-center justify-center gap-2">
+            <span>📖</span> 接入示例
+          </button>
+          
+          <div>
+        <label class="block text-sm text-gray-400 mb-2">搜索（例：junyong.tang）</label>
+        <input type="text" id="searchInput" placeholder="请输入用户名、UserId 或电话号码" 
+               class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none"
+               oninput="searchApiKey()">
+      </div>
+      <div id="searchResult" class="hidden p-4 bg-gray-700/50 rounded-lg">
+        <div class="text-sm text-gray-400 mb-2">查询结果:</div>
+        <div class="flex items-center gap-2">
+          <span id="resultApiKey" class="text-blue-400 font-mono text-sm flex-1 break-all"></span>
+          <button onclick="copySearchResult()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm transition whitespace-nowrap">
+            复制
+          </button>
+        </div>
+      </div>
+      <div id="searchNoResult" class="hidden p-4 bg-gray-700/50 rounded-lg text-center text-gray-400">
+        未找到匹配的APIKey
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = window.location.origin + '/api';
+
+    async function searchApiKey() {
+      const searchValue = document.getElementById('searchInput').value.trim();
+      const resultDiv = document.getElementById('searchResult');
+      const noResultDiv = document.getElementById('searchNoResult');
+
+      if (!searchValue) {
+        resultDiv.classList.add('hidden');
+        noResultDiv.classList.add('hidden');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/apikeys`);
+        const apiKeys = await response.json();
+        
+        const matched = apiKeys.find(key => {
+          const matchUserName = key.userName && key.userName.toLowerCase() === searchValue.toLowerCase();
+          const matchUserId = key.userId && key.userId.toLowerCase() === searchValue.toLowerCase();
+          const matchPhone = key.phone && key.phone === searchValue;
+          return matchUserName || matchUserId || matchPhone;
+        });
+
+        if (matched) {
+          document.getElementById('resultApiKey').textContent = matched.apiKey;
+          resultDiv.classList.remove('hidden');
+          noResultDiv.classList.add('hidden');
+        } else {
+          resultDiv.classList.add('hidden');
+          noResultDiv.classList.remove('hidden');
+        }
+      } catch (error) {
+        console.error('查询失败:', error);
+        noResultDiv.textContent = '查询失败，请稍后重试';
+        noResultDiv.classList.remove('hidden');
+      }
+    }
+
+    function copySearchResult() {
+      const apiKey = document.getElementById('resultApiKey').textContent;
+      navigator.clipboard.writeText(apiKey).then(() => {
+        alert('APIKey 已复制到剪贴板');
+      }).catch(err => {
+        console.error('复制失败:', err);
+      });
+    }
+  </script>
+</body>
+</html>

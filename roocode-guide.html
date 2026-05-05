@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roocode 接入指南</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%); }
+    pre { counter-reset: line; }
+    pre code span.line::before { counter-increment: line; content: counter(line); display: inline-block; width: 2em; margin-right: 1em; color: #6b7280; }
+  </style>
+</head>
+<body class="min-h-screen py-8 px-4">
+  <div class="max-w-3xl mx-auto">
+    <div class="bg-gray-800 rounded-2xl p-8 shadow-2xl">
+      <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold text-white">Roocode 接入Uantek模型指南</h1>
+        <a href="/apikey-search" class="text-blue-400 hover:text-blue-300 text-sm">← 返回查询</a>
+      </div>
+
+      <div class="flex gap-2 mb-6">
+        <a href="/roocode-guide" class="px-4 py-2 rounded-lg text-sm bg-blue-600 text-white">Roocode</a>
+        <a href="/opencode-guide" class="px-4 py-2 rounded-lg text-sm bg-gray-700 hover:bg-gray-600 transition">OpenCode</a>
+        <a href="/openclaw-guide" class="px-4 py-2 rounded-lg text-sm bg-gray-700 hover:bg-gray-600 transition">OpenCLAW</a>
+      </div>
+      
+      <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4 mb-6">
+          <h3 class="text-blue-400 font-semibold mb-2">配置地址与模型说明</h3>
+          <div class="font-mono text-sm space-y-1">
+            <p><span class="text-gray-400">地址：</span><span class="text-blue-300">http://nat.ywapi.com:9234/v1</span></p>
+            <p><span class="text-gray-400">模型：</span><span class="text-blue-300">UantekDEV0</span></p>
+          </div>
+        </div>
+
+        <div class="space-y-6 text-gray-300">
+        <div class="bg-gray-700/50 rounded-lg p-4">
+          <h2 class="text-lg font-semibold text-white mb-2">什么是 Roocode？</h2>
+          <p>Roocode 是 VSCode 的 AI 代码补全插件，可以帮助你快速编写代码、提供智能提示和建议。</p>
+        </div>
+
+        <div>
+          <h2 class="text-lg font-semibold text-white mb-3">第一步：安装 Roocode 插件</h2>
+          <div class="bg-gray-700/50 rounded-lg p-4 space-y-2 text-sm">
+            <p>1. 打开 VSCode</p>
+            <p>2. 点击左侧扩展图标（或按 <kbd class="bg-gray-600 px-2 py-1 rounded">Ctrl+Shift+X</kbd>）</p>
+            <p>3. 搜索 "Roocode"</p>
+            <p>4. 点击安装</p>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-lg font-semibold text-white mb-3">第二步：获取 APIKey</h2>
+          <div class="bg-gray-700/50 rounded-lg p-4">
+            <p>在查询页面获取您的专属 APIKey：</p>
+            <a href="/apikey-search" class="text-blue-400 hover:underline mt-2 inline-block">→ 前往查询 APIKey</a>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-lg font-semibold text-white mb-3">第三步：配置 Roocode</h2>
+          <div class="bg-gray-700/50 rounded-lg p-4">
+            <p class="mb-3">1. 点击 VSCode 左下角设置图标，选择 <strong class="text-white">Settings</strong></p>
+            <p class="mb-3">2. 搜索 "Roocode" 或找到 Roocode 设置项</p>
+            <p class="mb-3">3. 找到 <strong class="text-white">API Endpoint</strong> 和 <strong class="text-white">API Key</strong> 配置项</p>
+            
+            <div class="bg-gray-900 rounded-lg p-4 mt-4 font-mono text-sm">
+              <p class="text-green-400 mb-2">// 配置示例</p>
+              <p class="text-gray-400">// API Endpoint:</p>
+              <p class="text-blue-300">http://nat.ywapi.com:9234/v1</p>
+              <p class="text-gray-400 mt-2">// API Key:</p>
+              <p class="text-blue-300">ux-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-lg font-semibold text-white mb-3">第四步：开始使用</h2>
+          <div class="bg-gray-700/50 rounded-lg p-4 space-y-2 text-sm">
+            <p>配置完成后，重启 VSCode 即可开始使用。</p>
+            <ul class="list-disc list-inside space-y-1 text-gray-400">
+              <li>开始输入代码时，Roocode 会自动提供补全建议</li>
+              <li>按 <kbd class="bg-gray-600 px-2 py-1 rounded">Tab</kbd> 接受建议</li>
+              <li>按 <kbd class="bg-gray-600 px-2 py-1 rounded">Ctrl+↓</kbd> 查看更多建议</li>
+              <li>按 <kbd class="bg-gray-600 px-2 py-1 rounded">Ctrl+Shift+P</kbd> 输入 "Roocode" 查看更多命令</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
+          <h3 class="text-yellow-400 font-semibold mb-2">常见问题</h3>
+          <div class="space-y-2 text-sm">
+            <p><strong class="text-white">Q: 连接失败怎么办？</strong></p>
+            <p>A: 检查 API Endpoint 是否正确，确保服务器地址可访问。</p>
+            <p><strong class="text-white">Q: 没有补全提示？</strong></p>
+            <p>A: 确认 APIKey 正确且未过期，检查网络连接。</p>
+            <p><strong class="text-white">Q: 其他相似工具？</strong></p>
+            <p>A: Roo、Cline、Continue 等使用方法一样，配置相同的 API Endpoint 和 API Key 即可。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

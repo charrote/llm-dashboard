@@ -1,0 +1,281 @@
+{
+  "requests": [],
+  "byApiKey": {},
+  "byModel": {},
+  "hourlyStats": [
+    {
+      "requests": 0,
+      "tokens": 0,
+      "errors": 0
+    },
+    {
+      "requests": 0,
+      "tokens": 0,
+      "errors": 0
+    },
+    {
+      "requests": 0,
+      "tokens": 0,
+      "errors": 0
+    },
+    {
+      "requests": 0,
+      "tokens": 0,
+      "errors": 0
+    },
+    {
+      "requests": 0,
+      "tokens": 0,
+      "errors": 0
+    },
+    {
+      "requests": 0,
+      "tokens": 0,
+      "errors": 0
+    },
+    {
+      "requests": 0,
+      "tokens": 0,
+      "errors": 0
+    },
+    {
+      "requests": 0,
+      "tokens": 0,
+      "errors": 0
+    },
+    {
+      "requests": 0,
+      "tokens": 0,
+      "errors": 0
+    },
+    {
+      "requests": 0,
+      "tokens": 0,
+      "errors": 0
+    },
+    {
+      "requests": 0,
+      "tokens": 0,
+      "errors": 0
+    },
+    {
+      "requests": 0,
+      "tokens": 0,
+      "errors": 0
+    },
+    {
+      "requests": 0,
+      "tokens": 0,
+      "errors": 0
+    },
+    {
+      "requests": 0,
+      "tokens": 0,
+      "errors": 0
+    },
+    {
+      "requests": 0,
+      "tokens": 0,
+      "errors": 0
+    },
+    {
+      "requests": 0,
+      "tokens": 0,
+      "errors": 0
+    },
+    {
+      "requests": 0,
+      "tokens": 0,
+      "errors": 0
+    },
+    {
+      "requests": 0,
+      "tokens": 0,
+      "errors": 0
+    },
+    {
+      "requests": 0,
+      "tokens": 0,
+      "errors": 0
+    },
+    {
+      "requests": 0,
+      "tokens": 0,
+      "errors": 0
+    },
+    {
+      "requests": 0,
+      "tokens": 0,
+      "errors": 0
+    },
+    {
+      "requests": 0,
+      "tokens": 0,
+      "errors": 0
+    },
+    {
+      "requests": 0,
+      "tokens": 0,
+      "errors": 0
+    },
+    {
+      "requests": 0,
+      "tokens": 0,
+      "errors": 0
+    }
+  ],
+  "totalTokens": {
+    "prompt": 0,
+    "completion": 0
+  },
+  "latency": {
+    "sum": 0,
+    "count": 0,
+    "min": null,
+    "max": 0
+  },
+  "errors": 0,
+  "date": "20260406",
+  "errorLogs": [
+    {
+      "id": "4c5e383b-76c4-4c0b-b1a6-37c8c4d3fb37",
+      "timestamp": "2026-04-05T17:21:16.689Z",
+      "requestId": "497157e6-9156-42e6-b668-4505cb95686f",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-6CNP4MMKATVQSG1IP0EVJ3O32R65SQA4",
+      "userId": null,
+      "model": "UantekDev0",
+      "errorType": "INVALID_API_KEY",
+      "errorMessage": "API Key不在允许列表中",
+      "latency": 0,
+      "resolved": false
+    },
+    {
+      "id": "c9453149-0967-4704-926c-b0e3193b83d5",
+      "timestamp": "2026-04-05T17:21:16.748Z",
+      "requestId": "6511410f-6e93-4876-984d-db9afca7d650",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-6CNP4MMKATVQSG1IP0EVJ3O32R65SQA4",
+      "userId": null,
+      "model": "UantekDev0",
+      "errorType": "INVALID_API_KEY",
+      "errorMessage": "API Key不在允许列表中",
+      "latency": 0,
+      "resolved": false
+    },
+    {
+      "id": "adb1b8fa-3c78-47b1-97e3-67ce112dfb2f",
+      "timestamp": "2026-04-05T17:21:16.802Z",
+      "requestId": "c0ca404a-8f2e-45f8-86e3-1dcbbe3f3df4",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-6CNP4MMKATVQSG1IP0EVJ3O32R65SQA4",
+      "userId": null,
+      "model": "UantekDev0",
+      "errorType": "INVALID_API_KEY",
+      "errorMessage": "API Key不在允许列表中",
+      "latency": 0,
+      "resolved": false
+    },
+    {
+      "id": "59ccc427-f57f-4707-a1d7-3e7b233e6bbc",
+      "timestamp": "2026-04-05T17:21:16.862Z",
+      "requestId": "4cd3a004-45bd-4678-85a7-e48e7639a1e6",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-6CNP4MMKATVQSG1IP0EVJ3O32R65SQA4",
+      "userId": null,
+      "model": "UantekDev0",
+      "errorType": "INVALID_API_KEY",
+      "errorMessage": "API Key不在允许列表中",
+      "latency": 0,
+      "resolved": false
+    },
+    {
+      "id": "585a3b21-3b7d-4a3e-9be1-cef8fb493660",
+      "timestamp": "2026-04-05T17:21:16.923Z",
+      "requestId": "10cd8634-8b46-4e6f-a6b4-76ab40403dab",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-6CNP4MMKATVQSG1IP0EVJ3O32R65SQA4",
+      "userId": null,
+      "model": "UantekDev0",
+      "errorType": "INVALID_API_KEY",
+      "errorMessage": "API Key不在允许列表中",
+      "latency": 0,
+      "resolved": false
+    },
+    {
+      "id": "fcb09998-1386-415c-8201-90ef58795af9",
+      "timestamp": "2026-04-05T17:21:16.987Z",
+      "requestId": "fbffd6c4-8b86-41d1-9fbc-a10f8787209c",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-6CNP4MMKATVQSG1IP0EVJ3O32R65SQA4",
+      "userId": null,
+      "model": "UantekDev0",
+      "errorType": "INVALID_API_KEY",
+      "errorMessage": "API Key不在允许列表中",
+      "latency": 0,
+      "resolved": false
+    },
+    {
+      "id": "016c15fe-1619-422d-ac32-9ea6ba4ddbd9",
+      "timestamp": "2026-04-05T17:21:17.045Z",
+      "requestId": "b4371d1a-dcbb-4a8b-aac6-2bd65ea31a85",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-6CNP4MMKATVQSG1IP0EVJ3O32R65SQA4",
+      "userId": null,
+      "model": "UantekDev0",
+      "errorType": "INVALID_API_KEY",
+      "errorMessage": "API Key不在允许列表中",
+      "latency": 0,
+      "resolved": false
+    },
+    {
+      "id": "91f4a4d7-81f7-4d98-a194-65dcbc92c5e2",
+      "timestamp": "2026-04-05T17:21:17.111Z",
+      "requestId": "e973f396-a546-4295-a309-3c46de9b76c1",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-6CNP4MMKATVQSG1IP0EVJ3O32R65SQA4",
+      "userId": null,
+      "model": "UantekDev0",
+      "errorType": "INVALID_API_KEY",
+      "errorMessage": "API Key不在允许列表中",
+      "latency": 0,
+      "resolved": false
+    },
+    {
+      "id": "8fd1c892-e88e-466b-9206-39d307f02be4",
+      "timestamp": "2026-04-05T17:21:17.186Z",
+      "requestId": "9c9752c6-e968-484e-9feb-beee38691707",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-6CNP4MMKATVQSG1IP0EVJ3O32R65SQA4",
+      "userId": null,
+      "model": "UantekDev0",
+      "errorType": "INVALID_API_KEY",
+      "errorMessage": "API Key不在允许列表中",
+      "latency": 0,
+      "resolved": false
+    },
+    {
+      "id": "246a509f-82f0-4af8-98ba-69dbc845ca01",
+      "timestamp": "2026-04-05T17:21:17.255Z",
+      "requestId": "ea3b2108-cadf-490b-9df5-98257aac80dc",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-6CNP4MMKATVQSG1IP0EVJ3O32R65SQA4",
+      "userId": null,
+      "model": "UantekDev0",
+      "errorType": "INVALID_API_KEY",
+      "errorMessage": "API Key不在允许列表中",
+      "latency": 0,
+      "resolved": false
+    }
+  ]
+}

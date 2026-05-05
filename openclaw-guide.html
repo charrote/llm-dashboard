@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenCLAW 接入指南</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%); }
+  </style>
+</head>
+<body class="min-h-screen py-8 px-4">
+  <div class="max-w-3xl mx-auto">
+    <div class="bg-gray-800 rounded-2xl p-8 shadow-2xl">
+      <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold text-white">OpenCLAW 接入Uantek模型指南</h1>
+        <a href="/apikey-search" class="text-blue-400 hover:text-blue-300 text-sm">← 返回查询</a>
+      </div>
+
+      <div class="flex gap-2 mb-6">
+        <a href="/roocode-guide" class="px-4 py-2 rounded-lg text-sm bg-gray-700 hover:bg-gray-600 transition">Roocode</a>
+        <a href="/opencode-guide" class="px-4 py-2 rounded-lg text-sm bg-gray-700 hover:bg-gray-600 transition">OpenCode</a>
+        <a href="/openclaw-guide" class="px-4 py-2 rounded-lg text-sm bg-blue-600 text-white">OpenCLAW</a>
+      </div>
+      
+      <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-4 mb-6">
+          <h3 class="text-blue-400 font-semibold mb-2">配置地址与模型说明</h3>
+          <div class="font-mono text-sm space-y-1">
+            <p><span class="text-gray-400">地址：</span><span class="text-blue-300">http://nat.ywapi.com:9234/v1</span></p>
+            <p><span class="text-gray-400">模型：</span><span class="text-blue-300">UantekDEV0</span></p>
+          </div>
+        </div>
+
+        <div class="space-y-6 text-gray-300">
+        <div class="bg-gray-700/50 rounded-lg p-4">
+          <h2 class="text-lg font-semibold text-white mb-2">什么是 OpenCLAW？</h2>
+          <p>OpenCLAW 是一个开源的 AI 编程助手，通过命令行与用户交互。它运行在本地的 AI 网关上，支持连接多种 AI 提供商。</p>
+        </div>
+
+        <div>
+          <h2 class="text-lg font-semibold text-white mb-3">第一步：安装 OpenCLAW</h2>
+          <div class="bg-gray-700/50 rounded-lg p-4 space-y-2 text-sm">
+            <p>1. 确保已安装 Node.js 22 或更高版本</p>
+            <p>2. 在终端执行以下命令安装：</p>
+            <div class="bg-gray-900 rounded-lg p-3 font-mono text-sm mt-2">
+              <p class="text-green-400">npm install -g openclaw@latest</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-lg font-semibold text-white mb-3">第二步：获取 APIKey</h2>
+          <div class="bg-gray-700/50 rounded-lg p-4">
+            <p>在查询页面获取您的专属 APIKey：</p>
+            <a href="/apikey-search" class="text-blue-400 hover:underline mt-2 inline-block">→ 前往查询 APIKey</a>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-lg font-semibold text-white mb-3">第三步：配置 OpenCLAW</h2>
+          <div class="bg-gray-700/50 rounded-lg p-4">
+            <p class="mb-3">1. 运行初始化配置：</p>
+            <div class="bg-gray-900 rounded-lg p-3 font-mono text-sm mb-3">
+              <p class="text-green-400">openclaw onboard --install-daemon</p>
+            </div>
+            <p class="mb-3">2. 配置自定义模型（使用 Uantek API）：</p>
+            <div class="bg-gray-900 rounded-lg p-3 font-mono text-sm mb-3">
+              <p class="text-green-400">openclaw configure</p>
+            </div>
+            <p class="mb-3">或在配置文件中添加：</p>
+            <div class="bg-gray-900 rounded-lg p-4 font-mono text-sm">
+              <p class="text-green-400 mb-2">// ~/.openclaw/openclaw.json</p>
+              <p class="text-gray-400">{</p>
+              <p class="text-gray-400">  "env": {</p>
+              <p class="text-gray-400">    "ANTHROPIC_API_KEY": "your-api-key"</p>
+              <p class="text-gray-400">  },</p>
+              <p class="text-gray-400">  "agents": {</p>
+              <p class="text-gray-400">    "defaults": {</p>
+              <p class="text-gray-400">      "model": {</p>
+              <p class="text-blue-300">        "primary": "openai/your-model"</p>
+              <p class="text-gray-400">      }</p>
+              <p class="text-gray-400">    }</p>
+              <p class="text-gray-400">  },</p>
+              <p class="text-gray-400">  "gateway": {</p>
+              <p class="text-gray-400">    "base_url": "http://nat.ywapi.com:9234/v1"</p>
+              <p class="text-gray-400">  }</p>
+              <p class="text-gray-400">}</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-lg font-semibold text-white mb-3">第四步：开始使用</h2>
+          <div class="bg-gray-700/50 rounded-lg p-4 space-y-2 text-sm">
+            <p>配置完成后，可以通过以下方式使用：</p>
+            <ul class="list-disc list-inside space-y-1 text-gray-400">
+              <li>在终端输入 <kbd class="bg-gray-600 px-2 py-1 rounded">openclaw chat</kbd> 开始对话</li>
+              <li>打开控制面板 <kbd class="bg-gray-600 px-2 py-1 rounded">openclaw dashboard</kbd></li>
+              <li>访问 http://localhost:18789 使用 Web 界面</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4">
+          <h3 class="text-yellow-400 font-semibold mb-2">常见问题</h3>
+          <div class="space-y-2 text-sm">
+            <p><strong class="text-white">Q: 连接失败怎么办？</strong></p>
+            <p>A: 检查 gateway.base_url 配置是否正确，确保服务器地址可访问。</p>
+            <p><strong class="text-white">Q: 没有响应？</strong></p>
+            <p>A: 确认 APIKey 正确且未过期，检查网络连接。可运行 <code class="bg-gray-700 px-1 rounded">openclaw doctor</code> 诊断问题。</p>
+            <p><strong class="text-white">Q: 其他相似工具？</strong></p>
+            <p>A: Roo、Cline、Continue 等使用方法一样，配置相同的 API Endpoint 和 API Key 即可。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

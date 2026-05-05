@@ -1,0 +1,23 @@
+services:
+  dashboard:
+    build: .
+    ports:
+      - target: 9234
+        published: 9234
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    environment:
+      - LMSTUDIO_URL=http://host.docker.internal:1234
+    volumes:
+      - ./data/logs:/app/proxy/logs
+      - ./data/apikeys.json:/app/proxy/apikeys.json
+      - ./proxy/config.json:/app/proxy/config.json
+      - ./dashboard.html:/app/dashboard.html
+    restart: unless-stopped
+    networks:
+      - lmstudio-proxy
+
+networks:
+  lmstudio-proxy:
+    name: lmstudio-proxy
+    driver: bridge
