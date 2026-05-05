@@ -21,7 +21,7 @@ config.simCostEnabled = config.simCostEnabled || false;
 config.simPromptCost = config.simPromptCost || 0;
 config.simCompletionCost = config.simCompletionCost || 0;
 config.resourceMonitor = config.resourceMonitor || {
-  enabled: true,
+  enabled: false,
   dockerContainer: 'llamacppserver_llama-server_1',
   maxConcurrent: 4
 };
@@ -1065,7 +1065,7 @@ app.get('/api/resource-monitor', async (req, res) => {
   }
 
   try {
-    const { stdout: gpuUse } = await execAsync('rocm-smi --showuse 2>/dev/null');
+    const { stdout: gpuUse } = await execAsync('docker run --rm --network host rocm/dev-tools:latest rocm-smi --showuse 2>/dev/null || docker run --rm --network host ubuntu:22.04 sh -c "apt-get update && apt-get install -y rocm-utils && rocm-smi --showuse" 2>/dev/null || echo ""');
     const gpuMatch = gpuUse.match(/GPU use.*?(\d+)%/i);
     if (gpuMatch) {
       result.gpuUsage = parseInt(gpuMatch[1]);
@@ -1075,15 +1075,11 @@ app.get('/api/resource-monitor', async (req, res) => {
   }
 
   try {
-    const { stdout: vramUse } = await execAsync('rocm-smi --showmemuse 2>/dev/null');
-    const vramPercentMatch = vramUse.match(/VRAM.*?(\d+)%/i);
+    const { stdout: vramUse } = await execAsync('docker run --rm --network host rocm/dev-tools:latest rocm-smi --showmemuse 2>/dev/null || echo ""');
+    const vramPercentMatch = vramUse.match(/\(VRAM%\).*?(\d+)/i);
     if (vramPercentMatch) {
       result.vramPercent = parseInt(vramPercentMatch[1]);
     }
-    const usedMatch = vramUse.match(/Allocated.*?(\d+)MiB/i);
-    const totalMatch = vramUse.match(/Total.*?(\d+)MiB/i);
-    if (usedMatch) result.vramUsed = parseInt(usedMatch[1]);
-    if (totalMatch) result.vramTotal = parseInt(totalMatch[1]);
   } catch (e) {
     console.error('VRAM usage error:', e.message);
   }
