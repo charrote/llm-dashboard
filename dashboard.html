@@ -721,22 +721,8 @@
       
       const latency = stats.latency || {};
       const avgLatency = latency.count > 0 ? Math.round(latency.sum / latency.count) : 0;
-      document.getElementById('avgLatency').textContent = `${avgLatency}ms`;
-      
-      const modelCount = Object.keys(stats.byModel || {}).length;
-      document.getElementById('activeModels').textContent = modelCount;
-      
-      const topModels = Object.entries(stats.byModel || {})
-        .sort((a, b) => b[1].requests - a[1].requests)
-        .slice(0, 3);
-      const listEl = document.getElementById('activeModelsList');
-      if (topModels.length > 0) {
-        listEl.innerHTML = topModels.map(([model, data]) => `
-          <div class="text-purple-300 truncate" title="${model}">${model.length > 20 ? model.substring(0, 20) + '...' : model}</div>
-        `).join('');
-      } else {
-        listEl.innerHTML = '';
-      }
+      const avgLatencyEl = document.getElementById('avgLatency');
+      if (avgLatencyEl) avgLatencyEl.textContent = `${avgLatency}ms`;
 
       // Update hourly chart
       if (stats.hourlyStats && hourlyChart) {
@@ -1051,20 +1037,25 @@
     }
 
     function updateResourceMonitor(data) {
-      if (!data || !data.enabled) {
-        document.getElementById('concurrentCount').textContent = '- / -';
-        document.getElementById('gpuUsage').textContent = '-';
-        document.getElementById('vramUsage').textContent = '- / -';
+      const concurrentEl = document.getElementById('concurrentCount');
+      const gpuEl = document.getElementById('gpuUsage');
+      const vramEl = document.getElementById('vramUsage');
+      if (!concurrentEl || !gpuEl || !vramEl) return;
+
+      if (!data || data.enabled === false) {
+        concurrentEl.textContent = '- / -';
+        gpuEl.textContent = '-';
+        vramEl.textContent = '- / -';
         return;
       }
-      document.getElementById('concurrentCount').textContent = `${data.concurrent} / ${data.maxConcurrent}`;
-      document.getElementById('gpuUsage').textContent = `${data.gpuUsage}%`;
+      concurrentEl.textContent = `${data.concurrent} / ${data.maxConcurrent}`;
+      gpuEl.textContent = `${data.gpuUsage}%`;
       if (data.vramTotal > 0) {
-        document.getElementById('vramUsage').textContent = `${data.vramUsed} / ${data.vramTotal} MiB`;
+        vramEl.textContent = `${data.vramUsed} / ${data.vramTotal} MiB`;
       } else if (data.vramPercent) {
-        document.getElementById('vramUsage').textContent = `${data.vramPercent}%`;
+        vramEl.textContent = `${data.vramPercent}%`;
       } else {
-        document.getElementById('vramUsage').textContent = '-';
+        vramEl.textContent = '-';
       }
     }
 

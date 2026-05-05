@@ -12,6 +12,7 @@ services:
       - ./data/logs:/app/proxy/logs
       - ./data/apikeys.json:/app/proxy/apikeys.json
       - ./proxy/config.json:/app/proxy/config.json
+      - ./proxy/server.js:/app/proxy/server.js
       - ./dashboard.html:/app/dashboard.html
     restart: unless-stopped
     networks:
