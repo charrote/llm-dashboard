@@ -1059,7 +1059,13 @@
       }
       document.getElementById('concurrentCount').textContent = `${data.concurrent} / ${data.maxConcurrent}`;
       document.getElementById('gpuUsage').textContent = `${data.gpuUsage}%`;
-      document.getElementById('vramUsage').textContent = `${data.vramUsed} / ${data.vramTotal} MiB`;
+      if (data.vramTotal > 0) {
+        document.getElementById('vramUsage').textContent = `${data.vramUsed} / ${data.vramTotal} MiB`;
+      } else if (data.vramPercent) {
+        document.getElementById('vramUsage').textContent = `${data.vramPercent}%`;
+      } else {
+        document.getElementById('vramUsage').textContent = '-';
+      }
     }
 
     async function poll() {

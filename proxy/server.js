@@ -1076,7 +1076,11 @@ app.get('/api/resource-monitor', async (req, res) => {
 
   try {
     const { stdout: vramUse } = await execAsync('rocm-smi --showmemuse 2>/dev/null');
-    const usedMatch = vramUse.match(/VRAM.*?(\d+)MiB/i);
+    const vramPercentMatch = vramUse.match(/VRAM.*?(\d+)%/i);
+    if (vramPercentMatch) {
+      result.vramPercent = parseInt(vramPercentMatch[1]);
+    }
+    const usedMatch = vramUse.match(/Allocated.*?(\d+)MiB/i);
     const totalMatch = vramUse.match(/Total.*?(\d+)MiB/i);
     if (usedMatch) result.vramUsed = parseInt(usedMatch[1]);
     if (totalMatch) result.vramTotal = parseInt(totalMatch[1]);
