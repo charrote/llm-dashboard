@@ -21,7 +21,7 @@ config.simCostEnabled = config.simCostEnabled || false;
 config.simPromptCost = config.simPromptCost || 0;
 config.simCompletionCost = config.simCompletionCost || 0;
 config.resourceMonitor = config.resourceMonitor || {
-  enabled: false,
+  enabled: true,
   dockerContainer: 'llamacppserver_llama-server_1',
   maxConcurrent: 4
 };
@@ -1065,20 +1065,23 @@ app.get('/api/resource-monitor', async (req, res) => {
   }
 
   try {
-    const { stdout: gpuUse } = await execAsync('docker run --rm --network host rocm/dev-tools:latest rocm-smi --showuse 2>/dev/null || docker run --rm --network host ubuntu:22.04 sh -c "apt-get update && apt-get install -y rocm-utils && rocm-smi --showuse" 2>/dev/null || echo ""');
-    const gpuMatch = gpuUse.match(/GPU use.*?(\d+)%/i);
-    if (gpuMatch) {
-      result.gpuUsage = parseInt(gpuMatch[1]);
+    const { stdout: gpuUse } = await execAsync(`docker exec ${dockerContainer} sh -c 'cat /sys/class/drm/card0/device/gpu_busy_percent 2>/dev/null || echo 0'`);
+    const gpuVal = parseInt(gpuUse.trim()) || 0;
+    if (gpuVal > 0) {
+      result.gpuUsage = gpuVal;
+    } else {
+      const { stdout: gpuUse2 } = await execAsync(`docker exec ${dockerContainer} sh -c 'cat /sys/class/drm/card0/device/gpu_busy_percent 2>/dev/null || echo 0'`);
+      result.gpuUsage = parseInt(gpuUse2.trim()) || 0;
     }
   } catch (e) {
     console.error('GPU usage error:', e.message);
   }
 
   try {
-    const { stdout: vramUse } = await execAsync('docker run --rm --network host rocm/dev-tools:latest rocm-smi --showmemuse 2>/dev/null || echo ""');
-    const vramPercentMatch = vramUse.match(/\(VRAM%\).*?(\d+)/i);
-    if (vramPercentMatch) {
-      result.vramPercent = parseInt(vramPercentMatch[1]);
+    const { stdout: vramInfo } = await execAsync(`docker exec ${dockerContainer} sh -c 'cat /sys/class/drm/card0/device/mem_info_vram_used 2>/dev/null || cat /sys/class/drm/card0/device/mem_info_gtt_used 2>/dev/null || echo 0'`);
+    const vramUsed = parseInt(vramInfo.trim()) || 0;
+    if (vramUsed > 0) {
+      result.vramUsed = Math.round(vramUsed / 1024 / 1024);
     }
   } catch (e) {
     console.error('VRAM usage error:', e.message);

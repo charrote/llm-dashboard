@@ -16,6 +16,6 @@
   "resourceMonitor": {
     "dockerContainer": "llamacppserver_llama-server_1",
     "maxConcurrent": 4,
-    "enabled": false
+    "enabled": true
   }
 }
