@@ -5,6 +5,10 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { TrimCompressor } from 'slimcontext';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+
+const execAsync = promisify(exec);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,6 +20,11 @@ let config = fs.existsSync(CONFIG_FILE) ? JSON.parse(fs.readFileSync(CONFIG_FILE
 config.simCostEnabled = config.simCostEnabled || false;
 config.simPromptCost = config.simPromptCost || 0;
 config.simCompletionCost = config.simCompletionCost || 0;
+config.resourceMonitor = config.resourceMonitor || {
+  enabled: true,
+  dockerContainer: 'llamacppserver_llama-server_1',
+  maxConcurrent: 4
+};
 
 function loadApiKeys() {
   try {
@@ -1022,6 +1031,60 @@ app.delete('/api/apikeys/:id', (req, res) => {
   apiKeys.splice(index, 1);
   saveApiKeys(apiKeys);
   res.json({ success: true });
+});
+
+app.get('/api/resource-monitor', async (req, res) => {
+  const resourceConfig = config.resourceMonitor || {};
+  if (!resourceConfig.enabled) {
+    return res.json({ enabled: false });
+  }
+
+  const dockerContainer = resourceConfig.dockerContainer || 'llamacppserver_llama-server_1';
+  const maxConcurrent = resourceConfig.maxConcurrent || 4;
+  
+  let result = {
+    enabled: true,
+    concurrent: 0,
+    maxConcurrent: maxConcurrent,
+    gpuUsage: 0,
+    vramUsed: 0,
+    vramTotal: 0,
+    timestamp: new Date().toISOString()
+  };
+
+  try {
+    const { stdout: dockerLogs } = await execAsync(`docker logs --tail 30 ${dockerContainer} 2>&1`);
+    if (dockerLogs.includes('all slots are idle')) {
+      result.concurrent = 0;
+    } else if (dockerLogs.includes('slot') || dockerLogs.includes('processing')) {
+      const slotMatches = dockerLogs.match(/slot.*busy/gi);
+      result.concurrent = slotMatches ? Math.min(slotMatches.length, maxConcurrent) : 1;
+    }
+  } catch (e) {
+    console.error('Docker logs error:', e.message);
+  }
+
+  try {
+    const { stdout: gpuUse } = await execAsync('rocm-smi --showuse 2>/dev/null');
+    const gpuMatch = gpuUse.match(/GPU use.*?(\d+)%/i);
+    if (gpuMatch) {
+      result.gpuUsage = parseInt(gpuMatch[1]);
+    }
+  } catch (e) {
+    console.error('GPU usage error:', e.message);
+  }
+
+  try {
+    const { stdout: vramUse } = await execAsync('rocm-smi --showmemuse 2>/dev/null');
+    const usedMatch = vramUse.match(/VRAM.*?(\d+)MiB/i);
+    const totalMatch = vramUse.match(/Total.*?(\d+)MiB/i);
+    if (usedMatch) result.vramUsed = parseInt(usedMatch[1]);
+    if (totalMatch) result.vramTotal = parseInt(totalMatch[1]);
+  } catch (e) {
+    console.error('VRAM usage error:', e.message);
+  }
+
+  res.json(result);
 });
 
 app.listen(PORT, '0.0.0.0', () => {

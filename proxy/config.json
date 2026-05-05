@@ -12,5 +12,10 @@
   "lmAuthValue": "sk-lm-Qwgo0fsU:03usFUHghwG9mBZCQJSh",
   "simCostEnabled": true,
   "simPromptCost": 0.2,
-  "simCompletionCost": 2
+  "simCompletionCost": 2,
+  "resourceMonitor": {
+    "dockerContainer": "llamacppserver_llama-server_1",
+    "maxConcurrent": 4,
+    "enabled": true
+  }
 }

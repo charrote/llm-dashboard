@@ -254,10 +254,20 @@
         <div id="avgLatency" class="text-2xl font-bold text-yellow-400">0ms</div>
       </div>
       <div class="bg-gray-800 rounded-xl p-4">
-        <div class="text-gray-400 text-sm mb-1">活跃模型</div>
-        <div class="flex items-start gap-4">
-          <div id="activeModels" class="text-2xl font-bold text-purple-400">0</div>
-          <div id="activeModelsList" class="flex-1 text-sm space-y-1"></div>
+        <div class="text-gray-400 text-sm mb-1">资源监控</div>
+        <div class="space-y-2 text-sm">
+          <div class="flex justify-between">
+            <span class="text-gray-400">并发数</span>
+            <span id="concurrentCount" class="text-purple-400 font-bold">- / -</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-400">GPU使用率</span>
+            <span id="gpuUsage" class="text-green-400 font-bold">-</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-400">VRAM</span>
+            <span id="vramUsage" class="text-blue-400 font-bold">- / -</span>
+          </div>
         </div>
       </div>
     </div>
@@ -1029,10 +1039,34 @@
       }
     }
 
+    async function fetchResourceMonitor() {
+      try {
+        const response = await fetch(`${API_BASE}/resource-monitor`);
+        if (!response.ok) throw new Error('Failed to fetch resource monitor');
+        return await response.json();
+      } catch (error) {
+        console.error('Fetch resource monitor error:', error);
+        return null;
+      }
+    }
+
+    function updateResourceMonitor(data) {
+      if (!data || !data.enabled) {
+        document.getElementById('concurrentCount').textContent = '- / -';
+        document.getElementById('gpuUsage').textContent = '-';
+        document.getElementById('vramUsage').textContent = '- / -';
+        return;
+      }
+      document.getElementById('concurrentCount').textContent = `${data.concurrent} / ${data.maxConcurrent}`;
+      document.getElementById('gpuUsage').textContent = `${data.gpuUsage}%`;
+      document.getElementById('vramUsage').textContent = `${data.vramUsed} / ${data.vramTotal} MiB`;
+    }
+
     async function poll() {
       const stats = await fetchStats();
       const userStats = await fetchUserStats();
       const newRequests = await fetchRequests(0);
+      const resourceData = await fetchResourceMonitor();
       if (newRequests.length > 0) {
         cachedRequests = newRequests;
         requestOffset = newRequests.length;
@@ -1040,6 +1074,7 @@
       }
       await updateUI(stats);
       updateUserStats(userStats, stats);
+      updateResourceMonitor(resourceData);
       if (currentTab === 'errors') fetchErrorLogs();
     }
 
