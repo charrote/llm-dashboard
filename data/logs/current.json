@@ -1,2568 +1,6 @@
 {
   "requests": [
     {
-      "requestId": "38895d54-bb3d-45bf-8e2c-1e0e481eb0d7",
-      "timestamp": "2026-05-22T20:23:46.662Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 51935,
-        "completion": 48390,
-        "total": 100325
-      },
-      "latency": 34931,
-      "error": null,
-      "ttft": 1711,
-      "tpot": 1,
-      "requestTime": 1710,
-      "llmTime": 33220
-    },
-    {
-      "requestId": "f79a3fc6-8e7c-4717-9a78-59ec5aa6bb23",
-      "timestamp": "2026-05-22T20:24:21.618Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 52846,
-        "completion": 3781,
-        "total": 56627
-      },
-      "latency": 5409,
-      "error": null,
-      "ttft": 1846,
-      "tpot": 1,
-      "requestTime": 1845,
-      "llmTime": 3563
-    },
-    {
-      "requestId": "af3c6268-0862-4ea4-8995-9a7c4ed6bb4c",
-      "timestamp": "2026-05-22T20:24:27.063Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 52994,
-        "completion": 42267,
-        "total": 95261
-      },
-      "latency": 30576,
-      "error": null,
-      "ttft": 608,
-      "tpot": 1,
-      "requestTime": 607,
-      "llmTime": 29968
-    },
-    {
-      "requestId": "512cf8f0-5b4c-4a32-b0dc-708a2fa40833",
-      "timestamp": "2026-05-22T20:24:58.493Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 53669,
-        "completion": 11948,
-        "total": 65617
-      },
-      "latency": 11402,
-      "error": null,
-      "ttft": 1715,
-      "tpot": 1,
-      "requestTime": 1714,
-      "llmTime": 9687
-    },
-    {
-      "requestId": "3d81757d-21e3-4294-a3c8-14677f17f9ea",
-      "timestamp": "2026-05-22T20:25:09.919Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 53952,
-        "completion": 8087,
-        "total": 62039
-      },
-      "latency": 7363,
-      "error": null,
-      "ttft": 863,
-      "tpot": 1,
-      "requestTime": 862,
-      "llmTime": 6500
-    },
-    {
-      "requestId": "72180ca5-7602-486c-bbed-178e0dd690b1",
-      "timestamp": "2026-05-22T20:25:17.317Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 54147,
-        "completion": 10898,
-        "total": 65045
-      },
-      "latency": 9715,
-      "error": null,
-      "ttft": 707,
-      "tpot": 1,
-      "requestTime": 706,
-      "llmTime": 9008
-    },
-    {
-      "requestId": "ce0b4caf-3135-41e3-8010-54fd918303ff",
-      "timestamp": "2026-05-22T20:25:27.093Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 54380,
-        "completion": 9592,
-        "total": 63972
-      },
-      "latency": 8674,
-      "error": null,
-      "ttft": 943,
-      "tpot": 1,
-      "requestTime": 942,
-      "llmTime": 7731
-    },
-    {
-      "requestId": "27554ca7-ea7b-4503-81ba-5fd806bc1791",
-      "timestamp": "2026-05-22T20:25:35.791Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 54599,
-        "completion": 12039,
-        "total": 66638
-      },
-      "latency": 10679,
-      "error": null,
-      "ttft": 821,
-      "tpot": 1,
-      "requestTime": 821,
-      "llmTime": 9858
-    },
-    {
-      "requestId": "1eb76e0a-5a7e-4b56-b764-f6db45e6013f",
-      "timestamp": "2026-05-22T20:25:46.507Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 54841,
-        "completion": 3735,
-        "total": 58576
-      },
-      "latency": 4923,
-      "error": null,
-      "ttft": 926,
-      "tpot": 1,
-      "requestTime": 925,
-      "llmTime": 3997
-    },
-    {
-      "requestId": "54ace733-2d35-4105-8720-b16646cc3184",
-      "timestamp": "2026-05-22T20:25:51.472Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 54981,
-        "completion": 1315,
-        "total": 56296
-      },
-      "latency": 2715,
-      "error": null,
-      "ttft": 583,
-      "tpot": 2,
-      "requestTime": 582,
-      "llmTime": 2132
-    },
-    {
-      "requestId": "44e579c8-c41d-48e6-9c9e-afc61c90b8fe",
-      "timestamp": "2026-05-22T20:25:54.225Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 55081,
-        "completion": 1315,
-        "total": 56396
-      },
-      "latency": 2673,
-      "error": null,
-      "ttft": 539,
-      "tpot": 2,
-      "requestTime": 538,
-      "llmTime": 2134
-    },
-    {
-      "requestId": "6f3bbc73-d67c-4e6b-84eb-1f9ca584e5d0",
-      "timestamp": "2026-05-22T20:25:56.941Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 55180,
-        "completion": 1313,
-        "total": 56493
-      },
-      "latency": 2759,
-      "error": null,
-      "ttft": 546,
-      "tpot": 2,
-      "requestTime": 545,
-      "llmTime": 2213
-    },
-    {
-      "requestId": "36147cba-d2b9-4fc2-b4bd-445291770929",
-      "timestamp": "2026-05-22T20:25:59.743Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 55280,
-        "completion": 1312,
-        "total": 56592
-      },
-      "latency": 2684,
-      "error": null,
-      "ttft": 549,
-      "tpot": 2,
-      "requestTime": 549,
-      "llmTime": 2135
-    },
-    {
-      "requestId": "b3534bc2-954c-40bb-83b5-f01bf1263632",
-      "timestamp": "2026-05-22T20:26:02.483Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 55380,
-        "completion": 1312,
-        "total": 56692
-      },
-      "latency": 2704,
-      "error": null,
-      "ttft": 557,
-      "tpot": 2,
-      "requestTime": 557,
-      "llmTime": 2147
-    },
-    {
-      "requestId": "1dd74e52-5ed5-4d68-8a7b-c91541ea523b",
-      "timestamp": "2026-05-22T20:26:05.230Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 55480,
-        "completion": 1315,
-        "total": 56795
-      },
-      "latency": 2707,
-      "error": null,
-      "ttft": 558,
-      "tpot": 2,
-      "requestTime": 557,
-      "llmTime": 2149
-    },
-    {
-      "requestId": "747e3edc-c5d1-4c1b-bf70-5be53e43dd38",
-      "timestamp": "2026-05-22T20:26:07.981Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 55579,
-        "completion": 1315,
-        "total": 56894
-      },
-      "latency": 2707,
-      "error": null,
-      "ttft": 560,
-      "tpot": 2,
-      "requestTime": 559,
-      "llmTime": 2147
-    },
-    {
-      "requestId": "2c343072-9c15-48f2-b806-a6da0465f1d9",
-      "timestamp": "2026-05-22T20:26:10.730Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 55679,
-        "completion": 1315,
-        "total": 56994
-      },
-      "latency": 2720,
-      "error": null,
-      "ttft": 561,
-      "tpot": 2,
-      "requestTime": 560,
-      "llmTime": 2159
-    },
-    {
-      "requestId": "5bd5960a-e1ea-4c5b-ac6c-d821b65acfb7",
-      "timestamp": "2026-05-22T20:26:13.495Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 55779,
-        "completion": 1313,
-        "total": 57092
-      },
-      "latency": 2708,
-      "error": null,
-      "ttft": 550,
-      "tpot": 2,
-      "requestTime": 550,
-      "llmTime": 2158
-    },
-    {
-      "requestId": "7415bfc1-4e18-4b30-9bc1-732de1050594",
-      "timestamp": "2026-05-22T20:26:16.245Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 55879,
-        "completion": 1314,
-        "total": 57193
-      },
-      "latency": 2742,
-      "error": null,
-      "ttft": 569,
-      "tpot": 2,
-      "requestTime": 568,
-      "llmTime": 2173
-    },
-    {
-      "requestId": "fc4c9583-4bb1-4415-8149-67c30943f4a4",
-      "timestamp": "2026-05-22T20:26:19.027Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 55978,
-        "completion": 1312,
-        "total": 57290
-      },
-      "latency": 2731,
-      "error": null,
-      "ttft": 568,
-      "tpot": 2,
-      "requestTime": 567,
-      "llmTime": 2163
-    },
-    {
-      "requestId": "567ed6cd-9b07-4f2c-bf5b-f21d91754e5d",
-      "timestamp": "2026-05-22T20:26:21.786Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 56085,
-        "completion": 4630,
-        "total": 60715
-      },
-      "latency": 5217,
-      "error": null,
-      "ttft": 565,
-      "tpot": 1,
-      "requestTime": 563,
-      "llmTime": 4652
-    },
-    {
-      "requestId": "1153c9c4-2fff-40e9-993c-21e00c9cc9d5",
-      "timestamp": "2026-05-22T20:26:27.043Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 56240,
-        "completion": 1315,
-        "total": 57555
-      },
-      "latency": 2810,
-      "error": null,
-      "ttft": 637,
-      "tpot": 2,
-      "requestTime": 635,
-      "llmTime": 2174
-    },
-    {
-      "requestId": "9c9334c6-cbee-4186-afbc-c2263de802b4",
-      "timestamp": "2026-05-22T20:26:29.895Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 56339,
-        "completion": 1312,
-        "total": 57651
-      },
-      "latency": 2822,
-      "error": null,
-      "ttft": 564,
-      "tpot": 2,
-      "requestTime": 562,
-      "llmTime": 2259
-    },
-    {
-      "requestId": "f968048d-5464-4136-b540-cd9f7b221f1d",
-      "timestamp": "2026-05-22T20:26:32.760Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 56439,
-        "completion": 1311,
-        "total": 57750
-      },
-      "latency": 2740,
-      "error": null,
-      "ttft": 554,
-      "tpot": 2,
-      "requestTime": 554,
-      "llmTime": 2186
-    },
-    {
-      "requestId": "63cacf0f-b26d-4796-9b1b-dee26f4bc0fb",
-      "timestamp": "2026-05-22T20:26:35.545Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 56539,
-        "completion": 1313,
-        "total": 57852
-      },
-      "latency": 2758,
-      "error": null,
-      "ttft": 579,
-      "tpot": 2,
-      "requestTime": 578,
-      "llmTime": 2179
-    },
-    {
-      "requestId": "7bd25fbb-66c8-4077-a632-c988b48ae2e7",
-      "timestamp": "2026-05-22T20:26:38.348Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 56639,
-        "completion": 1314,
-        "total": 57953
-      },
-      "latency": 2756,
-      "error": null,
-      "ttft": 578,
-      "tpot": 2,
-      "requestTime": 577,
-      "llmTime": 2178
-    },
-    {
-      "requestId": "20346203-5605-4d63-b7e4-0a17614a2307",
-      "timestamp": "2026-05-22T20:26:41.148Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 56738,
-        "completion": 1313,
-        "total": 58051
-      },
-      "latency": 2768,
-      "error": null,
-      "ttft": 576,
-      "tpot": 2,
-      "requestTime": 576,
-      "llmTime": 2192
-    },
-    {
-      "requestId": "3c13eb6b-0988-42ec-a267-c7491e35e553",
-      "timestamp": "2026-05-22T20:26:43.957Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 56838,
-        "completion": 1314,
-        "total": 58152
-      },
-      "latency": 2755,
-      "error": null,
-      "ttft": 580,
-      "tpot": 2,
-      "requestTime": 579,
-      "llmTime": 2175
-    },
-    {
-      "requestId": "a2e746da-58d7-49f1-a9cc-3078a5e055de",
-      "timestamp": "2026-05-22T20:26:46.758Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 56938,
-        "completion": 1312,
-        "total": 58250
-      },
-      "latency": 2755,
-      "error": null,
-      "ttft": 579,
-      "tpot": 2,
-      "requestTime": 578,
-      "llmTime": 2176
-    },
-    {
-      "requestId": "3168f7f2-09a3-4a16-a325-2fe834c573a1",
-      "timestamp": "2026-05-22T20:26:49.564Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 57038,
-        "completion": 1311,
-        "total": 58349
-      },
-      "latency": 2747,
-      "error": null,
-      "ttft": 576,
-      "tpot": 2,
-      "requestTime": 576,
-      "llmTime": 2171
-    },
-    {
-      "requestId": "7af14a96-f95a-49e8-a3ee-62ff57406a6e",
-      "timestamp": "2026-05-22T20:26:52.356Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 57137,
-        "completion": 1315,
-        "total": 58452
-      },
-      "latency": 2752,
-      "error": null,
-      "ttft": 582,
-      "tpot": 2,
-      "requestTime": 581,
-      "llmTime": 2170
-    },
-    {
-      "requestId": "1da9fb4a-9b60-42c6-abfa-07c141cc3b7d",
-      "timestamp": "2026-05-22T20:26:55.149Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 57237,
-        "completion": 1312,
-        "total": 58549
-      },
-      "latency": 2754,
-      "error": null,
-      "ttft": 583,
-      "tpot": 2,
-      "requestTime": 583,
-      "llmTime": 2171
-    },
-    {
-      "requestId": "b225c021-145f-40e8-9a31-0e98f3b6c725",
-      "timestamp": "2026-05-22T20:26:57.930Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 57344,
-        "completion": 10077,
-        "total": 67421
-      },
-      "latency": 8945,
-      "error": null,
-      "ttft": 580,
-      "tpot": 1,
-      "requestTime": 580,
-      "llmTime": 8365
-    },
-    {
-      "requestId": "19649ff1-005d-469a-86e7-ef5ba94fc662",
-      "timestamp": "2026-05-22T20:27:06.901Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 57574,
-        "completion": 3685,
-        "total": 61259
-      },
-      "latency": 4936,
-      "error": null,
-      "ttft": 816,
-      "tpot": 1,
-      "requestTime": 816,
-      "llmTime": 4120
-    },
-    {
-      "requestId": "a2af96bf-a544-459e-883a-80b122bb76d0",
-      "timestamp": "2026-05-22T20:27:11.878Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 57716,
-        "completion": 1315,
-        "total": 59031
-      },
-      "latency": 2813,
-      "error": null,
-      "ttft": 620,
-      "tpot": 2,
-      "requestTime": 619,
-      "llmTime": 2193
-    },
-    {
-      "requestId": "64bc6748-8def-499f-8f6d-132ba1f1f0e8",
-      "timestamp": "2026-05-22T20:27:14.735Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 57816,
-        "completion": 1312,
-        "total": 59128
-      },
-      "latency": 2772,
-      "error": null,
-      "ttft": 580,
-      "tpot": 2,
-      "requestTime": 580,
-      "llmTime": 2192
-    },
-    {
-      "requestId": "39432cd2-20ed-4fe3-8dfe-f36bd5526623",
-      "timestamp": "2026-05-22T20:27:17.549Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 57916,
-        "completion": 1315,
-        "total": 59231
-      },
-      "latency": 2775,
-      "error": null,
-      "ttft": 575,
-      "tpot": 2,
-      "requestTime": 574,
-      "llmTime": 2200
-    },
-    {
-      "requestId": "76ccfe69-4020-4a08-8dd5-ccd95a6ad82d",
-      "timestamp": "2026-05-22T20:27:20.364Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 58015,
-        "completion": 1314,
-        "total": 59329
-      },
-      "latency": 2790,
-      "error": null,
-      "ttft": 590,
-      "tpot": 2,
-      "requestTime": 589,
-      "llmTime": 2201
-    },
-    {
-      "requestId": "f47b27e6-b545-4a2b-b79c-bfe5d00d847f",
-      "timestamp": "2026-05-22T20:27:23.196Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 58115,
-        "completion": 1312,
-        "total": 59427
-      },
-      "latency": 2788,
-      "error": null,
-      "ttft": 589,
-      "tpot": 2,
-      "requestTime": 588,
-      "llmTime": 2199
-    },
-    {
-      "requestId": "eaf5ec5c-297b-4d47-b0c1-3f0dc26bf330",
-      "timestamp": "2026-05-22T20:27:26.028Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 58215,
-        "completion": 1315,
-        "total": 59530
-      },
-      "latency": 2795,
-      "error": null,
-      "ttft": 591,
-      "tpot": 2,
-      "requestTime": 590,
-      "llmTime": 2204
-    },
-    {
-      "requestId": "65dc60e1-8952-4cd3-ae35-6cdb82daff15",
-      "timestamp": "2026-05-22T20:27:28.866Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 58315,
-        "completion": 1312,
-        "total": 59627
-      },
-      "latency": 2802,
-      "error": null,
-      "ttft": 592,
-      "tpot": 2,
-      "requestTime": 591,
-      "llmTime": 2210
-    },
-    {
-      "requestId": "19fe2e3f-7e4d-4520-924c-b240f80b2249",
-      "timestamp": "2026-05-22T20:27:32.541Z",
-      "apiKey": "anonymous...",
-      "apiKeyFull": "anonymous",
-      "model": "unknown",
-      "method": "GET",
-      "path": "/models",
-      "status": 200,
-      "tokens": {
-        "prompt": 1,
-        "completion": 0,
-        "total": 1
-      },
-      "latency": 1,
-      "error": null,
-      "ttft": null,
-      "tpot": null,
-      "requestTime": 2,
-      "llmTime": 0
-    },
-    {
-      "requestId": "46374f62-76ea-4dc5-a8ae-9bcd07f8982b",
-      "timestamp": "2026-05-22T20:27:34.085Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 8222,
-        "completion": 2548,
-        "total": 10770
-      },
-      "latency": 4890,
-      "error": null,
-      "ttft": 3239,
-      "tpot": 1,
-      "requestTime": 3238,
-      "llmTime": 1651
-    },
-    {
-      "requestId": "e3b9c95b-2a26-40dd-83f1-3afdfe1bdff9",
-      "timestamp": "2026-05-22T20:27:49.021Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 8347,
-        "completion": 1460,
-        "total": 9807
-      },
-      "latency": 1912,
-      "error": null,
-      "ttft": 443,
-      "tpot": 1,
-      "requestTime": 443,
-      "llmTime": 1469
-    },
-    {
-      "requestId": "2faa733b-ad62-4529-871f-f6114337ea91",
-      "timestamp": "2026-05-22T20:28:10.959Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 9371,
-        "completion": 1531,
-        "total": 10902
-      },
-      "latency": 2979,
-      "error": null,
-      "ttft": 2013,
-      "tpot": 1,
-      "requestTime": 2013,
-      "llmTime": 966
-    },
-    {
-      "requestId": "9892cb8b-3f9d-4b04-b3ea-5c56ca9f8123",
-      "timestamp": "2026-05-22T20:28:13.964Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 23412,
-        "completion": 24713,
-        "total": 48125
-      },
-      "latency": 52411,
-      "error": null,
-      "ttft": 36428,
-      "tpot": 1,
-      "requestTime": 36427,
-      "llmTime": 15983
-    },
-    {
-      "requestId": "27c67ff6-1876-4685-b870-fefea11ec48a",
-      "timestamp": "2026-05-22T20:29:08.187Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 8193,
-        "completion": 2042,
-        "total": 10235
-      },
-      "latency": 3741,
-      "error": null,
-      "ttft": 2275,
-      "tpot": 1,
-      "requestTime": 2275,
-      "llmTime": 1466
-    },
-    {
-      "requestId": "2d9be538-b7d0-4479-bb09-3a995d614511",
-      "timestamp": "2026-05-22T20:29:12.128Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 8736,
-        "completion": 29014,
-        "total": 37750
-      },
-      "latency": 13238,
-      "error": null,
-      "ttft": 745,
-      "tpot": 0,
-      "requestTime": 745,
-      "llmTime": 12493
-    },
-    {
-      "requestId": "4d8f3dce-1a69-445c-8a5d-b945c52bcb5e",
-      "timestamp": "2026-05-22T21:24:00.019Z",
-      "apiKey": "anonymous...",
-      "apiKeyFull": "anonymous",
-      "model": "unknown",
-      "method": "GET",
-      "path": "/models",
-      "status": 200,
-      "tokens": {
-        "prompt": 1,
-        "completion": 0,
-        "total": 1
-      },
-      "latency": 2,
-      "error": null,
-      "ttft": null,
-      "tpot": null,
-      "requestTime": 3,
-      "llmTime": 0
-    },
-    {
-      "requestId": "44e6feb8-1745-464e-8a4d-1c42c4c79763",
-      "timestamp": "2026-05-22T21:24:01.550Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 8222,
-        "completion": 4126,
-        "total": 12348
-      },
-      "latency": 4317,
-      "error": null,
-      "ttft": 2065,
-      "tpot": 1,
-      "requestTime": 2064,
-      "llmTime": 2252
-    },
-    {
-      "requestId": "92234d80-7d45-42f1-916b-b5b566fa555b",
-      "timestamp": "2026-05-22T21:24:05.921Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 8355,
-        "completion": 2259,
-        "total": 10614
-      },
-      "latency": 1856,
-      "error": null,
-      "ttft": 336,
-      "tpot": 1,
-      "requestTime": 336,
-      "llmTime": 1520
-    },
-    {
-      "requestId": "af62ff81-adf9-45e0-bc6d-2bd8ba488069",
-      "timestamp": "2026-05-22T21:24:17.809Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 8477,
-        "completion": 1460,
-        "total": 9937
-      },
-      "latency": 1907,
-      "error": null,
-      "ttft": 438,
-      "tpot": 1,
-      "requestTime": 437,
-      "llmTime": 1469
-    },
-    {
-      "requestId": "c92adf76-77ff-4327-9c9b-7ba08c8e4dd5",
-      "timestamp": "2026-05-22T21:24:42.036Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 10155,
-        "completion": 32892,
-        "total": 43047
-      },
-      "latency": 18342,
-      "error": null,
-      "ttft": 3514,
-      "tpot": 0,
-      "requestTime": 3514,
-      "llmTime": 14828
-    },
-    {
-      "requestId": "074c2b2c-f4c4-4dda-af25-289817b8f263",
-      "timestamp": "2026-05-22T22:02:27.659Z",
-      "apiKey": "anonymous...",
-      "apiKeyFull": "anonymous",
-      "model": "unknown",
-      "method": "GET",
-      "path": "/models",
-      "status": 200,
-      "tokens": {
-        "prompt": 1,
-        "completion": 0,
-        "total": 1
-      },
-      "latency": 3,
-      "error": null,
-      "ttft": null,
-      "tpot": null,
-      "requestTime": 3,
-      "llmTime": 0
-    },
-    {
-      "requestId": "18d39382-11e8-47ca-97f0-60e8659e3ecb",
-      "timestamp": "2026-05-22T22:02:29.158Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 8683,
-        "completion": 5738,
-        "total": 14421
-      },
-      "latency": 5557,
-      "error": null,
-      "ttft": 2682,
-      "tpot": 1,
-      "requestTime": 2682,
-      "llmTime": 2875
-    },
-    {
-      "requestId": "6577c4e1-3fc4-4ff0-b5d2-4fe3e6cd73be",
-      "timestamp": "2026-05-22T22:02:34.784Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 19636,
-        "completion": 3568,
-        "total": 23204
-      },
-      "latency": 15163,
-      "error": null,
-      "ttft": 13015,
-      "tpot": 1,
-      "requestTime": 13015,
-      "llmTime": 2148
-    },
-    {
-      "requestId": "5271f1e2-27d9-4213-905e-97227e293e11",
-      "timestamp": "2026-05-22T22:02:49.972Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 30566,
-        "completion": 25263,
-        "total": 55829
-      },
-      "latency": 30706,
-      "error": null,
-      "ttft": 15893,
-      "tpot": 1,
-      "requestTime": 15892,
-      "llmTime": 14813
-    },
-    {
-      "requestId": "28ac02be-c35b-4728-8e48-10994c0519b7",
-      "timestamp": "2026-05-22T22:03:20.733Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 31926,
-        "completion": 19085,
-        "total": 51011
-      },
-      "latency": 13849,
-      "error": null,
-      "ttft": 2502,
-      "tpot": 1,
-      "requestTime": 2501,
-      "llmTime": 11347
-    },
-    {
-      "requestId": "5ea49d4a-9dc2-46c6-89b6-4f39595b9c87",
-      "timestamp": "2026-05-22T22:03:34.642Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 32270,
-        "completion": 23799,
-        "total": 56069
-      },
-      "latency": 14542,
-      "error": null,
-      "ttft": 785,
-      "tpot": 1,
-      "requestTime": 784,
-      "llmTime": 13758
-    },
-    {
-      "requestId": "cdd31354-7960-43f9-94b3-03382b087801",
-      "timestamp": "2026-05-22T22:03:49.236Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 32671,
-        "completion": 29904,
-        "total": 62575
-      },
-      "latency": 17809,
-      "error": null,
-      "ttft": 895,
-      "tpot": 1,
-      "requestTime": 895,
-      "llmTime": 16914
-    },
-    {
-      "requestId": "479ceb75-75fe-4206-bda5-7298d557c13b",
-      "timestamp": "2026-05-22T22:04:07.112Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 33138,
-        "completion": 13033,
-        "total": 46171
-      },
-      "latency": 8930,
-      "error": null,
-      "ttft": 1019,
-      "tpot": 1,
-      "requestTime": 1018,
-      "llmTime": 7911
-    },
-    {
-      "requestId": "264dc721-5911-4e6b-99a1-4f729d1a6a50",
-      "timestamp": "2026-05-22T22:04:16.089Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 33381,
-        "completion": 10921,
-        "total": 44302
-      },
-      "latency": 7553,
-      "error": null,
-      "ttft": 699,
-      "tpot": 1,
-      "requestTime": 699,
-      "llmTime": 6854
-    },
-    {
-      "requestId": "a1d2ffb9-c2f7-4355-a78c-1a66da19b50d",
-      "timestamp": "2026-05-22T22:04:23.730Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 33653,
-        "completion": 8804,
-        "total": 42457
-      },
-      "latency": 6601,
-      "error": null,
-      "ttft": 732,
-      "tpot": 1,
-      "requestTime": 731,
-      "llmTime": 5869
-    },
-    {
-      "requestId": "f64d6e72-6d49-4085-a8c7-ff403e3f0264",
-      "timestamp": "2026-05-22T22:04:30.383Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 33826,
-        "completion": 1240,
-        "total": 35066
-      },
-      "latency": 2131,
-      "error": null,
-      "ttft": 565,
-      "tpot": 1,
-      "requestTime": 564,
-      "llmTime": 1566
-    },
-    {
-      "requestId": "70a0b0a0-6cc7-468e-8b81-4e3d3c08b9c8",
-      "timestamp": "2026-05-22T22:04:32.538Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 34556,
-        "completion": 1603,
-        "total": 36159
-      },
-      "latency": 5026,
-      "error": null,
-      "ttft": 2839,
-      "tpot": 1,
-      "requestTime": 2838,
-      "llmTime": 2187
-    },
-    {
-      "requestId": "aa7911dc-1d76-406d-adc1-d766c70d9cad",
-      "timestamp": "2026-05-22T22:04:37.589Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 45198,
-        "completion": 8435,
-        "total": 53633
-      },
-      "latency": 56370,
-      "error": null,
-      "ttft": 48741,
-      "tpot": 1,
-      "requestTime": 48741,
-      "llmTime": 7629
-    },
-    {
-      "requestId": "55d5f48a-7f46-4776-96cb-6c086edb202c",
-      "timestamp": "2026-05-22T22:05:34.018Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 45398,
-        "completion": 8855,
-        "total": 54253
-      },
-      "latency": 8479,
-      "error": null,
-      "ttft": 786,
-      "tpot": 1,
-      "requestTime": 786,
-      "llmTime": 7693
-    },
-    {
-      "requestId": "2679d44a-7b27-4005-a9c7-621a7d437656",
-      "timestamp": "2026-05-22T22:05:42.553Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 45741,
-        "completion": 11484,
-        "total": 57225
-      },
-      "latency": 10909,
-      "error": null,
-      "ttft": 1154,
-      "tpot": 1,
-      "requestTime": 1153,
-      "llmTime": 9755
-    },
-    {
-      "requestId": "db14bafa-8a0d-4c06-8fb0-2a998b6232de",
-      "timestamp": "2026-05-22T22:05:53.555Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 45949,
-        "completion": 9290,
-        "total": 55239
-      },
-      "latency": 9104,
-      "error": null,
-      "ttft": 805,
-      "tpot": 1,
-      "requestTime": 804,
-      "llmTime": 8299
-    },
-    {
-      "requestId": "72e82b4d-4a95-494c-b11c-c1dcae292b57",
-      "timestamp": "2026-05-22T22:06:02.709Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 46109,
-        "completion": 1091,
-        "total": 47200
-      },
-      "latency": 2226,
-      "error": null,
-      "ttft": 694,
-      "tpot": 1,
-      "requestTime": 693,
-      "llmTime": 1532
-    },
-    {
-      "requestId": "134b3669-805e-43e1-a74e-a5c2eadebd69",
-      "timestamp": "2026-05-22T22:06:04.958Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 47222,
-        "completion": 24455,
-        "total": 71677
-      },
-      "latency": 26032,
-      "error": null,
-      "ttft": 6104,
-      "tpot": 1,
-      "requestTime": 6103,
-      "llmTime": 19928
-    },
-    {
-      "requestId": "07cfdfed-e7d0-4dcc-a5b2-79c16a16ccc5",
-      "timestamp": "2026-05-22T22:06:31.142Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 47680,
-        "completion": 12365,
-        "total": 60045
-      },
-      "latency": 12157,
-      "error": null,
-      "ttft": 1370,
-      "tpot": 1,
-      "requestTime": 1370,
-      "llmTime": 10787
-    },
-    {
-      "requestId": "593791ac-8772-4b73-a3f7-987158a7f865",
-      "timestamp": "2026-05-22T22:06:43.323Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 47911,
-        "completion": 16729,
-        "total": 64640
-      },
-      "latency": 14982,
-      "error": null,
-      "ttft": 883,
-      "tpot": 1,
-      "requestTime": 882,
-      "llmTime": 14099
-    },
-    {
-      "requestId": "9f897bd2-f735-4088-846b-89562b50597c",
-      "timestamp": "2026-05-22T22:06:58.331Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 48202,
-        "completion": 15279,
-        "total": 63481
-      },
-      "latency": 14056,
-      "error": null,
-      "ttft": 988,
-      "tpot": 1,
-      "requestTime": 987,
-      "llmTime": 13068
-    },
-    {
-      "requestId": "9b5c3c1a-6aba-489c-85ab-01113d4c5500",
-      "timestamp": "2026-05-22T22:07:12.411Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 48476,
-        "completion": 17290,
-        "total": 65766
-      },
-      "latency": 15645,
-      "error": null,
-      "ttft": 946,
-      "tpot": 1,
-      "requestTime": 945,
-      "llmTime": 14699
-    },
-    {
-      "requestId": "632d8b6d-f42b-4387-9732-083f747117b3",
-      "timestamp": "2026-05-22T22:07:28.089Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 48777,
-        "completion": 13610,
-        "total": 62387
-      },
-      "latency": 12778,
-      "error": null,
-      "ttft": 1028,
-      "tpot": 1,
-      "requestTime": 1027,
-      "llmTime": 11751
-    },
-    {
-      "requestId": "70d95b4c-0aed-49eb-9382-3dd4305a88fb",
-      "timestamp": "2026-05-22T22:07:40.889Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 49033,
-        "completion": 17351,
-        "total": 66384
-      },
-      "latency": 15754,
-      "error": null,
-      "ttft": 956,
-      "tpot": 1,
-      "requestTime": 955,
-      "llmTime": 14798
-    },
-    {
-      "requestId": "c49b1241-c5b9-4c8f-911c-20a260dc7d11",
-      "timestamp": "2026-05-22T22:07:56.667Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 49336,
-        "completion": 13610,
-        "total": 62946
-      },
-      "latency": 12725,
-      "error": null,
-      "ttft": 1040,
-      "tpot": 1,
-      "requestTime": 1039,
-      "llmTime": 11685
-    },
-    {
-      "requestId": "96f2f2bf-1a66-4ebe-9802-d2d1004cfa8b",
-      "timestamp": "2026-05-22T22:08:09.414Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 49592,
-        "completion": 16727,
-        "total": 66319
-      },
-      "latency": 15230,
-      "error": null,
-      "ttft": 980,
-      "tpot": 1,
-      "requestTime": 979,
-      "llmTime": 14250
-    },
-    {
-      "requestId": "bc1143a7-b64c-42d3-86cd-46d115ddd3c2",
-      "timestamp": "2026-05-22T22:08:24.678Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 49884,
-        "completion": 13610,
-        "total": 63494
-      },
-      "latency": 12825,
-      "error": null,
-      "ttft": 1033,
-      "tpot": 1,
-      "requestTime": 1031,
-      "llmTime": 11793
-    },
-    {
-      "requestId": "0ab44c45-c57a-4afd-a626-7b56d57f3a13",
-      "timestamp": "2026-05-22T22:08:37.530Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 50140,
-        "completion": 16726,
-        "total": 66866
-      },
-      "latency": 15374,
-      "error": null,
-      "ttft": 981,
-      "tpot": 1,
-      "requestTime": 980,
-      "llmTime": 14393
-    },
-    {
-      "requestId": "890acce1-9a63-4f38-bbbf-6f893e86a4eb",
-      "timestamp": "2026-05-22T22:08:52.930Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 50431,
-        "completion": 13610,
-        "total": 64041
-      },
-      "latency": 12909,
-      "error": null,
-      "ttft": 1039,
-      "tpot": 1,
-      "requestTime": 1038,
-      "llmTime": 11870
-    },
-    {
-      "requestId": "cb52aba4-9bc2-4665-ad75-26b9c7d38495",
-      "timestamp": "2026-05-22T22:09:05.864Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 50687,
-        "completion": 16729,
-        "total": 67416
-      },
-      "latency": 15545,
-      "error": null,
-      "ttft": 1003,
-      "tpot": 1,
-      "requestTime": 1002,
-      "llmTime": 14542
-    },
-    {
-      "requestId": "a9e50b84-8d36-417a-a15c-23d51736c25c",
-      "timestamp": "2026-05-22T22:09:21.441Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 50979,
-        "completion": 13610,
-        "total": 64589
-      },
-      "latency": 12990,
-      "error": null,
-      "ttft": 1055,
-      "tpot": 1,
-      "requestTime": 1054,
-      "llmTime": 11935
-    },
-    {
-      "requestId": "db66709c-87a2-41c2-a8bf-cb0ecdd9ad10",
-      "timestamp": "2026-05-22T22:09:34.458Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 51272,
-        "completion": 12905,
-        "total": 64177
-      },
-      "latency": 12709,
-      "error": null,
-      "ttft": 1027,
-      "tpot": 1,
-      "requestTime": 1027,
-      "llmTime": 11682
-    },
-    {
-      "requestId": "08155870-331f-49f6-b9db-ade189bce966",
-      "timestamp": "2026-05-22T22:09:47.211Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 51539,
-        "completion": 10550,
-        "total": 62089
-      },
-      "latency": 10395,
-      "error": null,
-      "ttft": 921,
-      "tpot": 1,
-      "requestTime": 920,
-      "llmTime": 9474
-    },
-    {
-      "requestId": "6f867fcc-9cbb-4616-a3a8-7f6a29adb378",
-      "timestamp": "2026-05-22T22:09:57.696Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 51990,
-        "completion": 6263,
-        "total": 58253
-      },
-      "latency": 7630,
-      "error": null,
-      "ttft": 1256,
-      "tpot": 1,
-      "requestTime": 1254,
-      "llmTime": 6375
-    },
-    {
-      "requestId": "73a2fa3a-09ef-4f42-96fd-12f7c4d681aa",
-      "timestamp": "2026-05-22T22:10:05.378Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 52135,
-        "completion": 9236,
-        "total": 61371
-      },
-      "latency": 9251,
-      "error": null,
-      "ttft": 639,
-      "tpot": 1,
-      "requestTime": 638,
-      "llmTime": 8612
-    },
-    {
-      "requestId": "fbc320cf-ab74-4ea6-99be-7ca1f76d184f",
-      "timestamp": "2026-05-22T22:10:14.727Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 52384,
-        "completion": 9745,
-        "total": 62129
-      },
-      "latency": 10022,
-      "error": null,
-      "ttft": 1006,
-      "tpot": 1,
-      "requestTime": 1005,
-      "llmTime": 9016
-    },
-    {
-      "requestId": "167eca04-b898-45f3-8a10-b93aa2e66a96",
-      "timestamp": "2026-05-22T22:10:24.811Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 52802,
-        "completion": 19778,
-        "total": 72580
-      },
-      "latency": 18693,
-      "error": null,
-      "ttft": 1460,
-      "tpot": 1,
-      "requestTime": 1459,
-      "llmTime": 17233
-    },
-    {
-      "requestId": "5b270873-e67d-4480-a6f0-ac13c7994d94",
-      "timestamp": "2026-05-22T22:10:43.598Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 53203,
-        "completion": 45432,
-        "total": 98635
-      },
-      "latency": 38508,
-      "error": null,
-      "ttft": 1392,
-      "tpot": 1,
-      "requestTime": 1391,
-      "llmTime": 37116
-    },
-    {
-      "requestId": "cb9c9130-26ee-442b-b95f-87b4231f1a62",
-      "timestamp": "2026-05-22T22:11:22.155Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 54105,
-        "completion": 10924,
-        "total": 65029
-      },
-      "latency": 13091,
-      "error": null,
-      "ttft": 2730,
-      "tpot": 1,
-      "requestTime": 2729,
-      "llmTime": 10361
-    },
-    {
-      "requestId": "fa7e6206-ca01-4152-9d9f-9e92e5ca9933",
-      "timestamp": "2026-05-22T22:11:35.309Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 54553,
-        "completion": 46757,
-        "total": 101310
-      },
-      "latency": 40367,
-      "error": null,
-      "ttft": 1502,
-      "tpot": 1,
-      "requestTime": 1501,
-      "llmTime": 38865
-    },
-    {
-      "requestId": "22405931-d250-47ed-82e7-ddc46b7b5685",
-      "timestamp": "2026-05-22T22:12:15.787Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 55201,
-        "completion": 32097,
-        "total": 87298
-      },
-      "latency": 29379,
-      "error": null,
-      "ttft": 2043,
-      "tpot": 1,
-      "requestTime": 2042,
-      "llmTime": 27336
-    },
-    {
-      "requestId": "df31f952-c274-4a77-a22e-d339095898ab",
-      "timestamp": "2026-05-22T22:24:00.020Z",
-      "apiKey": "anonymous...",
-      "apiKeyFull": "anonymous",
-      "model": "unknown",
-      "method": "GET",
-      "path": "/models",
-      "status": 200,
-      "tokens": {
-        "prompt": 1,
-        "completion": 0,
-        "total": 1
-      },
-      "latency": 3,
-      "error": null,
-      "ttft": null,
-      "tpot": null,
-      "requestTime": 3,
-      "llmTime": 0
-    },
-    {
-      "requestId": "fad99376-5dca-41e8-8fb6-7c65c067d0f9",
-      "timestamp": "2026-05-22T22:24:01.543Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 8222,
-        "completion": 3472,
-        "total": 11694
-      },
-      "latency": 4970,
-      "error": null,
-      "ttft": 3000,
-      "tpot": 1,
-      "requestTime": 2999,
-      "llmTime": 1970
-    },
-    {
-      "requestId": "2b32b7e8-360a-479d-aab0-211f92dad157",
-      "timestamp": "2026-05-22T22:24:16.560Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 8358,
-        "completion": 1460,
-        "total": 9818
-      },
-      "latency": 1830,
-      "error": null,
-      "ttft": 357,
-      "tpot": 1,
-      "requestTime": 356,
-      "llmTime": 1473
-    },
-    {
-      "requestId": "30186a32-201f-4158-a04d-42c39982f915",
-      "timestamp": "2026-05-22T22:24:38.418Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 10153,
-        "completion": 1512,
-        "total": 11665
-      },
-      "latency": 5362,
-      "error": null,
-      "ttft": 3753,
-      "tpot": 1,
-      "requestTime": 3751,
-      "llmTime": 1610
-    },
-    {
-      "requestId": "d20365ec-5426-4e94-876e-55b17e7b6b17",
-      "timestamp": "2026-05-22T22:24:43.802Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 10743,
-        "completion": 5280,
-        "total": 16023
-      },
-      "latency": 4771,
-      "error": null,
-      "ttft": 1441,
-      "tpot": 1,
-      "requestTime": 1440,
-      "llmTime": 3330
-    },
-    {
-      "requestId": "d6de2bfb-c6af-41c7-bc48-a6fbf3be6c40",
-      "timestamp": "2026-05-22T22:24:48.623Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 11336,
-        "completion": 21226,
-        "total": 32562
-      },
-      "latency": 11215,
-      "error": null,
-      "ttft": 1423,
-      "tpot": 0,
-      "requestTime": 1422,
-      "llmTime": 9792
-    },
-    {
-      "requestId": "6c496cba-df1f-4647-83be-4d36854c434d",
-      "timestamp": "2026-05-22T22:44:06.694Z",
-      "apiKey": "anonymous...",
-      "apiKeyFull": "anonymous",
-      "model": "unknown",
-      "method": "GET",
-      "path": "/models",
-      "status": 200,
-      "tokens": {
-        "prompt": 1,
-        "completion": 0,
-        "total": 1
-      },
-      "latency": 2,
-      "error": null,
-      "ttft": null,
-      "tpot": null,
-      "requestTime": 3,
-      "llmTime": 0
-    },
-    {
-      "requestId": "a1d2b8e4-bdd0-48bc-aca6-ceb58235d1e5",
-      "timestamp": "2026-05-22T22:44:08.221Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 8193,
-        "completion": 2550,
-        "total": 10743
-      },
-      "latency": 3708,
-      "error": null,
-      "ttft": 2056,
-      "tpot": 1,
-      "requestTime": 2056,
-      "llmTime": 1652
-    },
-    {
-      "requestId": "79825683-89ae-4709-bef1-c5dc7e431567",
-      "timestamp": "2026-05-22T22:44:12.133Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 8746,
-        "completion": 14275,
-        "total": 23021
-      },
-      "latency": 7757,
-      "error": null,
-      "ttft": 801,
-      "tpot": 0,
-      "requestTime": 800,
-      "llmTime": 6956
-    },
-    {
-      "requestId": "6dd94398-96c8-41ce-ae1e-6e562d297047",
-      "timestamp": "2026-05-22T22:44:19.997Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 9081,
-        "completion": 14277,
-        "total": 23358
-      },
-      "latency": 7684,
-      "error": null,
-      "ttft": 627,
-      "tpot": 0,
-      "requestTime": 626,
-      "llmTime": 7057
-    },
-    {
-      "requestId": "0506e685-5fe3-46ef-bf95-4d63abe1a651",
-      "timestamp": "2026-05-22T22:44:27.705Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 9373,
-        "completion": 14760,
-        "total": 24133
-      },
-      "latency": 7178,
-      "error": null,
-      "ttft": 655,
-      "tpot": 0,
-      "requestTime": 655,
-      "llmTime": 6523
-    },
-    {
-      "requestId": "d1db7d38-065a-487f-af35-ab2ad6526248",
-      "timestamp": "2026-05-22T23:02:00.023Z",
-      "apiKey": "anonymous...",
-      "apiKeyFull": "anonymous",
-      "model": "unknown",
-      "method": "GET",
-      "path": "/models",
-      "status": 200,
-      "tokens": {
-        "prompt": 1,
-        "completion": 0,
-        "total": 1
-      },
-      "latency": 3,
-      "error": null,
-      "ttft": null,
-      "tpot": null,
-      "requestTime": 3,
-      "llmTime": 0
-    },
-    {
-      "requestId": "f223a5f6-1aae-4222-bb5a-6e98f70e7717",
-      "timestamp": "2026-05-22T23:02:01.542Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 8309,
-        "completion": 3238,
-        "total": 11547
-      },
-      "latency": 4319,
-      "error": null,
-      "ttft": 2308,
-      "tpot": 1,
-      "requestTime": 2307,
-      "llmTime": 2011
-    },
-    {
-      "requestId": "b25cda72-5c96-40b8-a1fa-fd9894502875",
-      "timestamp": "2026-05-22T23:02:11.938Z",
-      "apiKey": "anonymous...",
-      "apiKeyFull": "anonymous",
-      "model": "unknown",
-      "method": "GET",
-      "path": "/models",
-      "status": 200,
-      "tokens": {
-        "prompt": 1,
-        "completion": 0,
-        "total": 1
-      },
-      "latency": 1,
-      "error": null,
-      "ttft": null,
-      "tpot": null,
-      "requestTime": 2,
-      "llmTime": 0
-    },
-    {
-      "requestId": "4cf65495-c4f3-4be5-aba5-3b1e03ebbf29",
-      "timestamp": "2026-05-22T23:02:15.907Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 8449,
-        "completion": 1532,
-        "total": 9981
-      },
-      "latency": 1857,
-      "error": null,
-      "ttft": 361,
-      "tpot": 1,
-      "requestTime": 361,
-      "llmTime": 1496
-    },
-    {
-      "requestId": "fa7b1d37-b020-43ef-9cd4-9ac471d0a7ec",
-      "timestamp": "2026-05-22T23:02:47.801Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 10208,
-        "completion": 1097,
-        "total": 11305
-      },
-      "latency": 4720,
-      "error": null,
-      "ttft": 3598,
-      "tpot": 1,
-      "requestTime": 3598,
-      "llmTime": 1122
-    },
-    {
-      "requestId": "5fcfe973-a466-469f-b582-1423a406012a",
-      "timestamp": "2026-05-22T23:02:52.544Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 10291,
-        "completion": 21784,
-        "total": 32075
-      },
-      "latency": 10240,
-      "error": null,
-      "ttft": 283,
-      "tpot": 0,
-      "requestTime": 283,
-      "llmTime": 9957
-    },
-    {
-      "requestId": "eb314b67-4243-4c06-8578-9c567e599975",
-      "timestamp": "2026-05-22T23:24:00.019Z",
-      "apiKey": "anonymous...",
-      "apiKeyFull": "anonymous",
-      "model": "unknown",
-      "method": "GET",
-      "path": "/models",
-      "status": 200,
-      "tokens": {
-        "prompt": 1,
-        "completion": 0,
-        "total": 1
-      },
-      "latency": 2,
-      "error": null,
-      "ttft": null,
-      "tpot": null,
-      "requestTime": 2,
-      "llmTime": 0
-    },
-    {
-      "requestId": "3c64f82b-8e5b-4a1b-b1dd-97bb546ed339",
-      "timestamp": "2026-05-22T23:24:01.531Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 8222,
-        "completion": 3348,
-        "total": 11570
-      },
-      "latency": 3908,
-      "error": null,
-      "ttft": 1993,
-      "tpot": 1,
-      "requestTime": 1991,
-      "llmTime": 1916
-    },
-    {
-      "requestId": "46a45fa0-d38f-461a-9034-d46492ed902f",
-      "timestamp": "2026-05-22T23:24:15.484Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 8358,
-        "completion": 1673,
-        "total": 10031
-      },
-      "latency": 1907,
-      "error": null,
-      "ttft": 359,
-      "tpot": 1,
-      "requestTime": 359,
-      "llmTime": 1548
-    },
-    {
-      "requestId": "b58f1ad3-b062-412a-8eec-4c714b96bc7b",
-      "timestamp": "2026-05-22T23:24:37.420Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 10155,
-        "completion": 1604,
-        "total": 11759
-      },
-      "latency": 5352,
-      "error": null,
-      "ttft": 3744,
-      "tpot": 1,
-      "requestTime": 3743,
-      "llmTime": 1608
-    },
-    {
-      "requestId": "0f66c218-e95f-4ac9-bf0e-bef84f4f051c",
-      "timestamp": "2026-05-22T23:24:42.794Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 10745,
-        "completion": 24817,
-        "total": 35562
-      },
-      "latency": 12962,
-      "error": null,
-      "ttft": 1467,
-      "tpot": 0,
-      "requestTime": 1467,
-      "llmTime": 11495
-    },
-    {
-      "requestId": "6b7932db-7183-4946-a2af-385b4b2b3592",
-      "timestamp": "2026-05-23T00:02:27.661Z",
-      "apiKey": "anonymous...",
-      "apiKeyFull": "anonymous",
-      "model": "unknown",
-      "method": "GET",
-      "path": "/models",
-      "status": 200,
-      "tokens": {
-        "prompt": 1,
-        "completion": 0,
-        "total": 1
-      },
-      "latency": 2,
-      "error": null,
-      "ttft": null,
-      "tpot": null,
-      "requestTime": 2,
-      "llmTime": 0
-    },
-    {
-      "requestId": "3ac56c8d-404f-4763-8ea4-66ae69ee1636",
-      "timestamp": "2026-05-23T00:02:29.193Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 8683,
-        "completion": 5883,
-        "total": 14566
-      },
-      "latency": 5514,
-      "error": null,
-      "ttft": 2585,
-      "tpot": 0,
-      "requestTime": 2585,
-      "llmTime": 2929
-    },
-    {
-      "requestId": "69f57888-a13d-4dea-9b9f-579c5db55976",
-      "timestamp": "2026-05-23T00:02:34.769Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 8821,
-        "completion": 948,
-        "total": 9769
-      },
-      "latency": 1075,
-      "error": null,
-      "ttft": 342,
-      "tpot": 1,
-      "requestTime": 342,
-      "llmTime": 733
-    },
-    {
-      "requestId": "6c1bbc8c-a359-444e-aa1a-6bc2ce27f7aa",
-      "timestamp": "2026-05-23T00:02:35.870Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 19706,
-        "completion": 3321,
-        "total": 23027
-      },
-      "latency": 14957,
-      "error": null,
-      "ttft": 12932,
-      "tpot": 1,
-      "requestTime": 12932,
-      "llmTime": 2025
-    },
-    {
-      "requestId": "719ebd41-f89d-49ba-b512-b03e23e750f0",
-      "timestamp": "2026-05-23T00:02:50.850Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 30635,
-        "completion": 13597,
-        "total": 44232
-      },
-      "latency": 24377,
-      "error": null,
-      "ttft": 15947,
-      "tpot": 1,
-      "requestTime": 15947,
-      "llmTime": 8430
-    },
-    {
-      "requestId": "70896fa3-090e-4d39-a6c2-708459ec34e8",
-      "timestamp": "2026-05-23T00:03:15.261Z",
-      "apiKey": "ux-7KWOLMNDF5M3X...",
-      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
-      "model": "Qwen3.6-35B-A3B",
-      "method": "POST",
-      "path": "/chat/completions",
-      "status": 200,
-      "tokens": {
-        "prompt": 41672,
-        "completion": 2573,
-        "total": 44245
-      },
-      "latency": 21449,
-      "error": null,
-      "ttft": 19182,
-      "tpot": 1,
-      "requestTime": 19182,
-      "llmTime": 2267
-    },
-    {
       "requestId": "602ca4f8-47e9-41cc-b71a-075e3fcd499b",
       "timestamp": "2026-05-23T00:03:36.738Z",
       "apiKey": "ux-7KWOLMNDF5M3X...",
@@ -20999,37 +18437,2569 @@
       "tpot": 1,
       "requestTime": 16863,
       "llmTime": 7071
+    },
+    {
+      "requestId": "ce09b2fd-8e42-4528-8047-7fa52c599465",
+      "timestamp": "2026-05-23T08:41:51.409Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 39048,
+        "completion": 29153,
+        "total": 68201
+      },
+      "latency": 102157,
+      "error": null,
+      "ttft": 76881,
+      "tpot": 1,
+      "requestTime": 76881,
+      "llmTime": 25276
+    },
+    {
+      "requestId": "0cb2e582-b636-4996-9182-c5a823855039",
+      "timestamp": "2026-05-23T08:43:33.668Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 39549,
+        "completion": 59552,
+        "total": 99101
+      },
+      "latency": 50993,
+      "error": null,
+      "ttft": 1596,
+      "tpot": 1,
+      "requestTime": 1595,
+      "llmTime": 49397
+    },
+    {
+      "requestId": "db9ed540-2962-47df-807e-59bf5f842a0b",
+      "timestamp": "2026-05-23T08:44:24.890Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 40462,
+        "completion": 10589,
+        "total": 51051
+      },
+      "latency": 12711,
+      "error": null,
+      "ttft": 2573,
+      "tpot": 1,
+      "requestTime": 2573,
+      "llmTime": 10138
+    },
+    {
+      "requestId": "33481ff2-9070-47ba-bc94-a4bf0acd48a0",
+      "timestamp": "2026-05-23T08:44:37.678Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 40673,
+        "completion": 26535,
+        "total": 67208
+      },
+      "latency": 23155,
+      "error": null,
+      "ttft": 820,
+      "tpot": 1,
+      "requestTime": 819,
+      "llmTime": 22335
+    },
+    {
+      "requestId": "78c836ea-2ff7-481d-ab2f-be07601fc449",
+      "timestamp": "2026-05-23T08:45:00.916Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 41989,
+        "completion": 17887,
+        "total": 59876
+      },
+      "latency": 19576,
+      "error": null,
+      "ttft": 3457,
+      "tpot": 1,
+      "requestTime": 3457,
+      "llmTime": 16119
+    },
+    {
+      "requestId": "87c04940-46e8-4075-8f05-c58c94c70dee",
+      "timestamp": "2026-05-23T08:45:20.557Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 42359,
+        "completion": 9295,
+        "total": 51654
+      },
+      "latency": 10073,
+      "error": null,
+      "ttft": 1227,
+      "tpot": 1,
+      "requestTime": 1226,
+      "llmTime": 8847
+    },
+    {
+      "requestId": "602d6a2f-399c-4ba9-8dc7-fab045a538b2",
+      "timestamp": "2026-05-23T08:45:30.752Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 42578,
+        "completion": 9161,
+        "total": 51739
+      },
+      "latency": 9796,
+      "error": null,
+      "ttft": 935,
+      "tpot": 1,
+      "requestTime": 934,
+      "llmTime": 8861
+    },
+    {
+      "requestId": "64c202f9-00e6-4074-a087-c44aa55b86d7",
+      "timestamp": "2026-05-23T08:45:40.659Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 42943,
+        "completion": 12792,
+        "total": 55735
+      },
+      "latency": 13190,
+      "error": null,
+      "ttft": 1306,
+      "tpot": 1,
+      "requestTime": 1305,
+      "llmTime": 11884
+    },
+    {
+      "requestId": "f976bb66-e1a2-4b55-8078-9a3e1582921f",
+      "timestamp": "2026-05-23T08:45:53.972Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 43203,
+        "completion": 8719,
+        "total": 51922
+      },
+      "latency": 9495,
+      "error": null,
+      "ttft": 984,
+      "tpot": 1,
+      "requestTime": 983,
+      "llmTime": 8511
+    },
+    {
+      "requestId": "dfcab59c-b6ed-4ad7-9cbd-53c0ffb4c2db",
+      "timestamp": "2026-05-23T08:46:03.550Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 43382,
+        "completion": 34748,
+        "total": 78130
+      },
+      "latency": 31853,
+      "error": null,
+      "ttft": 842,
+      "tpot": 1,
+      "requestTime": 842,
+      "llmTime": 31011
+    },
+    {
+      "requestId": "dc472fc1-a0d4-49cf-966e-9894fd38b8de",
+      "timestamp": "2026-05-23T08:46:35.514Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 43999,
+        "completion": 21112,
+        "total": 65111
+      },
+      "latency": 20725,
+      "error": null,
+      "ttft": 1763,
+      "tpot": 1,
+      "requestTime": 1763,
+      "llmTime": 18962
+    },
+    {
+      "requestId": "d874adb6-62c0-4bc4-b6d6-f778fc6075ae",
+      "timestamp": "2026-05-23T08:46:56.311Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 44364,
+        "completion": 13336,
+        "total": 57700
+      },
+      "latency": 16042,
+      "error": null,
+      "ttft": 1250,
+      "tpot": 1,
+      "requestTime": 1249,
+      "llmTime": 14792
+    },
+    {
+      "requestId": "e3fb73c2-915b-47e0-b07e-dbfadc9fb7b3",
+      "timestamp": "2026-05-23T08:47:12.405Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 44617,
+        "completion": 11061,
+        "total": 55678
+      },
+      "latency": 11785,
+      "error": null,
+      "ttft": 994,
+      "tpot": 1,
+      "requestTime": 992,
+      "llmTime": 10792
+    },
+    {
+      "requestId": "cfca5e48-1d0c-47c3-9731-16e02368679c",
+      "timestamp": "2026-05-23T08:47:24.277Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 44840,
+        "completion": 9378,
+        "total": 54218
+      },
+      "latency": 10176,
+      "error": null,
+      "ttft": 927,
+      "tpot": 1,
+      "requestTime": 926,
+      "llmTime": 9250
+    },
+    {
+      "requestId": "694282d0-207f-4a7f-9cb3-3ee940a9b7b9",
+      "timestamp": "2026-05-23T08:47:34.563Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 45214,
+        "completion": 12275,
+        "total": 57489
+      },
+      "latency": 13048,
+      "error": null,
+      "ttft": 1387,
+      "tpot": 1,
+      "requestTime": 1386,
+      "llmTime": 11661
+    },
+    {
+      "requestId": "a711f563-19d0-4016-909e-958973b65ad6",
+      "timestamp": "2026-05-23T08:47:47.751Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 46297,
+        "completion": 13588,
+        "total": 59885
+      },
+      "latency": 19806,
+      "error": null,
+      "ttft": 6399,
+      "tpot": 1,
+      "requestTime": 6398,
+      "llmTime": 13407
+    },
+    {
+      "requestId": "4e625aa1-803e-47d7-8fa1-fd644eb54d8f",
+      "timestamp": "2026-05-23T08:48:07.677Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 46604,
+        "completion": 8205,
+        "total": 54809
+      },
+      "latency": 9618,
+      "error": null,
+      "ttft": 1186,
+      "tpot": 1,
+      "requestTime": 1186,
+      "llmTime": 8432
+    },
+    {
+      "requestId": "cb24f6fe-1741-4dca-ac26-e5790e83d342",
+      "timestamp": "2026-05-23T08:48:26.350Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "gemma-4-26B-A4B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 500,
+      "tokens": {
+        "prompt": 30874,
+        "completion": 0,
+        "total": 30874
+      },
+      "latency": 18,
+      "error": "fetch failed",
+      "ttft": null,
+      "tpot": null,
+      "requestTime": 0,
+      "llmTime": 0
+    },
+    {
+      "requestId": "11b26890-e09f-47b0-b638-06cad60e7176",
+      "timestamp": "2026-05-23T08:48:26.836Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "gemma-4-26B-A4B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 500,
+      "tokens": {
+        "prompt": 30874,
+        "completion": 0,
+        "total": 30874
+      },
+      "latency": 3,
+      "error": "fetch failed",
+      "ttft": null,
+      "tpot": null,
+      "requestTime": 0,
+      "llmTime": 0
+    },
+    {
+      "requestId": "8a0c92e0-6a85-4b2b-84d1-fc22f8c9804c",
+      "timestamp": "2026-05-23T08:48:27.719Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "gemma-4-26B-A4B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 500,
+      "tokens": {
+        "prompt": 30874,
+        "completion": 0,
+        "total": 30874
+      },
+      "latency": 2,
+      "error": "fetch failed",
+      "ttft": null,
+      "tpot": null,
+      "requestTime": 0,
+      "llmTime": 0
+    },
+    {
+      "requestId": "65dd2bc8-6093-4291-9961-815942a66752",
+      "timestamp": "2026-05-23T08:48:35.256Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "gemma-4-26B-A4B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 500,
+      "tokens": {
+        "prompt": 339,
+        "completion": 0,
+        "total": 339
+      },
+      "latency": 2,
+      "error": "fetch failed",
+      "ttft": null,
+      "tpot": null,
+      "requestTime": 0,
+      "llmTime": 0
+    },
+    {
+      "requestId": "944a5209-7519-429e-9c0a-e080483b7337",
+      "timestamp": "2026-05-23T08:48:35.673Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "gemma-4-26B-A4B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 500,
+      "tokens": {
+        "prompt": 339,
+        "completion": 0,
+        "total": 339
+      },
+      "latency": 2,
+      "error": "fetch failed",
+      "ttft": null,
+      "tpot": null,
+      "requestTime": 0,
+      "llmTime": 0
+    },
+    {
+      "requestId": "1d89a0e2-2736-4b47-b56b-81b1a4e0e1bb",
+      "timestamp": "2026-05-23T08:48:36.461Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "gemma-4-26B-A4B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 500,
+      "tokens": {
+        "prompt": 339,
+        "completion": 0,
+        "total": 339
+      },
+      "latency": 1,
+      "error": "fetch failed",
+      "ttft": null,
+      "tpot": null,
+      "requestTime": 0,
+      "llmTime": 0
+    },
+    {
+      "requestId": "d137324a-3e44-4621-a2b7-cab5e2949a88",
+      "timestamp": "2026-05-23T08:48:52.420Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "gemma-4-26B-A4B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 500,
+      "tokens": {
+        "prompt": 565,
+        "completion": 0,
+        "total": 565
+      },
+      "latency": 2,
+      "error": "fetch failed",
+      "ttft": null,
+      "tpot": null,
+      "requestTime": 0,
+      "llmTime": 0
+    },
+    {
+      "requestId": "4c451cef-34e7-430a-8481-dbb8c851dbe5",
+      "timestamp": "2026-05-23T08:48:52.805Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "gemma-4-26B-A4B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 500,
+      "tokens": {
+        "prompt": 565,
+        "completion": 0,
+        "total": 565
+      },
+      "latency": 2,
+      "error": "fetch failed",
+      "ttft": null,
+      "tpot": null,
+      "requestTime": 0,
+      "llmTime": 0
+    },
+    {
+      "requestId": "b75a00b1-f847-4595-927b-0a8cd5b98f4d",
+      "timestamp": "2026-05-23T08:48:53.601Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "gemma-4-26B-A4B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 500,
+      "tokens": {
+        "prompt": 565,
+        "completion": 0,
+        "total": 565
+      },
+      "latency": 3,
+      "error": "fetch failed",
+      "ttft": null,
+      "tpot": null,
+      "requestTime": 0,
+      "llmTime": 0
+    },
+    {
+      "requestId": "b971050a-5443-4329-9ca2-adbbe2f5762b",
+      "timestamp": "2026-05-23T08:49:08.683Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "gemma-4-26B-A4B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 500,
+      "tokens": {
+        "prompt": 565,
+        "completion": 0,
+        "total": 565
+      },
+      "latency": 4,
+      "error": "fetch failed",
+      "ttft": null,
+      "tpot": null,
+      "requestTime": 0,
+      "llmTime": 0
+    },
+    {
+      "requestId": "f37fc88d-09d8-4b21-8006-a0085abd055c",
+      "timestamp": "2026-05-23T08:49:09.173Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "gemma-4-26B-A4B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 500,
+      "tokens": {
+        "prompt": 565,
+        "completion": 0,
+        "total": 565
+      },
+      "latency": 1,
+      "error": "fetch failed",
+      "ttft": null,
+      "tpot": null,
+      "requestTime": 0,
+      "llmTime": 0
+    },
+    {
+      "requestId": "bc2fdfee-8296-4e5b-b496-217d9e501181",
+      "timestamp": "2026-05-23T08:49:10.097Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "gemma-4-26B-A4B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 500,
+      "tokens": {
+        "prompt": 565,
+        "completion": 0,
+        "total": 565
+      },
+      "latency": 1,
+      "error": "fetch failed",
+      "ttft": null,
+      "tpot": null,
+      "requestTime": 0,
+      "llmTime": 0
+    },
+    {
+      "requestId": "b7458bfe-5aa1-4a77-92be-088952f95c90",
+      "timestamp": "2026-05-23T08:56:36.428Z",
+      "apiKey": "ux-MQ8XGX8ZWB5P0...",
+      "apiKeyFull": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "model": "UANTEKDEV0",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "status": 500,
+      "tokens": {
+        "prompt": 10636,
+        "completion": 0,
+        "total": 10636
+      },
+      "latency": 18,
+      "error": "fetch failed",
+      "ttft": null
+    },
+    {
+      "requestId": "d4063105-811d-43ad-bf28-0a84ac4316d5",
+      "timestamp": "2026-05-23T08:56:36.923Z",
+      "apiKey": "ux-MQ8XGX8ZWB5P0...",
+      "apiKeyFull": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "model": "UANTEKDEV0",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "status": 500,
+      "tokens": {
+        "prompt": 10636,
+        "completion": 0,
+        "total": 10636
+      },
+      "latency": 2,
+      "error": "fetch failed",
+      "ttft": null
+    },
+    {
+      "requestId": "e02b6a3c-5663-4af2-a081-8de694a51cda",
+      "timestamp": "2026-05-23T08:56:37.724Z",
+      "apiKey": "ux-MQ8XGX8ZWB5P0...",
+      "apiKeyFull": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "model": "UANTEKDEV0",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "status": 500,
+      "tokens": {
+        "prompt": 10636,
+        "completion": 0,
+        "total": 10636
+      },
+      "latency": 2,
+      "error": "fetch failed",
+      "ttft": null
+    },
+    {
+      "requestId": "7c1739a9-421f-4774-b218-838143a69f84",
+      "timestamp": "2026-05-23T08:56:38.094Z",
+      "apiKey": "ux-MQ8XGX8ZWB5P0...",
+      "apiKeyFull": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "model": "UANTEKDEV0",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "status": 500,
+      "tokens": {
+        "prompt": 10636,
+        "completion": 0,
+        "total": 10636
+      },
+      "latency": 2,
+      "error": "fetch failed",
+      "ttft": null
+    },
+    {
+      "requestId": "fbb0cdba-fd9f-4c34-9d78-057fc9ec52ac",
+      "timestamp": "2026-05-23T08:56:38.488Z",
+      "apiKey": "ux-MQ8XGX8ZWB5P0...",
+      "apiKeyFull": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "model": "UANTEKDEV0",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "status": 500,
+      "tokens": {
+        "prompt": 10636,
+        "completion": 0,
+        "total": 10636
+      },
+      "latency": 2,
+      "error": "fetch failed",
+      "ttft": null
+    },
+    {
+      "requestId": "2d7d5367-0478-4e72-b243-2c43b5b224cd",
+      "timestamp": "2026-05-23T08:56:39.427Z",
+      "apiKey": "ux-MQ8XGX8ZWB5P0...",
+      "apiKeyFull": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "model": "UANTEKDEV0",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "status": 500,
+      "tokens": {
+        "prompt": 10636,
+        "completion": 0,
+        "total": 10636
+      },
+      "latency": 2,
+      "error": "fetch failed",
+      "ttft": null
+    },
+    {
+      "requestId": "fa38ba64-99a5-4d11-9ced-48085296a7bf",
+      "timestamp": "2026-05-23T08:56:40.498Z",
+      "apiKey": "ux-MQ8XGX8ZWB5P0...",
+      "apiKeyFull": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "model": "UANTEKDEV0",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "status": 500,
+      "tokens": {
+        "prompt": 10636,
+        "completion": 0,
+        "total": 10636
+      },
+      "latency": 2,
+      "error": "fetch failed",
+      "ttft": null
+    },
+    {
+      "requestId": "8cb62b5f-293f-44b3-ab21-779be04dfbaa",
+      "timestamp": "2026-05-23T08:56:40.931Z",
+      "apiKey": "ux-MQ8XGX8ZWB5P0...",
+      "apiKeyFull": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "model": "UANTEKDEV0",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "status": 500,
+      "tokens": {
+        "prompt": 10636,
+        "completion": 0,
+        "total": 10636
+      },
+      "latency": 2,
+      "error": "fetch failed",
+      "ttft": null
+    },
+    {
+      "requestId": "71e79858-d3a1-493a-bb0f-595525ebc776",
+      "timestamp": "2026-05-23T08:56:41.871Z",
+      "apiKey": "ux-MQ8XGX8ZWB5P0...",
+      "apiKeyFull": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "model": "UANTEKDEV0",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "status": 500,
+      "tokens": {
+        "prompt": 10636,
+        "completion": 0,
+        "total": 10636
+      },
+      "latency": 2,
+      "error": "fetch failed",
+      "ttft": null
+    },
+    {
+      "requestId": "cc68a449-f137-49c8-b6ea-ac87871ae23e",
+      "timestamp": "2026-05-23T09:24:00.023Z",
+      "apiKey": "anonymous...",
+      "apiKeyFull": "anonymous",
+      "model": "unknown",
+      "method": "GET",
+      "path": "/models",
+      "status": 200,
+      "tokens": {
+        "prompt": 1,
+        "completion": 0,
+        "total": 1
+      },
+      "latency": 8,
+      "error": null,
+      "ttft": null
+    },
+    {
+      "requestId": "28d5f62b-7ee2-4164-bf0d-3c182d791dc1",
+      "timestamp": "2026-05-23T09:24:01.686Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 8302,
+        "completion": 3347,
+        "total": 11649
+      },
+      "latency": 5918,
+      "error": null,
+      "ttft": 3878
+    },
+    {
+      "requestId": "8eabe479-ddc1-4345-b568-2f13a89fde32",
+      "timestamp": "2026-05-23T09:24:07.889Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 9213,
+        "completion": 16568,
+        "total": 25781
+      },
+      "latency": 10040,
+      "error": null,
+      "ttft": 2278
+    },
+    {
+      "requestId": "f2254c6a-1e75-4d0d-8f6b-e7d5051ad930",
+      "timestamp": "2026-05-23T10:02:27.648Z",
+      "apiKey": "anonymous...",
+      "apiKeyFull": "anonymous",
+      "model": "unknown",
+      "method": "GET",
+      "path": "/models",
+      "status": 200,
+      "tokens": {
+        "prompt": 1,
+        "completion": 0,
+        "total": 1
+      },
+      "latency": 20,
+      "error": null,
+      "ttft": null,
+      "tpot": null,
+      "requestTime": 23,
+      "llmTime": 0
+    },
+    {
+      "requestId": "1503e151-dee9-42b1-a69b-4286010469c9",
+      "timestamp": "2026-05-23T10:02:29.232Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 8763,
+        "completion": 3809,
+        "total": 12572
+      },
+      "latency": 4727,
+      "error": null,
+      "ttft": 2715,
+      "tpot": 1,
+      "requestTime": 2714,
+      "llmTime": 2013
+    },
+    {
+      "requestId": "ea7f260d-193e-4b84-b5e5-2e2eb606a205",
+      "timestamp": "2026-05-23T10:02:34.013Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 11665,
+        "completion": 5553,
+        "total": 17218
+      },
+      "latency": 7233,
+      "error": null,
+      "ttft": 4139,
+      "tpot": 1,
+      "requestTime": 4138,
+      "llmTime": 3094
+    },
+    {
+      "requestId": "a7ef0b4b-6ab6-45e6-ada6-f218d4fb34eb",
+      "timestamp": "2026-05-23T10:02:41.321Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 21885,
+        "completion": 14991,
+        "total": 36876
+      },
+      "latency": 25616,
+      "error": null,
+      "ttft": 16936,
+      "tpot": 1,
+      "requestTime": 16936,
+      "llmTime": 8680
+    },
+    {
+      "requestId": "81245c62-c694-421a-aa19-d50583b3d4f3",
+      "timestamp": "2026-05-23T10:03:07.010Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 32264,
+        "completion": 17675,
+        "total": 49939
+      },
+      "latency": 31132,
+      "error": null,
+      "ttft": 19687,
+      "tpot": 1,
+      "requestTime": 19686,
+      "llmTime": 11445
+    },
+    {
+      "requestId": "ae2984cf-fabe-43cc-8101-2f01537357d5",
+      "timestamp": "2026-05-23T10:03:47.195Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 32657,
+        "completion": 10222,
+        "total": 42879
+      },
+      "latency": 8017,
+      "error": null,
+      "ttft": 943,
+      "tpot": 1,
+      "requestTime": 943,
+      "llmTime": 7074
+    },
+    {
+      "requestId": "e40cbb39-a8cd-42ec-a15a-f56cb0448d15",
+      "timestamp": "2026-05-23T10:03:55.502Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 32858,
+        "completion": 18246,
+        "total": 51104
+      },
+      "latency": 12159,
+      "error": null,
+      "ttft": 642,
+      "tpot": 1,
+      "requestTime": 641,
+      "llmTime": 11517
+    },
+    {
+      "requestId": "11605b0a-6839-4b45-8077-e5b4b73b95f3",
+      "timestamp": "2026-05-23T10:04:07.787Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 33359,
+        "completion": 15710,
+        "total": 49069
+      },
+      "latency": 11338,
+      "error": null,
+      "ttft": 1262,
+      "tpot": 1,
+      "requestTime": 1262,
+      "llmTime": 10076
+    },
+    {
+      "requestId": "76f552b4-78bf-48ad-a341-576bddfc0f80",
+      "timestamp": "2026-05-23T10:04:19.344Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 33713,
+        "completion": 4965,
+        "total": 38678
+      },
+      "latency": 4978,
+      "error": null,
+      "ttft": 941,
+      "tpot": 1,
+      "requestTime": 941,
+      "llmTime": 4037
+    },
+    {
+      "requestId": "8c0533bd-50c8-4639-ac68-7f9b920af0e1",
+      "timestamp": "2026-05-23T10:04:24.375Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 33844,
+        "completion": 15249,
+        "total": 49093
+      },
+      "latency": 10406,
+      "error": null,
+      "ttft": 567,
+      "tpot": 1,
+      "requestTime": 566,
+      "llmTime": 9839
+    },
+    {
+      "requestId": "db361266-d690-47fc-880e-bb41ffedbf8e",
+      "timestamp": "2026-05-23T10:04:34.875Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 34080,
+        "completion": 5093,
+        "total": 39173
+      },
+      "latency": 4668,
+      "error": null,
+      "ttft": 750,
+      "tpot": 1,
+      "requestTime": 749,
+      "llmTime": 3919
+    },
+    {
+      "requestId": "3ae32cf6-4835-4746-8146-734e8364c1d0",
+      "timestamp": "2026-05-23T10:04:39.602Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 34204,
+        "completion": 8646,
+        "total": 42850
+      },
+      "latency": 6516,
+      "error": null,
+      "ttft": 579,
+      "tpot": 1,
+      "requestTime": 579,
+      "llmTime": 5937
+    },
+    {
+      "requestId": "c94d33ab-41c0-4a71-a04b-6b9e6c474059",
+      "timestamp": "2026-05-23T10:04:46.227Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 34408,
+        "completion": 11123,
+        "total": 45531
+      },
+      "latency": 8284,
+      "error": null,
+      "ttft": 693,
+      "tpot": 1,
+      "requestTime": 693,
+      "llmTime": 7591
+    },
+    {
+      "requestId": "d154f70c-9300-44a2-a8c4-83903529f3e4",
+      "timestamp": "2026-05-23T10:04:54.631Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 34798,
+        "completion": 4437,
+        "total": 39235
+      },
+      "latency": 4716,
+      "error": null,
+      "ttft": 1069,
+      "tpot": 1,
+      "requestTime": 1067,
+      "llmTime": 3648
+    },
+    {
+      "requestId": "3712f42b-6503-4c05-a022-71f6529b5fc6",
+      "timestamp": "2026-05-23T10:05:04.399Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 35516,
+        "completion": 14792,
+        "total": 50308
+      },
+      "latency": 12842,
+      "error": null,
+      "ttft": 2732,
+      "tpot": 1,
+      "requestTime": 2731,
+      "llmTime": 10110
+    },
+    {
+      "requestId": "ce8311c7-674d-479c-b4d0-c47c88dfc7c9",
+      "timestamp": "2026-05-23T10:05:17.377Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 35837,
+        "completion": 20152,
+        "total": 55989
+      },
+      "latency": 14006,
+      "error": null,
+      "ttft": 834,
+      "tpot": 1,
+      "requestTime": 834,
+      "llmTime": 13172
+    },
+    {
+      "requestId": "990c5cf1-8a5d-42fe-bd9a-f333a1c48d12",
+      "timestamp": "2026-05-23T10:05:31.511Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 36211,
+        "completion": 47538,
+        "total": 83749
+      },
+      "latency": 30952,
+      "error": null,
+      "ttft": 1006,
+      "tpot": 1,
+      "requestTime": 1004,
+      "llmTime": 29947
+    },
+    {
+      "requestId": "f43d24fe-dbd7-4191-9050-0295ee9e26ba",
+      "timestamp": "2026-05-23T10:06:02.514Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 36967,
+        "completion": 9914,
+        "total": 46881
+      },
+      "latency": 8507,
+      "error": null,
+      "ttft": 1605,
+      "tpot": 1,
+      "requestTime": 1605,
+      "llmTime": 6902
+    },
+    {
+      "requestId": "64bdd425-1bfa-472c-9ea6-0a2a9b720b9b",
+      "timestamp": "2026-05-23T10:06:11.071Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 37187,
+        "completion": 15792,
+        "total": 52979
+      },
+      "latency": 11384,
+      "error": null,
+      "ttft": 690,
+      "tpot": 1,
+      "requestTime": 689,
+      "llmTime": 10695
+    },
+    {
+      "requestId": "faa12eba-6c17-4abb-846a-4eec99550535",
+      "timestamp": "2026-05-23T10:06:22.498Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 37475,
+        "completion": 9877,
+        "total": 47352
+      },
+      "latency": 7937,
+      "error": null,
+      "ttft": 781,
+      "tpot": 1,
+      "requestTime": 781,
+      "llmTime": 7156
+    },
+    {
+      "requestId": "9de1a82c-1124-4170-bf5c-7071e1ba7762",
+      "timestamp": "2026-05-23T10:06:30.476Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 37700,
+        "completion": 25898,
+        "total": 63598
+      },
+      "latency": 17729,
+      "error": null,
+      "ttft": 703,
+      "tpot": 1,
+      "requestTime": 703,
+      "llmTime": 17026
+    },
+    {
+      "requestId": "bcf51693-db20-465f-9434-9d7b08ede41b",
+      "timestamp": "2026-05-23T10:06:48.256Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 38175,
+        "completion": 8887,
+        "total": 47062
+      },
+      "latency": 7547,
+      "error": null,
+      "ttft": 1070,
+      "tpot": 1,
+      "requestTime": 1069,
+      "llmTime": 6477
+    },
+    {
+      "requestId": "f268e326-005b-4b15-84e1-e493158acdf3",
+      "timestamp": "2026-05-23T10:06:55.845Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 38372,
+        "completion": 9897,
+        "total": 48269
+      },
+      "latency": 7854,
+      "error": null,
+      "ttft": 633,
+      "tpot": 1,
+      "requestTime": 633,
+      "llmTime": 7221
+    },
+    {
+      "requestId": "d96b47e6-c1cf-44bf-92cc-803d3ae142be",
+      "timestamp": "2026-05-23T10:07:03.741Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 38589,
+        "completion": 9856,
+        "total": 48445
+      },
+      "latency": 7788,
+      "error": null,
+      "ttft": 730,
+      "tpot": 1,
+      "requestTime": 730,
+      "llmTime": 7058
+    },
+    {
+      "requestId": "0ee2d878-c5c7-48b2-9228-11fb788fe70b",
+      "timestamp": "2026-05-23T10:07:11.571Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 38795,
+        "completion": 10046,
+        "total": 48841
+      },
+      "latency": 7961,
+      "error": null,
+      "ttft": 728,
+      "tpot": 1,
+      "requestTime": 727,
+      "llmTime": 7233
+    },
+    {
+      "requestId": "7d628f52-b8e7-47c2-be84-9fac142ffecf",
+      "timestamp": "2026-05-23T10:07:19.574Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 39007,
+        "completion": 10117,
+        "total": 49124
+      },
+      "latency": 8041,
+      "error": null,
+      "ttft": 734,
+      "tpot": 1,
+      "requestTime": 733,
+      "llmTime": 7307
+    },
+    {
+      "requestId": "0f45cf33-a62f-45e8-adf7-7fd0d5632775",
+      "timestamp": "2026-05-23T10:07:27.656Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 39219,
+        "completion": 10046,
+        "total": 49265
+      },
+      "latency": 8015,
+      "error": null,
+      "ttft": 718,
+      "tpot": 1,
+      "requestTime": 717,
+      "llmTime": 7297
+    },
+    {
+      "requestId": "9e877cc0-2a3e-42c3-b978-49e5989c2a22",
+      "timestamp": "2026-05-23T10:07:35.719Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 39431,
+        "completion": 10116,
+        "total": 49547
+      },
+      "latency": 8093,
+      "error": null,
+      "ttft": 747,
+      "tpot": 1,
+      "requestTime": 746,
+      "llmTime": 7346
+    },
+    {
+      "requestId": "089f6fed-77e7-490a-8a36-be2fb789bd79",
+      "timestamp": "2026-05-23T10:07:43.853Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 39643,
+        "completion": 10046,
+        "total": 49689
+      },
+      "latency": 8035,
+      "error": null,
+      "ttft": 724,
+      "tpot": 1,
+      "requestTime": 723,
+      "llmTime": 7311
+    },
+    {
+      "requestId": "474f3926-e9d4-4565-b1df-3821d35f0210",
+      "timestamp": "2026-05-23T10:07:51.930Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 39855,
+        "completion": 10117,
+        "total": 49972
+      },
+      "latency": 8134,
+      "error": null,
+      "ttft": 754,
+      "tpot": 1,
+      "requestTime": 753,
+      "llmTime": 7380
+    },
+    {
+      "requestId": "3456c0a6-62ed-4e53-9496-718591718c79",
+      "timestamp": "2026-05-23T10:08:00.108Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 40067,
+        "completion": 10046,
+        "total": 50113
+      },
+      "latency": 8084,
+      "error": null,
+      "ttft": 732,
+      "tpot": 1,
+      "requestTime": 732,
+      "llmTime": 7352
+    },
+    {
+      "requestId": "d2dd0bc1-8f03-4b42-bd25-34cfd8f9bb46",
+      "timestamp": "2026-05-23T10:08:08.235Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 40279,
+        "completion": 10117,
+        "total": 50396
+      },
+      "latency": 8160,
+      "error": null,
+      "ttft": 761,
+      "tpot": 1,
+      "requestTime": 761,
+      "llmTime": 7399
+    },
+    {
+      "requestId": "799b358e-fbe5-424d-ae83-e5d1d11da756",
+      "timestamp": "2026-05-23T10:08:16.437Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 40491,
+        "completion": 10046,
+        "total": 50537
+      },
+      "latency": 8097,
+      "error": null,
+      "ttft": 734,
+      "tpot": 1,
+      "requestTime": 733,
+      "llmTime": 7363
+    },
+    {
+      "requestId": "67eaf26d-02f4-40c5-a34f-7fe5f8db097d",
+      "timestamp": "2026-05-23T10:08:24.595Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 40703,
+        "completion": 10117,
+        "total": 50820
+      },
+      "latency": 8157,
+      "error": null,
+      "ttft": 772,
+      "tpot": 1,
+      "requestTime": 772,
+      "llmTime": 7385
+    },
+    {
+      "requestId": "5b92cdd9-ae83-4adc-9bd8-0bda1d661be3",
+      "timestamp": "2026-05-23T10:08:32.800Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 40952,
+        "completion": 10343,
+        "total": 51295
+      },
+      "latency": 8928,
+      "error": null,
+      "ttft": 829,
+      "tpot": 1,
+      "requestTime": 828,
+      "llmTime": 8100
+    },
+    {
+      "requestId": "8ace58e8-587b-45b0-bb67-53cfbb14d4cd",
+      "timestamp": "2026-05-23T10:08:41.792Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 41223,
+        "completion": 6934,
+        "total": 48157
+      },
+      "latency": 6549,
+      "error": null,
+      "ttft": 842,
+      "tpot": 1,
+      "requestTime": 841,
+      "llmTime": 5708
+    },
+    {
+      "requestId": "68b7480a-5c32-4430-a0ba-dd03895f1591",
+      "timestamp": "2026-05-23T10:08:48.404Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 41383,
+        "completion": 7614,
+        "total": 48997
+      },
+      "latency": 6638,
+      "error": null,
+      "ttft": 578,
+      "tpot": 1,
+      "requestTime": 577,
+      "llmTime": 6060
+    },
+    {
+      "requestId": "1f3c9b96-a834-4f96-a1da-3b996f743efb",
+      "timestamp": "2026-05-23T10:08:55.148Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 41551,
+        "completion": 10744,
+        "total": 52295
+      },
+      "latency": 8753,
+      "error": null,
+      "ttft": 589,
+      "tpot": 1,
+      "requestTime": 588,
+      "llmTime": 8164
+    },
+    {
+      "requestId": "e12f5825-d189-4328-bb57-b62edafc318e",
+      "timestamp": "2026-05-23T10:09:04.010Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 41761,
+        "completion": 7423,
+        "total": 49184
+      },
+      "latency": 6495,
+      "error": null,
+      "ttft": 724,
+      "tpot": 1,
+      "requestTime": 724,
+      "llmTime": 5771
+    },
+    {
+      "requestId": "c26a3849-1f96-4c78-b3dc-7f9fa534e337",
+      "timestamp": "2026-05-23T10:09:10.639Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 42032,
+        "completion": 4434,
+        "total": 46466
+      },
+      "latency": 4804,
+      "error": null,
+      "ttft": 847,
+      "tpot": 1,
+      "requestTime": 846,
+      "llmTime": 3957
+    },
+    {
+      "requestId": "2915b152-9122-4a0a-b300-e9c3ec14d3a2",
+      "timestamp": "2026-05-23T10:09:15.553Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 42361,
+        "completion": 7002,
+        "total": 49363
+      },
+      "latency": 6861,
+      "error": null,
+      "ttft": 1089,
+      "tpot": 1,
+      "requestTime": 1087,
+      "llmTime": 5773
+    },
+    {
+      "requestId": "acb7d350-d14e-45eb-86c3-1e8eadc8c7e8",
+      "timestamp": "2026-05-23T10:09:22.522Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 42524,
+        "completion": 7780,
+        "total": 50304
+      },
+      "latency": 6776,
+      "error": null,
+      "ttft": 612,
+      "tpot": 1,
+      "requestTime": 612,
+      "llmTime": 6164
+    },
+    {
+      "requestId": "7d7bc5bc-5c10-421b-a315-c12736a17c69",
+      "timestamp": "2026-05-23T10:09:29.405Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 42784,
+        "completion": 8579,
+        "total": 51363
+      },
+      "latency": 7772,
+      "error": null,
+      "ttft": 928,
+      "tpot": 1,
+      "requestTime": 928,
+      "llmTime": 6844
+    },
+    {
+      "requestId": "d4fccab4-681e-470a-8694-a6b63cde256a",
+      "timestamp": "2026-05-23T10:09:37.279Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 42951,
+        "completion": 10101,
+        "total": 53052
+      },
+      "latency": 8199,
+      "error": null,
+      "ttft": 672,
+      "tpot": 1,
+      "requestTime": 671,
+      "llmTime": 7527
+    },
+    {
+      "requestId": "a4fb6d25-b513-4ad2-89ed-9dc79564f6c1",
+      "timestamp": "2026-05-23T10:09:45.636Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 43163,
+        "completion": 11099,
+        "total": 54262
+      },
+      "latency": 9540,
+      "error": null,
+      "ttft": 837,
+      "tpot": 1,
+      "requestTime": 837,
+      "llmTime": 8703
+    },
+    {
+      "requestId": "d5d6713d-0011-4969-bc47-734d44fd7c83",
+      "timestamp": "2026-05-23T10:09:55.253Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 43402,
+        "completion": 6610,
+        "total": 50012
+      },
+      "latency": 6344,
+      "error": null,
+      "ttft": 872,
+      "tpot": 1,
+      "requestTime": 872,
+      "llmTime": 5472
+    },
+    {
+      "requestId": "5821695b-249e-496d-add0-d2bdd7764c3f",
+      "timestamp": "2026-05-23T10:10:01.739Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 43585,
+        "completion": 5447,
+        "total": 49032
+      },
+      "latency": 5348,
+      "error": null,
+      "ttft": 692,
+      "tpot": 1,
+      "requestTime": 691,
+      "llmTime": 4656
+    },
+    {
+      "requestId": "a8d64c48-74b6-40ea-afa9-7ea8a45d611e",
+      "timestamp": "2026-05-23T10:10:07.217Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 43734,
+        "completion": 10692,
+        "total": 54426
+      },
+      "latency": 8990,
+      "error": null,
+      "ttft": 626,
+      "tpot": 1,
+      "requestTime": 625,
+      "llmTime": 8364
+    },
+    {
+      "requestId": "0bb83b33-ca32-4454-a9a7-7cafd26efb67",
+      "timestamp": "2026-05-23T10:10:16.292Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 43987,
+        "completion": 14653,
+        "total": 58640
+      },
+      "latency": 12020,
+      "error": null,
+      "ttft": 870,
+      "tpot": 1,
+      "requestTime": 869,
+      "llmTime": 11150
+    },
+    {
+      "requestId": "2378a58a-436d-4b68-853b-b64535a175e8",
+      "timestamp": "2026-05-23T10:10:28.378Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 44355,
+        "completion": 12568,
+        "total": 56923
+      },
+      "latency": 10622,
+      "error": null,
+      "ttft": 1112,
+      "tpot": 1,
+      "requestTime": 1111,
+      "llmTime": 9510
+    },
+    {
+      "requestId": "01a50d0b-1a3d-461e-bead-466f8216a67e",
+      "timestamp": "2026-05-23T10:10:39.066Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 44744,
+        "completion": 6938,
+        "total": 51682
+      },
+      "latency": 7438,
+      "error": null,
+      "ttft": 1531,
+      "tpot": 1,
+      "requestTime": 1530,
+      "llmTime": 5907
+    },
+    {
+      "requestId": "454dfc18-debb-4cba-81ee-9d1bb783ada0",
+      "timestamp": "2026-05-23T10:10:46.558Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 44906,
+        "completion": 1090,
+        "total": 45996
+      },
+      "latency": 1979,
+      "error": null,
+      "ttft": 619,
+      "tpot": 1,
+      "requestTime": 619,
+      "llmTime": 1360
+    },
+    {
+      "requestId": "2ab5ec03-d07f-4bdd-8954-906da371c12d",
+      "timestamp": "2026-05-23T10:10:48.589Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 45076,
+        "completion": 8631,
+        "total": 53707
+      },
+      "latency": 7775,
+      "error": null,
+      "ttft": 627,
+      "tpot": 1,
+      "requestTime": 627,
+      "llmTime": 7148
+    },
+    {
+      "requestId": "3303d294-7027-49a8-afee-f64a7fa8661f",
+      "timestamp": "2026-05-23T10:10:56.447Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 45284,
+        "completion": 8766,
+        "total": 54050
+      },
+      "latency": 7912,
+      "error": null,
+      "ttft": 798,
+      "tpot": 1,
+      "requestTime": 797,
+      "llmTime": 7114
+    },
+    {
+      "requestId": "5c99f9d4-088e-487e-9cba-8fa2e5dd9014",
+      "timestamp": "2026-05-23T10:11:04.402Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 45493,
+        "completion": 7540,
+        "total": 53033
+      },
+      "latency": 7099,
+      "error": null,
+      "ttft": 704,
+      "tpot": 1,
+      "requestTime": 703,
+      "llmTime": 6395
+    },
+    {
+      "requestId": "a35ffe2c-2ebe-4877-ac99-5103cfb99be7",
+      "timestamp": "2026-05-23T10:11:11.568Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 46813,
+        "completion": 7418,
+        "total": 54231
+      },
+      "latency": 9367,
+      "error": null,
+      "ttft": 3105,
+      "tpot": 1,
+      "requestTime": 3104,
+      "llmTime": 6262
+    },
+    {
+      "requestId": "e65c2a3e-d0d0-409c-9330-1cc3c877d17d",
+      "timestamp": "2026-05-23T10:11:21.008Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 47064,
+        "completion": 6794,
+        "total": 53858
+      },
+      "latency": 6977,
+      "error": null,
+      "ttft": 920,
+      "tpot": 1,
+      "requestTime": 919,
+      "llmTime": 6057
+    },
+    {
+      "requestId": "4c19e549-5d99-42e8-a945-72f8a59320d9",
+      "timestamp": "2026-05-23T10:11:28.044Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 47213,
+        "completion": 6245,
+        "total": 53458
+      },
+      "latency": 6134,
+      "error": null,
+      "ttft": 631,
+      "tpot": 1,
+      "requestTime": 630,
+      "llmTime": 5503
+    },
+    {
+      "requestId": "6f42f661-fcbe-4756-9068-51d2922c5d0c",
+      "timestamp": "2026-05-23T10:11:34.270Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 47355,
+        "completion": 6079,
+        "total": 53434
+      },
+      "latency": 6111,
+      "error": null,
+      "ttft": 690,
+      "tpot": 1,
+      "requestTime": 688,
+      "llmTime": 5421
+    },
+    {
+      "requestId": "ebb6d58d-200a-4b31-b090-e6a49ae8075e",
+      "timestamp": "2026-05-23T10:11:40.449Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 48298,
+        "completion": 8044,
+        "total": 56342
+      },
+      "latency": 12007,
+      "error": null,
+      "ttft": 4942,
+      "tpot": 1,
+      "requestTime": 4942,
+      "llmTime": 7065
+    },
+    {
+      "requestId": "d9b5db51-480f-4097-9c13-f3ec9cc92ae9",
+      "timestamp": "2026-05-23T10:11:52.536Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 49264,
+        "completion": 7985,
+        "total": 57249
+      },
+      "latency": 12176,
+      "error": null,
+      "ttft": 5096,
+      "tpot": 1,
+      "requestTime": 5095,
+      "llmTime": 7080
+    },
+    {
+      "requestId": "9bd21f31-b2ed-4e1e-b838-371ea4374d39",
+      "timestamp": "2026-05-23T10:12:04.776Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 49429,
+        "completion": 17810,
+        "total": 67239
+      },
+      "latency": 16457,
+      "error": null,
+      "ttft": 719,
+      "tpot": 1,
+      "requestTime": 718,
+      "llmTime": 15738
+    },
+    {
+      "requestId": "3bd51763-20cf-4a02-ad3e-1e87b7ea389e",
+      "timestamp": "2026-05-23T10:12:21.283Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 49808,
+        "completion": 11794,
+        "total": 61602
+      },
+      "latency": 10814,
+      "error": null,
+      "ttft": 1156,
+      "tpot": 1,
+      "requestTime": 1155,
+      "llmTime": 9658
+    },
+    {
+      "requestId": "8dde5503-ee9f-4dae-b1c2-ee57538ba3fe",
+      "timestamp": "2026-05-23T10:24:00.020Z",
+      "apiKey": "anonymous...",
+      "apiKeyFull": "anonymous",
+      "model": "unknown",
+      "method": "GET",
+      "path": "/models",
+      "status": 200,
+      "tokens": {
+        "prompt": 1,
+        "completion": 0,
+        "total": 1
+      },
+      "latency": 4,
+      "error": null,
+      "ttft": null,
+      "tpot": null,
+      "requestTime": 4,
+      "llmTime": 0
+    },
+    {
+      "requestId": "1535f376-4c01-4d95-ac69-6977defdd8f1",
+      "timestamp": "2026-05-23T10:24:01.701Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 8302,
+        "completion": 3732,
+        "total": 12034
+      },
+      "latency": 23397,
+      "error": null,
+      "ttft": 21122,
+      "tpot": 1,
+      "requestTime": 21122,
+      "llmTime": 2275
+    },
+    {
+      "requestId": "3079231e-6f1a-435a-9bba-951fc1dffb67",
+      "timestamp": "2026-05-23T10:24:25.277Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 8457,
+        "completion": 1531,
+        "total": 9988
+      },
+      "latency": 1454,
+      "error": null,
+      "ttft": 449,
+      "tpot": 1,
+      "requestTime": 449,
+      "llmTime": 1005
+    },
+    {
+      "requestId": "f6e76c8f-6c10-42a2-b3c7-46ad4bee9895",
+      "timestamp": "2026-05-23T10:24:26.756Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 23205,
+        "completion": 24369,
+        "total": 47574
+      },
+      "latency": 65306,
+      "error": null,
+      "ttft": 48530,
+      "tpot": 1,
+      "requestTime": 48529,
+      "llmTime": 16776
+    },
+    {
+      "requestId": "c41565d6-abb1-4d13-840f-8b95f795a72b",
+      "timestamp": "2026-05-23T10:55:37.844Z",
+      "apiKey": "anonymous...",
+      "apiKeyFull": "anonymous",
+      "model": "unknown",
+      "method": "GET",
+      "path": "/models",
+      "status": 200,
+      "tokens": {
+        "prompt": 1,
+        "completion": 0,
+        "total": 1
+      },
+      "latency": 4,
+      "error": null,
+      "ttft": null,
+      "tpot": null,
+      "requestTime": 4,
+      "llmTime": 0
+    },
+    {
+      "requestId": "dc87cc39-2d2c-4c21-bce3-9f6ea84a201f",
+      "timestamp": "2026-05-23T10:55:39.429Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 8273,
+        "completion": 3749,
+        "total": 12022
+      },
+      "latency": 5542,
+      "error": null,
+      "ttft": 3325,
+      "tpot": 1,
+      "requestTime": 3323,
+      "llmTime": 2218
+    },
+    {
+      "requestId": "66fa1741-d104-43c0-954e-9476459dc726",
+      "timestamp": "2026-05-23T10:55:45.068Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 8442,
+        "completion": 1457,
+        "total": 9899
+      },
+      "latency": 1398,
+      "error": null,
+      "ttft": 438,
+      "tpot": 1,
+      "requestTime": 438,
+      "llmTime": 960
+    },
+    {
+      "requestId": "a34b5792-452c-48ef-8bba-71291cf514e1",
+      "timestamp": "2026-05-23T10:55:46.490Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 9384,
+        "completion": 2665,
+        "total": 12049
+      },
+      "latency": 3136,
+      "error": null,
+      "ttft": 1286,
+      "tpot": 1,
+      "requestTime": 1286,
+      "llmTime": 1850
+    },
+    {
+      "requestId": "762ac792-bb0b-4aed-b043-ac5a1a7bc573",
+      "timestamp": "2026-05-23T10:55:49.825Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 9936,
+        "completion": 38194,
+        "total": 48130
+      },
+      "latency": 18785,
+      "error": null,
+      "ttft": 841,
+      "tpot": 0,
+      "requestTime": 840,
+      "llmTime": 17944
+    },
+    {
+      "requestId": "3a704d6d-d8ea-4c66-ad9a-ee4b33ec7fcf",
+      "timestamp": "2026-05-23T11:22:36.524Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 11688,
+        "completion": 5448,
+        "total": 17136
+      },
+      "latency": 27171,
+      "error": null,
+      "ttft": 24101,
+      "tpot": 1,
+      "requestTime": 24101,
+      "llmTime": 3070
+    },
+    {
+      "requestId": "abd1e490-7b93-4cea-aeba-2ae990552e14",
+      "timestamp": "2026-05-23T11:23:03.939Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 11814,
+        "completion": 4797,
+        "total": 16611
+      },
+      "latency": 3158,
+      "error": null,
+      "ttft": 354,
+      "tpot": 1,
+      "requestTime": 354,
+      "llmTime": 2804
+    },
+    {
+      "requestId": "6b73cadc-16cb-4e15-b3b6-3f8c2478c850",
+      "timestamp": "2026-05-23T11:23:07.374Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 11972,
+        "completion": 2770,
+        "total": 14742
+      },
+      "latency": 1563,
+      "error": null,
+      "ttft": 391,
+      "tpot": 0,
+      "requestTime": 390,
+      "llmTime": 1172
+    },
+    {
+      "requestId": "0147886e-0d1a-4de4-bf68-d6ed01a54215",
+      "timestamp": "2026-05-23T11:24:00.029Z",
+      "apiKey": "anonymous...",
+      "apiKeyFull": "anonymous",
+      "model": "unknown",
+      "method": "GET",
+      "path": "/models",
+      "status": 200,
+      "tokens": {
+        "prompt": 1,
+        "completion": 0,
+        "total": 1
+      },
+      "latency": 1,
+      "error": null,
+      "ttft": null,
+      "tpot": null,
+      "requestTime": 2,
+      "llmTime": 0
+    },
+    {
+      "requestId": "4709df3e-257f-45b8-9267-80e32d51ba29",
+      "timestamp": "2026-05-23T11:24:01.571Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 8302,
+        "completion": 3347,
+        "total": 11649
+      },
+      "latency": 4960,
+      "error": null,
+      "ttft": 2940,
+      "tpot": 1,
+      "requestTime": 2940,
+      "llmTime": 2020
+    },
+    {
+      "requestId": "3937f7bd-76d9-4dec-8643-a02c2bba87a6",
+      "timestamp": "2026-05-23T11:24:06.599Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 9209,
+        "completion": 19470,
+        "total": 28679
+      },
+      "latency": 11412,
+      "error": null,
+      "ttft": 2337,
+      "tpot": 0,
+      "requestTime": 2337,
+      "llmTime": 9075
+    },
+    {
+      "requestId": "5b97494d-77e3-43da-8b67-7933f79dbeaa",
+      "timestamp": "2026-05-23T11:25:51.970Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 12052,
+        "completion": 4076,
+        "total": 16128
+      },
+      "latency": 6035,
+      "error": null,
+      "ttft": 3601,
+      "tpot": 1,
+      "requestTime": 3600,
+      "llmTime": 2434
+    },
+    {
+      "requestId": "f48a08d8-70bc-48b1-bd06-65076520ad5f",
+      "timestamp": "2026-05-23T11:25:58.251Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 12288,
+        "completion": 4939,
+        "total": 17227
+      },
+      "latency": 3366,
+      "error": null,
+      "ttft": 573,
+      "tpot": 1,
+      "requestTime": 572,
+      "llmTime": 2793
+    },
+    {
+      "requestId": "f884365c-94bb-4e5b-915b-7396df335f87",
+      "timestamp": "2026-05-23T11:26:01.864Z",
+      "apiKey": "ux-7KWOLMNDF5M3X...",
+      "apiKeyFull": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "model": "Qwen3.6-35B-A3B",
+      "method": "POST",
+      "path": "/chat/completions",
+      "status": 200,
+      "tokens": {
+        "prompt": 12652,
+        "completion": 11951,
+        "total": 24603
+      },
+      "latency": 6658,
+      "error": null,
+      "ttft": 713,
+      "tpot": 0,
+      "requestTime": 712,
+      "llmTime": 5945
     }
   ],
-  "totalRequestCount": 1334,
+  "totalRequestCount": 1456,
   "byApiKey": {
     "ux-7KWOLMNDF5M3X...": {
-      "requests": 1157,
-      "promptTokens": 69868403,
-      "completionTokens": 8809283,
-      "tokens": 78677686,
-      "errors": 3,
+      "requests": 1265,
+      "promptTokens": 73321556,
+      "completionTokens": 9925372,
+      "tokens": 83246928,
+      "errors": 15,
       "models": {
         "Qwen3.6-35B-A3B": {
-          "requests": 1157,
-          "promptTokens": 69868403,
-          "completionTokens": 8809283,
-          "tokens": 78677686
+          "requests": 1253,
+          "promptTokens": 73224527,
+          "completionTokens": 9925372,
+          "tokens": 83149899
+        },
+        "gemma-4-26B-A4B": {
+          "requests": 12,
+          "promptTokens": 97029,
+          "completionTokens": 0,
+          "tokens": 97029
         }
       }
     },
     "anonymous...": {
-      "requests": 35,
-      "promptTokens": 35,
+      "requests": 40,
+      "promptTokens": 40,
       "completionTokens": 0,
-      "tokens": 35,
+      "tokens": 40,
       "errors": 0,
       "models": {
         "unknown": {
-          "requests": 35,
-          "promptTokens": 35,
+          "requests": 40,
+          "promptTokens": 40,
           "completionTokens": 0,
-          "tokens": 35
+          "tokens": 40
         }
       }
     },
@@ -21049,32 +21019,32 @@
       }
     },
     "ux-MQ8XGX8ZWB5P0...": {
-      "requests": 75,
-      "promptTokens": 445106,
+      "requests": 84,
+      "promptTokens": 540830,
       "completionTokens": 1673324,
-      "tokens": 2118430,
-      "errors": 2,
+      "tokens": 2214154,
+      "errors": 11,
       "models": {
         "UANTEKDEV0": {
-          "requests": 75,
-          "promptTokens": 445106,
+          "requests": 84,
+          "promptTokens": 540830,
           "completionTokens": 1673324,
-          "tokens": 2118430
+          "tokens": 2214154
         }
       }
     }
   },
   "byModel": {
     "Qwen3.6-35B-A3B": {
-      "requests": 1224,
-      "promptTokens": 72376387,
-      "completionTokens": 9252360,
-      "tokens": 81628747,
+      "requests": 1320,
+      "promptTokens": 75732511,
+      "completionTokens": 10368449,
+      "tokens": 86100960,
       "errors": 3,
       "apiKeys": {
         "ux-7KWOLMNDF5M3X...": {
-          "requests": 1157,
-          "tokens": 78677686
+          "requests": 1253,
+          "tokens": 83149899
         },
         "ux-6CNP4MMKATVQS...": {
           "requests": 67,
@@ -21082,45 +21052,45 @@
         }
       },
       "latency": {
-        "sum": 24616600,
-        "count": 1224
+        "sum": 25784096,
+        "count": 1320
       },
       "contextLength": {
-        "sum": 72376387,
-        "count": 1224
+        "sum": 75732511,
+        "count": 1320
       },
       "ttft": {
-        "sum": 8655033,
-        "count": 1221
+        "sum": 8980085,
+        "count": 1317
       },
       "tpot": {
-        "sum": 6142.626753631015,
-        "count": 1221
+        "sum": 6248.921330570923,
+        "count": 1317
       },
       "tps": {
-        "sum": 615702.8507768941,
-        "count": 1221
+        "sum": 718928.2595604234,
+        "count": 1317
       }
     },
     "unknown": {
-      "requests": 35,
-      "promptTokens": 35,
+      "requests": 40,
+      "promptTokens": 40,
       "completionTokens": 0,
-      "tokens": 35,
+      "tokens": 40,
       "errors": 0,
       "apiKeys": {
         "anonymous...": {
-          "requests": 35,
-          "tokens": 35
+          "requests": 40,
+          "tokens": 40
         }
       },
       "latency": {
-        "sum": 79,
-        "count": 35
+        "sum": 116,
+        "count": 40
       },
       "contextLength": {
-        "sum": 35,
-        "count": 35
+        "sum": 40,
+        "count": 40
       },
       "ttft": {
         "sum": 0,
@@ -21136,24 +21106,24 @@
       }
     },
     "UANTEKDEV0": {
-      "requests": 75,
-      "promptTokens": 445106,
+      "requests": 84,
+      "promptTokens": 540830,
       "completionTokens": 1673324,
-      "tokens": 2118430,
-      "errors": 2,
+      "tokens": 2214154,
+      "errors": 11,
       "apiKeys": {
         "ux-MQ8XGX8ZWB5P0...": {
-          "requests": 75,
-          "tokens": 2118430
+          "requests": 84,
+          "tokens": 2214154
         }
       },
       "latency": {
-        "sum": 5022498,
-        "count": 75
+        "sum": 5022532,
+        "count": 84
       },
       "contextLength": {
-        "sum": 445106,
-        "count": 75
+        "sum": 540830,
+        "count": 84
       },
       "ttft": {
         "sum": 1600105,
@@ -21167,24 +21137,42 @@
         "sum": 24809.26970034961,
         "count": 73
       }
+    },
+    "gemma-4-26B-A4B": {
+      "requests": 12,
+      "promptTokens": 97029,
+      "completionTokens": 0,
+      "tokens": 97029,
+      "errors": 12,
+      "apiKeys": {
+        "ux-7KWOLMNDF5M3X...": {
+          "requests": 12,
+          "tokens": 97029
+        }
+      },
+      "latency": {
+        "sum": 41,
+        "count": 12
+      },
+      "contextLength": {
+        "sum": 97029,
+        "count": 12
+      },
+      "ttft": {
+        "sum": 0,
+        "count": 0
+      },
+      "tpot": {
+        "sum": 0,
+        "count": 0
+      },
+      "tps": {
+        "sum": 0,
+        "count": 0
+      }
     }
   },
   "hourlyStats": [
-    {
-      "requests": 8,
-      "tokens": 119860,
-      "errors": 0
-    },
-    {
-      "requests": 27,
-      "tokens": 1092583,
-      "errors": 0
-    },
-    {
-      "requests": 9,
-      "tokens": 168170,
-      "errors": 0
-    },
     {
       "requests": 373,
       "tokens": 20992501,
@@ -21211,9 +21199,9 @@
       "errors": 0
     },
     {
-      "requests": 5,
-      "tokens": 84851,
-      "errors": 0
+      "requests": 17,
+      "tokens": 181880,
+      "errors": 12
     },
     {
       "requests": 95,
@@ -21251,9 +21239,9 @@
       "errors": 0
     },
     {
-      "requests": 369,
-      "tokens": 29879893,
-      "errors": 0
+      "requests": 378,
+      "tokens": 29975617,
+      "errors": 9
     },
     {
       "requests": 153,
@@ -21261,8 +21249,8 @@
       "errors": 5
     },
     {
-      "requests": 58,
-      "tokens": 1487798,
+      "requests": 61,
+      "tokens": 1525229,
       "errors": 0
     },
     {
@@ -21271,38 +21259,53 @@
       "errors": 0
     },
     {
-      "requests": 0,
-      "tokens": 0,
+      "requests": 411,
+      "tokens": 28697611,
+      "errors": 1
+    },
+    {
+      "requests": 250,
+      "tokens": 20780824,
       "errors": 0
     },
     {
-      "requests": 0,
-      "tokens": 0,
+      "requests": 88,
+      "tokens": 8493992,
+      "errors": 1
+    },
+    {
+      "requests": 61,
+      "tokens": 3106786,
       "errors": 0
     },
     {
-      "requests": 0,
-      "tokens": 0,
+      "requests": 8,
+      "tokens": 119860,
       "errors": 0
     },
     {
-      "requests": 44,
-      "tokens": 2067279,
+      "requests": 99,
+      "tokens": 4341087,
+      "errors": 0
+    },
+    {
+      "requests": 9,
+      "tokens": 146776,
       "errors": 0
     }
   ],
-  "hourlyStatsBase": 17,
+  "hourlyStatsBase": 20,
   "totalTokens": {
-    "prompt": 72821528,
-    "completion": 10925684
+    "prompt": 76370410,
+    "completion": 12041773
   },
   "latency": {
-    "sum": 29639177,
-    "count": 1334,
+    "sum": 30806785,
+    "count": 1456,
     "min": 1,
     "max": 2351189
   },
-  "errors": 5,
+  "errors": 26,
   "date": "20260523",
   "errorLogs": [
     {
@@ -21438,6 +21441,636 @@
       "errorMessage": "fetch failed",
       "latency": 18,
       "lmStudioUrl": "http://llamacppserver-mtp-llama-server-1:1234/v1/chat/completions",
+      "resolved": false
+    },
+    {
+      "id": "cb24f6fe-1741-4dca-ac26-e5790e83d342",
+      "timestamp": "2026-05-23T08:48:26.350Z",
+      "requestId": "cb24f6fe-1741-4dca-ac26-e5790e83d342",
+      "method": "POST",
+      "path": "/chat/completions",
+      "apiKey": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "userId": "maxcmd",
+      "model": "gemma-4-26B-A4B",
+      "errorType": "API_ERROR",
+      "errorMessage": "fetch failed",
+      "status": 500,
+      "latency": 18,
+      "resolved": false
+    },
+    {
+      "id": "255fd11d-0da3-4b2c-9577-8d3cac6ebfd1",
+      "timestamp": "2026-05-23T08:48:26.350Z",
+      "requestId": "cb24f6fe-1741-4dca-ac26-e5790e83d342",
+      "method": "POST",
+      "path": "/chat/completions",
+      "apiKey": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "userId": "maxcmd",
+      "model": "gemma-4-26B-A4B",
+      "errorType": "NETWORK_ERROR",
+      "errorMessage": "fetch failed",
+      "latency": 18,
+      "lmStudioUrl": "http://host.docker.internal:1234/v1/chat/completions",
+      "resolved": false
+    },
+    {
+      "id": "11b26890-e09f-47b0-b638-06cad60e7176",
+      "timestamp": "2026-05-23T08:48:26.836Z",
+      "requestId": "11b26890-e09f-47b0-b638-06cad60e7176",
+      "method": "POST",
+      "path": "/chat/completions",
+      "apiKey": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "userId": "maxcmd",
+      "model": "gemma-4-26B-A4B",
+      "errorType": "API_ERROR",
+      "errorMessage": "fetch failed",
+      "status": 500,
+      "latency": 3,
+      "resolved": false
+    },
+    {
+      "id": "d5674007-86a1-4fb5-bc86-6815767b196a",
+      "timestamp": "2026-05-23T08:48:26.836Z",
+      "requestId": "11b26890-e09f-47b0-b638-06cad60e7176",
+      "method": "POST",
+      "path": "/chat/completions",
+      "apiKey": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "userId": "maxcmd",
+      "model": "gemma-4-26B-A4B",
+      "errorType": "NETWORK_ERROR",
+      "errorMessage": "fetch failed",
+      "latency": 3,
+      "lmStudioUrl": "http://host.docker.internal:1234/v1/chat/completions",
+      "resolved": false
+    },
+    {
+      "id": "8a0c92e0-6a85-4b2b-84d1-fc22f8c9804c",
+      "timestamp": "2026-05-23T08:48:27.719Z",
+      "requestId": "8a0c92e0-6a85-4b2b-84d1-fc22f8c9804c",
+      "method": "POST",
+      "path": "/chat/completions",
+      "apiKey": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "userId": "maxcmd",
+      "model": "gemma-4-26B-A4B",
+      "errorType": "API_ERROR",
+      "errorMessage": "fetch failed",
+      "status": 500,
+      "latency": 2,
+      "resolved": false
+    },
+    {
+      "id": "0dcc1794-9973-454d-bd97-8c14c3307cea",
+      "timestamp": "2026-05-23T08:48:27.719Z",
+      "requestId": "8a0c92e0-6a85-4b2b-84d1-fc22f8c9804c",
+      "method": "POST",
+      "path": "/chat/completions",
+      "apiKey": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "userId": "maxcmd",
+      "model": "gemma-4-26B-A4B",
+      "errorType": "NETWORK_ERROR",
+      "errorMessage": "fetch failed",
+      "latency": 2,
+      "lmStudioUrl": "http://host.docker.internal:1234/v1/chat/completions",
+      "resolved": false
+    },
+    {
+      "id": "65dd2bc8-6093-4291-9961-815942a66752",
+      "timestamp": "2026-05-23T08:48:35.256Z",
+      "requestId": "65dd2bc8-6093-4291-9961-815942a66752",
+      "method": "POST",
+      "path": "/chat/completions",
+      "apiKey": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "userId": "maxcmd",
+      "model": "gemma-4-26B-A4B",
+      "errorType": "API_ERROR",
+      "errorMessage": "fetch failed",
+      "status": 500,
+      "latency": 2,
+      "resolved": false
+    },
+    {
+      "id": "33575661-e88b-4c9f-ac2d-c9a16e89a901",
+      "timestamp": "2026-05-23T08:48:35.256Z",
+      "requestId": "65dd2bc8-6093-4291-9961-815942a66752",
+      "method": "POST",
+      "path": "/chat/completions",
+      "apiKey": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "userId": "maxcmd",
+      "model": "gemma-4-26B-A4B",
+      "errorType": "NETWORK_ERROR",
+      "errorMessage": "fetch failed",
+      "latency": 2,
+      "lmStudioUrl": "http://host.docker.internal:1234/v1/chat/completions",
+      "resolved": false
+    },
+    {
+      "id": "944a5209-7519-429e-9c0a-e080483b7337",
+      "timestamp": "2026-05-23T08:48:35.673Z",
+      "requestId": "944a5209-7519-429e-9c0a-e080483b7337",
+      "method": "POST",
+      "path": "/chat/completions",
+      "apiKey": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "userId": "maxcmd",
+      "model": "gemma-4-26B-A4B",
+      "errorType": "API_ERROR",
+      "errorMessage": "fetch failed",
+      "status": 500,
+      "latency": 2,
+      "resolved": false
+    },
+    {
+      "id": "0be78286-aae7-405b-90b9-5e55a5bd01a3",
+      "timestamp": "2026-05-23T08:48:35.673Z",
+      "requestId": "944a5209-7519-429e-9c0a-e080483b7337",
+      "method": "POST",
+      "path": "/chat/completions",
+      "apiKey": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "userId": "maxcmd",
+      "model": "gemma-4-26B-A4B",
+      "errorType": "NETWORK_ERROR",
+      "errorMessage": "fetch failed",
+      "latency": 2,
+      "lmStudioUrl": "http://host.docker.internal:1234/v1/chat/completions",
+      "resolved": false
+    },
+    {
+      "id": "1d89a0e2-2736-4b47-b56b-81b1a4e0e1bb",
+      "timestamp": "2026-05-23T08:48:36.461Z",
+      "requestId": "1d89a0e2-2736-4b47-b56b-81b1a4e0e1bb",
+      "method": "POST",
+      "path": "/chat/completions",
+      "apiKey": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "userId": "maxcmd",
+      "model": "gemma-4-26B-A4B",
+      "errorType": "API_ERROR",
+      "errorMessage": "fetch failed",
+      "status": 500,
+      "latency": 1,
+      "resolved": false
+    },
+    {
+      "id": "309b5a64-9367-42ec-943e-5bccb4f70b0a",
+      "timestamp": "2026-05-23T08:48:36.461Z",
+      "requestId": "1d89a0e2-2736-4b47-b56b-81b1a4e0e1bb",
+      "method": "POST",
+      "path": "/chat/completions",
+      "apiKey": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "userId": "maxcmd",
+      "model": "gemma-4-26B-A4B",
+      "errorType": "NETWORK_ERROR",
+      "errorMessage": "fetch failed",
+      "latency": 1,
+      "lmStudioUrl": "http://host.docker.internal:1234/v1/chat/completions",
+      "resolved": false
+    },
+    {
+      "id": "d137324a-3e44-4621-a2b7-cab5e2949a88",
+      "timestamp": "2026-05-23T08:48:52.420Z",
+      "requestId": "d137324a-3e44-4621-a2b7-cab5e2949a88",
+      "method": "POST",
+      "path": "/chat/completions",
+      "apiKey": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "userId": "maxcmd",
+      "model": "gemma-4-26B-A4B",
+      "errorType": "API_ERROR",
+      "errorMessage": "fetch failed",
+      "status": 500,
+      "latency": 2,
+      "resolved": false
+    },
+    {
+      "id": "48f7567f-f40a-404f-b8c0-ecabf1b0013f",
+      "timestamp": "2026-05-23T08:48:52.420Z",
+      "requestId": "d137324a-3e44-4621-a2b7-cab5e2949a88",
+      "method": "POST",
+      "path": "/chat/completions",
+      "apiKey": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "userId": "maxcmd",
+      "model": "gemma-4-26B-A4B",
+      "errorType": "NETWORK_ERROR",
+      "errorMessage": "fetch failed",
+      "latency": 2,
+      "lmStudioUrl": "http://host.docker.internal:1234/v1/chat/completions",
+      "resolved": false
+    },
+    {
+      "id": "4c451cef-34e7-430a-8481-dbb8c851dbe5",
+      "timestamp": "2026-05-23T08:48:52.805Z",
+      "requestId": "4c451cef-34e7-430a-8481-dbb8c851dbe5",
+      "method": "POST",
+      "path": "/chat/completions",
+      "apiKey": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "userId": "maxcmd",
+      "model": "gemma-4-26B-A4B",
+      "errorType": "API_ERROR",
+      "errorMessage": "fetch failed",
+      "status": 500,
+      "latency": 2,
+      "resolved": false
+    },
+    {
+      "id": "5f084eeb-e763-4c34-a89a-051a4bf19037",
+      "timestamp": "2026-05-23T08:48:52.805Z",
+      "requestId": "4c451cef-34e7-430a-8481-dbb8c851dbe5",
+      "method": "POST",
+      "path": "/chat/completions",
+      "apiKey": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "userId": "maxcmd",
+      "model": "gemma-4-26B-A4B",
+      "errorType": "NETWORK_ERROR",
+      "errorMessage": "fetch failed",
+      "latency": 2,
+      "lmStudioUrl": "http://host.docker.internal:1234/v1/chat/completions",
+      "resolved": false
+    },
+    {
+      "id": "b75a00b1-f847-4595-927b-0a8cd5b98f4d",
+      "timestamp": "2026-05-23T08:48:53.601Z",
+      "requestId": "b75a00b1-f847-4595-927b-0a8cd5b98f4d",
+      "method": "POST",
+      "path": "/chat/completions",
+      "apiKey": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "userId": "maxcmd",
+      "model": "gemma-4-26B-A4B",
+      "errorType": "API_ERROR",
+      "errorMessage": "fetch failed",
+      "status": 500,
+      "latency": 3,
+      "resolved": false
+    },
+    {
+      "id": "427100d0-07b5-4b9b-9e6b-af3e297bbb61",
+      "timestamp": "2026-05-23T08:48:53.601Z",
+      "requestId": "b75a00b1-f847-4595-927b-0a8cd5b98f4d",
+      "method": "POST",
+      "path": "/chat/completions",
+      "apiKey": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "userId": "maxcmd",
+      "model": "gemma-4-26B-A4B",
+      "errorType": "NETWORK_ERROR",
+      "errorMessage": "fetch failed",
+      "latency": 3,
+      "lmStudioUrl": "http://host.docker.internal:1234/v1/chat/completions",
+      "resolved": false
+    },
+    {
+      "id": "b971050a-5443-4329-9ca2-adbbe2f5762b",
+      "timestamp": "2026-05-23T08:49:08.683Z",
+      "requestId": "b971050a-5443-4329-9ca2-adbbe2f5762b",
+      "method": "POST",
+      "path": "/chat/completions",
+      "apiKey": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "userId": "maxcmd",
+      "model": "gemma-4-26B-A4B",
+      "errorType": "API_ERROR",
+      "errorMessage": "fetch failed",
+      "status": 500,
+      "latency": 4,
+      "resolved": false
+    },
+    {
+      "id": "854796df-8e56-44ee-86a1-23efd299a5b6",
+      "timestamp": "2026-05-23T08:49:08.683Z",
+      "requestId": "b971050a-5443-4329-9ca2-adbbe2f5762b",
+      "method": "POST",
+      "path": "/chat/completions",
+      "apiKey": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "userId": "maxcmd",
+      "model": "gemma-4-26B-A4B",
+      "errorType": "NETWORK_ERROR",
+      "errorMessage": "fetch failed",
+      "latency": 4,
+      "lmStudioUrl": "http://host.docker.internal:1234/v1/chat/completions",
+      "resolved": false
+    },
+    {
+      "id": "f37fc88d-09d8-4b21-8006-a0085abd055c",
+      "timestamp": "2026-05-23T08:49:09.173Z",
+      "requestId": "f37fc88d-09d8-4b21-8006-a0085abd055c",
+      "method": "POST",
+      "path": "/chat/completions",
+      "apiKey": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "userId": "maxcmd",
+      "model": "gemma-4-26B-A4B",
+      "errorType": "API_ERROR",
+      "errorMessage": "fetch failed",
+      "status": 500,
+      "latency": 1,
+      "resolved": false
+    },
+    {
+      "id": "a79fbbeb-a04a-4df8-8847-9fdd64973082",
+      "timestamp": "2026-05-23T08:49:09.173Z",
+      "requestId": "f37fc88d-09d8-4b21-8006-a0085abd055c",
+      "method": "POST",
+      "path": "/chat/completions",
+      "apiKey": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "userId": "maxcmd",
+      "model": "gemma-4-26B-A4B",
+      "errorType": "NETWORK_ERROR",
+      "errorMessage": "fetch failed",
+      "latency": 1,
+      "lmStudioUrl": "http://host.docker.internal:1234/v1/chat/completions",
+      "resolved": false
+    },
+    {
+      "id": "bc2fdfee-8296-4e5b-b496-217d9e501181",
+      "timestamp": "2026-05-23T08:49:10.097Z",
+      "requestId": "bc2fdfee-8296-4e5b-b496-217d9e501181",
+      "method": "POST",
+      "path": "/chat/completions",
+      "apiKey": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "userId": "maxcmd",
+      "model": "gemma-4-26B-A4B",
+      "errorType": "API_ERROR",
+      "errorMessage": "fetch failed",
+      "status": 500,
+      "latency": 1,
+      "resolved": false
+    },
+    {
+      "id": "9ff0294f-fefd-464c-8b8c-80495e1908e5",
+      "timestamp": "2026-05-23T08:49:10.097Z",
+      "requestId": "bc2fdfee-8296-4e5b-b496-217d9e501181",
+      "method": "POST",
+      "path": "/chat/completions",
+      "apiKey": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+      "userId": "maxcmd",
+      "model": "gemma-4-26B-A4B",
+      "errorType": "NETWORK_ERROR",
+      "errorMessage": "fetch failed",
+      "latency": 1,
+      "lmStudioUrl": "http://host.docker.internal:1234/v1/chat/completions",
+      "resolved": false
+    },
+    {
+      "id": "b7458bfe-5aa1-4a77-92be-088952f95c90",
+      "timestamp": "2026-05-23T08:56:36.428Z",
+      "requestId": "b7458bfe-5aa1-4a77-92be-088952f95c90",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "userId": "maxkimi",
+      "model": "UANTEKDEV0",
+      "errorType": "API_ERROR",
+      "errorMessage": "fetch failed",
+      "status": 500,
+      "latency": 18,
+      "resolved": false
+    },
+    {
+      "id": "81ebb7f6-60af-4966-a037-dc74876d5ef3",
+      "timestamp": "2026-05-23T08:56:36.428Z",
+      "requestId": "b7458bfe-5aa1-4a77-92be-088952f95c90",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "userId": "maxkimi",
+      "model": "UANTEKDEV0",
+      "errorType": "NETWORK_ERROR",
+      "errorMessage": "fetch failed",
+      "latency": 18,
+      "lmStudioUrl": "http://host.docker.internal:1234/v1/chat/completions",
+      "resolved": false
+    },
+    {
+      "id": "d4063105-811d-43ad-bf28-0a84ac4316d5",
+      "timestamp": "2026-05-23T08:56:36.923Z",
+      "requestId": "d4063105-811d-43ad-bf28-0a84ac4316d5",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "userId": "maxkimi",
+      "model": "UANTEKDEV0",
+      "errorType": "API_ERROR",
+      "errorMessage": "fetch failed",
+      "status": 500,
+      "latency": 2,
+      "resolved": false
+    },
+    {
+      "id": "4f459dbe-0938-4a71-aeb6-9ff28bfda248",
+      "timestamp": "2026-05-23T08:56:36.923Z",
+      "requestId": "d4063105-811d-43ad-bf28-0a84ac4316d5",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "userId": "maxkimi",
+      "model": "UANTEKDEV0",
+      "errorType": "NETWORK_ERROR",
+      "errorMessage": "fetch failed",
+      "latency": 2,
+      "lmStudioUrl": "http://host.docker.internal:1234/v1/chat/completions",
+      "resolved": false
+    },
+    {
+      "id": "e02b6a3c-5663-4af2-a081-8de694a51cda",
+      "timestamp": "2026-05-23T08:56:37.724Z",
+      "requestId": "e02b6a3c-5663-4af2-a081-8de694a51cda",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "userId": "maxkimi",
+      "model": "UANTEKDEV0",
+      "errorType": "API_ERROR",
+      "errorMessage": "fetch failed",
+      "status": 500,
+      "latency": 2,
+      "resolved": false
+    },
+    {
+      "id": "99403a10-f3bd-4e6e-8dba-e51486f1748b",
+      "timestamp": "2026-05-23T08:56:37.724Z",
+      "requestId": "e02b6a3c-5663-4af2-a081-8de694a51cda",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "userId": "maxkimi",
+      "model": "UANTEKDEV0",
+      "errorType": "NETWORK_ERROR",
+      "errorMessage": "fetch failed",
+      "latency": 2,
+      "lmStudioUrl": "http://host.docker.internal:1234/v1/chat/completions",
+      "resolved": false
+    },
+    {
+      "id": "7c1739a9-421f-4774-b218-838143a69f84",
+      "timestamp": "2026-05-23T08:56:38.094Z",
+      "requestId": "7c1739a9-421f-4774-b218-838143a69f84",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "userId": "maxkimi",
+      "model": "UANTEKDEV0",
+      "errorType": "API_ERROR",
+      "errorMessage": "fetch failed",
+      "status": 500,
+      "latency": 2,
+      "resolved": false
+    },
+    {
+      "id": "32d0bc6d-d561-4c58-8f06-726bc6b88149",
+      "timestamp": "2026-05-23T08:56:38.094Z",
+      "requestId": "7c1739a9-421f-4774-b218-838143a69f84",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "userId": "maxkimi",
+      "model": "UANTEKDEV0",
+      "errorType": "NETWORK_ERROR",
+      "errorMessage": "fetch failed",
+      "latency": 2,
+      "lmStudioUrl": "http://host.docker.internal:1234/v1/chat/completions",
+      "resolved": false
+    },
+    {
+      "id": "fbb0cdba-fd9f-4c34-9d78-057fc9ec52ac",
+      "timestamp": "2026-05-23T08:56:38.488Z",
+      "requestId": "fbb0cdba-fd9f-4c34-9d78-057fc9ec52ac",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "userId": "maxkimi",
+      "model": "UANTEKDEV0",
+      "errorType": "API_ERROR",
+      "errorMessage": "fetch failed",
+      "status": 500,
+      "latency": 2,
+      "resolved": false
+    },
+    {
+      "id": "fe47906b-0a6d-48de-92d7-e095dbbba136",
+      "timestamp": "2026-05-23T08:56:38.488Z",
+      "requestId": "fbb0cdba-fd9f-4c34-9d78-057fc9ec52ac",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "userId": "maxkimi",
+      "model": "UANTEKDEV0",
+      "errorType": "NETWORK_ERROR",
+      "errorMessage": "fetch failed",
+      "latency": 2,
+      "lmStudioUrl": "http://host.docker.internal:1234/v1/chat/completions",
+      "resolved": false
+    },
+    {
+      "id": "2d7d5367-0478-4e72-b243-2c43b5b224cd",
+      "timestamp": "2026-05-23T08:56:39.427Z",
+      "requestId": "2d7d5367-0478-4e72-b243-2c43b5b224cd",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "userId": "maxkimi",
+      "model": "UANTEKDEV0",
+      "errorType": "API_ERROR",
+      "errorMessage": "fetch failed",
+      "status": 500,
+      "latency": 2,
+      "resolved": false
+    },
+    {
+      "id": "c3123668-10f5-4b53-9147-39e886567bcd",
+      "timestamp": "2026-05-23T08:56:39.427Z",
+      "requestId": "2d7d5367-0478-4e72-b243-2c43b5b224cd",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "userId": "maxkimi",
+      "model": "UANTEKDEV0",
+      "errorType": "NETWORK_ERROR",
+      "errorMessage": "fetch failed",
+      "latency": 2,
+      "lmStudioUrl": "http://host.docker.internal:1234/v1/chat/completions",
+      "resolved": false
+    },
+    {
+      "id": "fa38ba64-99a5-4d11-9ced-48085296a7bf",
+      "timestamp": "2026-05-23T08:56:40.498Z",
+      "requestId": "fa38ba64-99a5-4d11-9ced-48085296a7bf",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "userId": "maxkimi",
+      "model": "UANTEKDEV0",
+      "errorType": "API_ERROR",
+      "errorMessage": "fetch failed",
+      "status": 500,
+      "latency": 2,
+      "resolved": false
+    },
+    {
+      "id": "e1697b49-b4bd-4bab-b7ec-00a26fd66448",
+      "timestamp": "2026-05-23T08:56:40.498Z",
+      "requestId": "fa38ba64-99a5-4d11-9ced-48085296a7bf",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "userId": "maxkimi",
+      "model": "UANTEKDEV0",
+      "errorType": "NETWORK_ERROR",
+      "errorMessage": "fetch failed",
+      "latency": 2,
+      "lmStudioUrl": "http://host.docker.internal:1234/v1/chat/completions",
+      "resolved": false
+    },
+    {
+      "id": "8cb62b5f-293f-44b3-ab21-779be04dfbaa",
+      "timestamp": "2026-05-23T08:56:40.931Z",
+      "requestId": "8cb62b5f-293f-44b3-ab21-779be04dfbaa",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "userId": "maxkimi",
+      "model": "UANTEKDEV0",
+      "errorType": "API_ERROR",
+      "errorMessage": "fetch failed",
+      "status": 500,
+      "latency": 2,
+      "resolved": false
+    },
+    {
+      "id": "fff4ac64-4757-436d-bf3d-32515a3cab2c",
+      "timestamp": "2026-05-23T08:56:40.931Z",
+      "requestId": "8cb62b5f-293f-44b3-ab21-779be04dfbaa",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "userId": "maxkimi",
+      "model": "UANTEKDEV0",
+      "errorType": "NETWORK_ERROR",
+      "errorMessage": "fetch failed",
+      "latency": 2,
+      "lmStudioUrl": "http://host.docker.internal:1234/v1/chat/completions",
+      "resolved": false
+    },
+    {
+      "id": "71e79858-d3a1-493a-bb0f-595525ebc776",
+      "timestamp": "2026-05-23T08:56:41.871Z",
+      "requestId": "71e79858-d3a1-493a-bb0f-595525ebc776",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "userId": "maxkimi",
+      "model": "UANTEKDEV0",
+      "errorType": "API_ERROR",
+      "errorMessage": "fetch failed",
+      "status": 500,
+      "latency": 2,
+      "resolved": false
+    },
+    {
+      "id": "cb7c8cef-d44d-4b5e-93bc-9d57fd991a49",
+      "timestamp": "2026-05-23T08:56:41.871Z",
+      "requestId": "71e79858-d3a1-493a-bb0f-595525ebc776",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "apiKey": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+      "userId": "maxkimi",
+      "model": "UANTEKDEV0",
+      "errorType": "NETWORK_ERROR",
+      "errorMessage": "fetch failed",
+      "latency": 2,
+      "lmStudioUrl": "http://host.docker.internal:1234/v1/chat/completions",
       "resolved": false
     }
   ]

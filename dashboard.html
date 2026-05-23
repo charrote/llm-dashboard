@@ -215,17 +215,34 @@
           <h2 class="text-xl font-bold">历史日志</h2>
           <button onclick="closeLogs()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
         </div>
-        <div id="logsList" class="grid grid-cols-7 gap-2 mb-4 max-h-[200px] overflow-y-auto scrollbar-thin">
-          <div class="text-gray-500 text-center py-4 col-span-7">加载中...</div>
-        </div>
-        <div id="logDetail" class="flex-1 overflow-hidden hidden">
-          <div class="flex items-center justify-between mb-2">
-            <h3 id="logDetailTitle" class="text-lg font-semibold"></h3>
-            <button onclick="closeLogDetail()" class="text-sm text-gray-400 hover:text-white">返回列表</button>
+        <div id="logCalendarNav" class="flex items-center justify-between mb-2">
+          <div class="flex items-center gap-2">
+            <button onclick="changeMonth(-1)" class="px-2 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm transition">&larr;</button>
+            <span id="currentMonthLabel" class="text-lg font-semibold min-w-[130px] text-center"></span>
+            <button onclick="changeMonth(1)" class="px-2 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm transition">&rarr;</button>
           </div>
-          <div id="logStats" class="grid grid-cols-4 gap-4 mb-4 p-4 bg-gray-700/50 rounded-lg"></div>
-          <div id="logRequests" class="font-mono text-xs space-y-1 max-h-[300px] overflow-y-auto scrollbar-thin"></div>
+          <select id="monthSelector" class="bg-gray-700 text-sm rounded px-2 py-1 border border-gray-600" onchange="jumpToMonth(this.value)"></select>
         </div>
+        <div id="monthlySummary" class="grid grid-cols-4 gap-4 mb-3 p-3 bg-gray-700/30 rounded-lg text-sm">
+          <div><span class="text-gray-400">累计请求</span><span id="monthRequests" class="ml-2 text-white font-bold">0</span></div>
+          <div><span class="text-gray-400">累计Tokens</span><span id="monthTokens" class="ml-2 text-blue-400 font-bold">0</span></div>
+          <div><span class="text-gray-400">累计费用</span><span id="monthCost" class="ml-2 text-green-400 font-bold">¥0.00</span></div>
+          <div><span class="text-gray-400">错误率</span><span id="monthErrorRate" class="ml-2 text-red-400 font-bold">0%</span></div>
+        </div>
+        <div id="weekdayHeader" class="grid grid-cols-7 gap-1 mb-1 text-xs text-gray-500 text-center"></div>
+        <div id="logsCalendar" class="grid grid-cols-7 gap-1" style="grid-template-rows: repeat(6, 90px);"></div>
+      </div>
+    </div>
+
+    <!-- Log Detail Modal -->
+    <div id="logDetailModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[60]">
+      <div class="bg-gray-800 rounded-xl p-6 w-full max-w-4xl mx-4 max-h-[80vh] flex flex-col">
+        <div class="flex items-center justify-between mb-4">
+          <h3 id="logDetailTitle" class="text-lg font-semibold"></h3>
+          <button onclick="closeLogDetail()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+        </div>
+        <div id="logStats" class="grid grid-cols-4 gap-4 mb-4 p-4 bg-gray-700/50 rounded-lg"></div>
+        <div id="logRequests" class="font-mono text-xs space-y-1 flex-1 overflow-y-auto scrollbar-thin"></div>
       </div>
     </div>
 
@@ -273,7 +290,7 @@
     </div>
 
     <!-- Charts Row -->
-    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-10">
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-10">
       <div class="bg-gray-800 rounded-xl p-4">
         <h3 class="text-lg font-semibold mb-4">用量趋势</h3>
         <canvas id="weeklyTrendChart" height="180"></canvas>
@@ -281,15 +298,6 @@
       <div class="bg-gray-800 rounded-xl p-4">
         <h3 class="text-lg font-semibold mb-4">24小时请求分布</h3>
         <canvas id="hourlyChart" height="180"></canvas>
-      </div>
-      <div class="bg-gray-800 rounded-xl p-4">
-        <h3 class="text-lg font-semibold mb-4">今日概览</h3>
-        <div id="todayOverview" class="space-y-3">
-          <div class="flex justify-between"><span class="text-gray-400">活跃用户</span><span id="activeUsers" class="text-white font-bold">0</span></div>
-          <div class="flex justify-between"><span class="text-gray-400">活跃模型</span><span id="activeModelsCount" class="text-purple-400 font-bold">0</span></div>
-          <div class="flex justify-between"><span class="text-gray-400">总请求</span><span id="totalRequestsCount" class="text-blue-400 font-bold">0</span></div>
-          <div class="flex justify-between"><span class="text-gray-400">错误率</span><span id="errorRate" class="text-red-400 font-bold">0%</span></div>
-        </div>
       </div>
     </div>
 
@@ -334,43 +342,7 @@
           </table>
         </div>
       </div>
-
-      <!-- 延迟分布 -->
-      <div class="bg-gray-800 rounded-xl p-4">
-        <h3 class="text-lg font-semibold mb-4">延迟分布</h3>
-        <div id="latencyStats" class="space-y-3">
-          <div class="flex justify-between"><span class="text-gray-400">平均延迟</span><span id="latencyAvg" class="text-yellow-400 font-bold">0ms</span></div>
-          <div class="flex justify-between"><span class="text-gray-400">最小延迟</span><span id="latencyMin" class="text-green-400 font-bold">0ms</span></div>
-          <div class="flex justify-between"><span class="text-gray-400">最大延迟</span><span id="latencyMax" class="text-red-400 font-bold">0ms</span></div>
-        </div>
-        <canvas id="latencyChart" height="120" class="mt-4"></canvas>
-      </div>
-    </div>
-
-    <!-- 用户统计报表 -->
-    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-10">
-      <div class="bg-gray-800 rounded-xl p-4">
-        <h3 class="text-lg font-semibold mb-4">用户排名</h3>
-        <div class="overflow-x-auto">
-          <table class="w-full text-sm">
-            <thead>
-              <tr class="text-gray-400 border-b border-gray-700">
-                <th class="text-left py-2 px-3">排名</th>
-                <th class="text-left py-2 px-3">用户</th>
-                <th class="text-right py-2 px-3">请求数</th>
-                <th class="text-right py-2 px-3">Tokens</th>
-              </tr>
-            </thead>
-            <tbody id="userRankingTable" class="scrollbar-thin max-h-48 overflow-y-auto">
-              <tr><td colspan="4" class="text-center py-4 text-gray-500">暂无数据</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="bg-gray-800 rounded-xl p-4">
-        <h3 class="text-lg font-semibold mb-4">模型平均响应时间</h3>
-        <canvas id="modelLatencyChart" height="180"></canvas>
-      </div>
+      <!-- 模型性能指标 -->
       <div class="bg-gray-800 rounded-xl p-4">
         <h3 class="text-lg font-semibold mb-4">模型性能指标</h3>
         <div id="modelPerformance" class="grid grid-cols-3 gap-4">
@@ -398,7 +370,10 @@
     <div class="bg-gray-800 rounded-xl p-4 mb-6">
       <div class="flex items-center justify-between mb-2">
         <h3 class="text-lg font-semibold">成本趋势（模拟预估）</h3>
-        <span id="costAvg" class="text-yellow-400 font-bold"></span>
+        <div class="flex items-center gap-4">
+          <span id="costAvg" class="text-yellow-400 font-bold text-sm"></span>
+          <span id="costPeak" class="text-orange-400 font-bold text-sm"></span>
+        </div>
       </div>
       <canvas id="costTrendChart" height="120"></canvas>
     </div>
@@ -442,7 +417,7 @@
 
   <script>
     const API_BASE = window.location.origin + '/api';
-    let hourlyChart, modelLatencyChart, modelPerformanceChart, latencyChart, weeklyTrendChart, costTrendChart;
+    let hourlyChart, modelPerformanceChart, weeklyTrendChart, costTrendChart;
     let lastRequestCount = 0;
     let currentTab = 'live';
     let requestOffset = 0;
@@ -480,19 +455,40 @@
           datasets: [{
             label: '请求数',
             data: new Array(24).fill(0),
-            backgroundColor: 'rgba(59, 130, 246, 0.6)',
-            borderColor: 'rgba(59, 130, 246, 1)',
+            backgroundColor: new Array(24).fill('rgba(59, 130, 246, 0.6)'),
+            borderColor: new Array(24).fill('rgba(59, 130, 246, 1)'),
             borderWidth: 1
           }]
         },
         options: {
           responsive: true,
-          plugins: { legend: { display: false } },
+          plugins: {
+            legend: { display: false },
+            tooltip: { enabled: false }
+          },
           scales: {
             y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#9ca3af' } },
             x: { grid: { display: false }, ticks: { color: '#9ca3af', maxRotation: 0 } }
           }
-        }
+        },
+        plugins: [{
+          id: 'barLabels',
+          afterDraw(chart) {
+            const ctx = chart.ctx;
+            const dataset = chart.data.datasets[0];
+            const meta = chart.getDatasetMeta(0);
+            const maxVal = Math.max(...dataset.data, 0);
+            ctx.font = '10px sans-serif';
+            ctx.textAlign = 'center';
+            meta.data.forEach((bar, i) => {
+              const val = dataset.data[i];
+              if (val > 0) {
+                ctx.fillStyle = val === maxVal ? 'rgba(251, 191, 36, 1)' : 'rgba(156, 163, 175, 1)';
+                ctx.fillText(val, bar.x, bar.y - 4);
+              }
+            });
+          }
+        }]
       });
 
       const weeklyCtx = document.getElementById('weeklyTrendChart').getContext('2d');
@@ -515,7 +511,42 @@
               borderColor: 'rgba(34, 197, 94, 1)',
               backgroundColor: 'rgba(34, 197, 94, 0.1)',
               fill: true,
-              tension: 0.3
+              tension: 0.3,
+              yAxisID: 'y'
+            },
+            {
+              label: '综合用量 7日均',
+              data: [],
+              borderColor: 'rgba(168, 85, 247, 1)',
+              backgroundColor: 'rgba(168, 85, 247, 0.05)',
+              borderDash: [2, 4],
+              borderWidth: 1,
+              pointRadius: 0,
+              fill: false,
+              tension: 0.3,
+              yAxisID: 'y'
+            },
+            {
+              type: 'bar',
+              label: 'Requests',
+              data: [],
+              backgroundColor: 'rgba(249, 115, 22, 0.6)',
+              borderColor: 'rgba(249, 115, 22, 1)',
+              borderWidth: 1,
+              borderRadius: 2,
+              yAxisID: 'y1'
+            },
+            {
+              label: '请求数 7日均',
+              data: [],
+              borderColor: 'rgba(251, 146, 60, 1)',
+              backgroundColor: 'rgba(251, 146, 60, 0.05)',
+              borderDash: [2, 4],
+              borderWidth: 1,
+              pointRadius: 0,
+              fill: false,
+              tension: 0.3,
+              yAxisID: 'y1'
             }
           ]
         },
@@ -524,6 +555,7 @@
           plugins: { legend: { position: 'bottom', labels: { color: '#9ca3af' } } },
           scales: {
             y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#9ca3af', callback: v => formatNumber(v) } },
+            y1: { beginAtZero: true, position: 'right', grid: { display: false }, ticks: { color: '#9ca3af', callback: v => formatNumber(v) } },
             x: { grid: { display: false }, ticks: { color: '#9ca3af' } }
           }
         }
@@ -553,42 +585,6 @@
         }
       });
 
-      const modelLatencyCtx = document.getElementById('modelLatencyChart').getContext('2d');
-      modelLatencyChart = new Chart(modelLatencyCtx, {
-        type: 'bar',
-        data: {
-          labels: [],
-          datasets: [{
-            label: '平均响应时间 (ms)',
-            data: [],
-            backgroundColor: 'rgba(59, 130, 246, 0.8)',
-            borderWidth: 0,
-            borderRadius: 4
-          }, {
-            label: '平均上下文长度',
-            data: [],
-            backgroundColor: 'rgba(168, 85, 247, 0.8)',
-            borderWidth: 0,
-            borderRadius: 4
-          }]
-        },
-        options: {
-          responsive: true,
-          indexAxis: 'y',
-          plugins: { legend: { position: 'bottom', labels: { color: '#9ca3af' } } },
-          scales: {
-            x: { 
-              grid: { color: 'rgba(255,255,255,0.1)' },
-              ticks: { color: '#9ca3af' }
-            },
-            y: { 
-              grid: { display: false },
-              ticks: { color: '#9ca3af' }
-            }
-          }
-        }
-      });
-
       const modelPerformanceCtx = document.getElementById('modelPerformanceChart').getContext('2d');
       modelPerformanceChart = new Chart(modelPerformanceCtx, {
         type: 'bar',
@@ -612,33 +608,6 @@
         }
       });
 
-      const latencyCtx = document.getElementById('latencyChart').getContext('2d');
-      latencyChart = new Chart(latencyCtx, {
-        type: 'bar',
-        data: {
-          labels: ['<100ms', '100-500ms', '500ms-1s', '1s-3s', '>3s'],
-          datasets: [{
-            label: '请求数',
-            data: [0, 0, 0, 0, 0],
-            backgroundColor: [
-              'rgba(34, 197, 94, 0.8)',
-              'rgba(59, 130, 246, 0.8)',
-              'rgba(234, 179, 8, 0.8)',
-              'rgba(249, 115, 22, 0.8)',
-              'rgba(239, 68, 68, 0.8)'
-            ],
-            borderWidth: 0
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: { legend: { display: false } },
-          scales: {
-            y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#9ca3af' } },
-            x: { grid: { display: false }, ticks: { color: '#9ca3af' } }
-          }
-        }
-      });
     }
 
     async function fetchStats() {
@@ -652,26 +621,12 @@
       }
     }
 
-    async function fetchUserStats() {
-      try {
-        const response = await fetch(`${API_BASE}/user-stats`);
-        if (!response.ok) throw new Error('Failed to fetch user stats');
-        return await response.json();
-      } catch (error) {
-        console.error('Fetch user stats error:', error);
-        return null;
-      }
-    }
-
-    async function fetchModelLatency() {
-      try {
-        const response = await fetch(`${API_BASE}/model-latency`);
-        if (!response.ok) throw new Error('Failed to fetch model latency');
-        return await response.json();
-      } catch (error) {
-        console.error('Fetch model latency error:', error);
-        return [];
-      }
+    function sma(arr, window) {
+      return arr.map((_, i) => {
+        const start = Math.max(0, i - window + 1);
+        const slice = arr.slice(start, i + 1);
+        return slice.reduce((a, b) => a + b, 0) / slice.length;
+      });
     }
 
     async function fetchWeeklyTrend() {
@@ -726,27 +681,40 @@
 
       // Update hourly chart
       if (stats.hourlyStats && hourlyChart) {
+        const base = stats.hourlyStatsBase || 0;
+        const labels = Array.from({length: 24}, (_, i) => `${(base + i) % 24}:00`);
         const hourlyData = stats.hourlyStats.map(h => h.requests);
+        const maxVal = Math.max(...hourlyData, 0);
+        const currentHour = new Date().getUTCHours() + 8;
+        const currentSlot = (currentHour < 24 ? currentHour : currentHour - 24);
+        const colors = hourlyData.map((v, i) => {
+          const hour = (base + i) % 24;
+          if (v > 0 && v === maxVal) return 'rgba(251, 191, 36, 0.9)';
+          if (hour === currentSlot) return 'rgba(59, 130, 246, 0.9)';
+          return 'rgba(59, 130, 246, 0.5)';
+        });
+        const borderColors = colors.map(c => c.replace('0.9', '1').replace('0.5', '0.8'));
+        hourlyChart.data.labels = labels;
         hourlyChart.data.datasets[0].data = hourlyData;
+        hourlyChart.data.datasets[0].backgroundColor = colors;
+        hourlyChart.data.datasets[0].borderColor = borderColors;
         hourlyChart.update('none');
       }
-
-      // Update today overview
-      const activeUsers = Object.keys(stats.byApiKey || {}).length;
-      const activeModels = Object.keys(stats.byModel || {}).length;
-      const totalRequests = stats.totalRequestCount || stats.requests?.length || 0;
-      const errorRate = totalRequests > 0 ? ((stats.errors || 0) / totalRequests * 100).toFixed(1) : 0;
-      document.getElementById('activeUsers').textContent = activeUsers;
-      document.getElementById('activeModelsCount').textContent = activeModels;
-      document.getElementById('totalRequestsCount').textContent = formatNumber(totalRequests);
-      document.getElementById('errorRate').textContent = errorRate + '%';
 
       // Update weekly trend chart
       const weeklyData = await fetchWeeklyTrend();
       if (weeklyData.length > 0 && weeklyTrendChart) {
+        const promptTokens = weeklyData.map(d => d.promptTokens);
+        const completionTokens = weeklyData.map(d => d.completionTokens);
+        const requests = weeklyData.map(d => d.requests);
+        const combinedTokens = weeklyData.map(d => d.tokens);
+
         weeklyTrendChart.data.labels = weeklyData.map(d => d.label);
-        weeklyTrendChart.data.datasets[0].data = weeklyData.map(d => d.promptTokens);
-        weeklyTrendChart.data.datasets[1].data = weeklyData.map(d => d.completionTokens);
+        weeklyTrendChart.data.datasets[0].data = promptTokens;
+        weeklyTrendChart.data.datasets[1].data = completionTokens;
+        weeklyTrendChart.data.datasets[2].data = sma(combinedTokens, 7);
+        weeklyTrendChart.data.datasets[3].data = requests;
+        weeklyTrendChart.data.datasets[4].data = sma(requests, 7);
         weeklyTrendChart.update('none');
       }
 
@@ -754,6 +722,7 @@
       if (weeklyData.length > 0 && costTrendChart && appConfig.simCostEnabled) {
         const costs = weeklyData.map(d => d.cost || 0);
         const avg = costs.reduce((a, b) => a + b, 0) / costs.length;
+        const peak = Math.max(...costs);
         costTrendChart.data.labels = weeklyData.map(d => d.label);
         costTrendChart.data.datasets[0].data = costs;
         if (costTrendChart.data.datasets.length > 1) {
@@ -771,13 +740,16 @@
           });
         }
         costTrendChart.update('none');
-        document.getElementById('costAvg').textContent = `￥${avg.toFixed(2)}/天`;
+        document.getElementById('costAvg').textContent = `均值: ￥${avg.toFixed(2)}/天`;
         document.getElementById('costAvg').style.color = 'rgba(251, 191, 36, 0.8)';
+        document.getElementById('costPeak').textContent = `峰值: ￥${peak.toFixed(2)}元`;
+        document.getElementById('costPeak').style.color = 'rgba(249, 115, 22, 0.9)';
       } else if (costTrendChart) {
         costTrendChart.data.labels = [];
         costTrendChart.data.datasets[0].data = [];
         costTrendChart.update('none');
         document.getElementById('costAvg').textContent = '';
+        document.getElementById('costPeak').textContent = '';
       }
 
       // Update API Key table
@@ -816,36 +788,7 @@
       updateRequestLog(stats.requests, true);
     }
 
-    async function updateUserStats(userStats, stats) {
-      if (!userStats) {
-        return;
-      }
-      
-      const rankingTable = document.getElementById('userRankingTable');
-      if (userStats.ranking && userStats.ranking.length > 0) {
-        rankingTable.innerHTML = userStats.ranking.map((user, index) => `
-          <tr class="border-b border-gray-700/50 hover:bg-gray-700/30">
-            <td class="py-2 px-3 text-center">${index + 1}</td>
-            <td class="py-2 px-3">${user.userName}</td>
-            <td class="py-2 px-3 text-right">${formatNumber(user.requests)}</td>
-            <td class="py-2 px-3 text-right">${formatNumber(user.tokens)}</td>
-          </tr>
-        `).join('');
-      } else {
-        rankingTable.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-gray-500">暂无数据</td></tr>';
-      }
-
-      // Update model latency chart
-      const modelLatency = await fetchModelLatency();
-      if (modelLatency && modelLatency.length > 0 && modelLatencyChart) {
-        const topModels = modelLatency.slice(0, 8);
-        modelLatencyChart.data.labels = topModels.map(m => m.modelName.length > 15 ? m.modelName.substring(0, 15) + '...' : m.modelName);
-        modelLatencyChart.data.datasets[0].data = topModels.map(m => m.avgLatency);
-        modelLatencyChart.data.datasets[1].data = topModels.map(m => m.avgContextLength);
-        modelLatencyChart.update('none');
-      }
-
-      // Update model performance chart
+    function updateModelPerformance(stats) {
       if (stats && stats.byModel && modelPerformanceChart) {
         const modelData = Object.entries(stats.byModel)
           .sort((a, b) => b[1].tokens - a[1].tokens)
@@ -871,26 +814,6 @@
         const calcTps = avgTpot.map(tpot => tpot > 0 ? 1000 / tpot : 0);
         modelPerformanceChart.data.datasets[0].data = calcTps;
         modelPerformanceChart.update('none');
-      }
-
-      // Update latency chart
-      if (stats && stats.requests && stats.requests.length > 0 && latencyChart) {
-        const latencyDist = [0, 0, 0, 0, 0];
-        stats.requests.forEach(req => {
-          const ms = Math.max(0, req.latency || 0);
-          if (ms < 100) latencyDist[0]++;
-          else if (ms < 500) latencyDist[1]++;
-          else if (ms < 1000) latencyDist[2]++;
-          else if (ms < 3000) latencyDist[3]++;
-          else latencyDist[4]++;
-        });
-        latencyChart.data.datasets[0].data = latencyDist;
-        latencyChart.update('none');
-
-        const latency = stats.latency || {};
-        document.getElementById('latencyAvg').textContent = (latency.count > 0 ? Math.round(latency.sum / latency.count) : 0) + 'ms';
-        document.getElementById('latencyMin').textContent = (latency.min === Infinity || latency.min < 0 ? 0 : latency.min) + 'ms';
-        document.getElementById('latencyMax').textContent = (latency.max || 0) + 'ms';
       }
     }
 
@@ -1061,7 +984,6 @@
 
     async function poll() {
       const stats = await fetchStats();
-      const userStats = await fetchUserStats();
       const newRequests = await fetchRequests(0);
       const resourceData = await fetchResourceMonitor();
       if (newRequests.length > 0) {
@@ -1070,7 +992,7 @@
         updateRequestLog(cachedRequests);
       }
       await updateUI(stats);
-      updateUserStats(userStats, stats);
+      updateModelPerformance(stats);
       updateResourceMonitor(resourceData);
       if (currentTab === 'errors') fetchErrorLogs();
     }
@@ -1501,47 +1423,173 @@ function toggleLog() {
       }
     }
 
+    let calendarLogs = [];
+    let calendarYear, calendarMonth;
+    const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六'];
+
     async function openLogs() {
+      document.body.style.overflow = 'hidden';
+      document.getElementById('logDetailModal').classList.add('hidden');
+      document.getElementById('logDetailModal').classList.remove('flex');
       document.getElementById('logsModal').classList.remove('hidden');
       document.getElementById('logsModal').classList.add('flex');
-      document.getElementById('logDetail').classList.add('hidden');
-      document.getElementById('logsList').classList.remove('hidden');
-      await loadLogsList();
+      const now = new Date();
+      calendarYear = now.getFullYear();
+      calendarMonth = now.getMonth();
+      initMonthSelector();
+      await loadCalendarData();
     }
 
     function closeLogs() {
+      document.body.style.overflow = '';
       document.getElementById('logsModal').classList.add('hidden');
       document.getElementById('logsModal').classList.remove('flex');
     }
 
-    async function loadLogsList() {
-      const container = document.getElementById('logsList');
+    async function loadCalendarData() {
       try {
         const response = await fetch(`${API_BASE}/logs`);
-        const logs = await response.json();
-        
-        if (logs.length === 0) {
-          container.innerHTML = '<div class="text-gray-500 text-center py-4 col-span-7">暂无历史日志</div>';
-          return;
-        }
-        
-        container.innerHTML = logs.map(log => `
-          <button onclick="loadLogDetail('${log.date}')" class="p-3 bg-gray-700 hover:bg-gray-600 rounded-lg text-center transition">
-            <div class="text-sm text-gray-400">${log.displayDate}</div>
-            <div class="text-lg font-bold text-white">${formatNumber(log.requests)}</div>
-            <div class="text-xs text-gray-500">${formatNumber(log.totalTokens)} tokens</div>
-            ${log.cost > 0 ? `<div class="text-xs text-green-400">￥${log.cost.toFixed(2)}</div>` : ''}
-            ${log.errors > 0 ? `<div class="text-xs text-red-400">${log.errors} errors</div>` : ''}
-          </button>
-        `).join('');
-      } catch (error) {
-        container.innerHTML = '<div class="text-red-400 text-center py-4 col-span-7">加载失败</div>';
+        calendarLogs = await response.json();
+      } catch (e) {
+        calendarLogs = [];
       }
+      renderCalendar(calendarYear, calendarMonth);
+    }
+
+    function renderCalendar(year, month) {
+      const calendarEl = document.getElementById('logsCalendar');
+      const navLabel = document.getElementById('currentMonthLabel');
+      const selector = document.getElementById('monthSelector');
+      const weekdayEl = document.getElementById('weekdayHeader');
+
+      navLabel.textContent = `${year}年${month + 1}月`;
+
+      const currentVal = `${year}-${String(month + 1).padStart(2, '0')}`;
+      if (selector.value !== currentVal) {
+        selector.value = currentVal;
+      }
+
+      weekdayEl.innerHTML = WEEKDAYS.map(d => `<div class="py-1">${d}</div>`).join('');
+
+      const prefix = `${year}${String(month + 1).padStart(2, '0')}`;
+      const monthLogs = calendarLogs.filter(log => log.date.startsWith(prefix));
+
+      updateMonthlySummary(monthLogs);
+
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const today = new Date();
+      const todayStr = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
+
+      const cells = [];
+
+      function dayCell(content, hasData, isToday) {
+        const bg = hasData ? 'bg-gray-700/50' : 'bg-gray-800/30';
+        const ring = isToday ? (hasData ? 'ring-2 ring-blue-500' : 'ring-1 ring-gray-600') : '';
+        return `<div class="h-[90px] overflow-hidden flex flex-col items-center justify-center ${bg} rounded ${ring}">${content}</div>`;
+      }
+
+      for (let i = 0; i < firstDay; i++) {
+        cells.push(dayCell('', false, false));
+      }
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dateStr = `${prefix}${String(d).padStart(2, '0')}`;
+        const log = monthLogs.find(l => l.date === dateStr);
+        const isToday = dateStr === todayStr;
+
+        if (log) {
+          const totalTokens = typeof log.totalTokens === 'object' && log.totalTokens !== null
+            ? (log.totalTokens.prompt || 0) + (log.totalTokens.completion || 0)
+            : (log.totalTokens || 0);
+          const costText = log.cost > 0 ? `¥${log.cost.toFixed(2)}` : '';
+          const errorText = log.errors > 0 ? `${log.errors}err` : '';
+          cells.push(dayCell(`
+            <button onclick="loadLogDetail('${log.date}')"
+              class="hover:bg-gray-600/50 rounded p-1 text-xs text-center transition w-full flex flex-col items-center">
+              <span class="text-gray-400 font-medium">${d}</span>
+              <span class="text-white font-bold text-sm">${formatNumber(log.requests)}</span>
+              <span class="text-gray-500">${formatNumber(totalTokens)}</span>
+              ${costText ? `<span class="text-green-400">${costText}</span>` : ''}
+              ${errorText ? `<span class="text-red-400">${errorText}</span>` : ''}
+            </button>
+          `, true, isToday));
+        } else {
+          cells.push(dayCell(`
+            <div class="p-1 text-xs text-center text-gray-600 w-full flex flex-col items-center">
+              <span class="font-medium">${d}</span>
+              <span>无数据</span>
+            </div>
+          `, false, isToday));
+        }
+      }
+
+      while (cells.length < 42) {
+        cells.push(dayCell('', false, false));
+      }
+
+      calendarEl.innerHTML = cells.join('');
+    }
+
+    function changeMonth(delta) {
+      calendarMonth += delta;
+      if (calendarMonth > 11) {
+        calendarMonth = 0;
+        calendarYear++;
+      } else if (calendarMonth < 0) {
+        calendarMonth = 11;
+        calendarYear--;
+      }
+      renderCalendar(calendarYear, calendarMonth);
+    }
+
+    function jumpToMonth(val) {
+      const parts = val.split('-');
+      calendarYear = parseInt(parts[0]);
+      calendarMonth = parseInt(parts[1]) - 1;
+      renderCalendar(calendarYear, calendarMonth);
+    }
+
+    function initMonthSelector() {
+      const selector = document.getElementById('monthSelector');
+      const currentYear = new Date().getFullYear();
+      const options = [];
+      for (let y = currentYear - 1; y <= currentYear + 1; y++) {
+        for (let m = 1; m <= 12; m++) {
+          const val = `${y}-${String(m).padStart(2, '0')}`;
+          const label = `${y}年${m}月`;
+          options.push(`<option value="${val}">${label}</option>`);
+        }
+      }
+      selector.innerHTML = options.join('');
+    }
+
+    function updateMonthlySummary(monthLogs) {
+      if (monthLogs.length === 0) {
+        document.getElementById('monthRequests').textContent = '0';
+        document.getElementById('monthTokens').textContent = '0';
+        document.getElementById('monthCost').textContent = '¥0.00';
+        document.getElementById('monthErrorRate').textContent = '0%';
+        return;
+      }
+      const totalRequests = monthLogs.reduce((s, l) => s + (l.requests || 0), 0);
+      const totalTokens = monthLogs.reduce((s, l) => {
+        const t = l.totalTokens;
+        if (typeof t === 'object' && t !== null) return s + (t.prompt || 0) + (t.completion || 0);
+        return s + (t || 0);
+      }, 0);
+      const totalCost = monthLogs.reduce((s, l) => s + (l.cost || 0), 0);
+      const totalErrors = monthLogs.reduce((s, l) => s + (l.errors || 0), 0);
+      const errorRate = totalRequests > 0 ? ((totalErrors / totalRequests) * 100).toFixed(1) : '0';
+
+      document.getElementById('monthRequests').textContent = formatNumber(totalRequests);
+      document.getElementById('monthTokens').textContent = formatNumber(totalTokens);
+      document.getElementById('monthCost').textContent = `¥${totalCost.toFixed(2)}`;
+      document.getElementById('monthErrorRate').textContent = `${errorRate}%`;
     }
 
     async function loadLogDetail(date) {
-      const detailDiv = document.getElementById('logDetail');
-      const listDiv = document.getElementById('logsList');
+      const modal = document.getElementById('logDetailModal');
       const titleEl = document.getElementById('logDetailTitle');
       const statsEl = document.getElementById('logStats');
       const requestsEl = document.getElementById('logRequests');
@@ -1577,16 +1625,19 @@ function toggleLog() {
           `).join('');
         }
         
-        listDiv.classList.add('hidden');
-        detailDiv.classList.remove('hidden');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
       } catch (error) {
         requestsEl.innerHTML = '<div class="text-red-400 text-center py-4">加载失败</div>';
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
       }
     }
 
     function closeLogDetail() {
-      document.getElementById('logDetail').classList.add('hidden');
-      document.getElementById('logsList').classList.remove('hidden');
+      const modal = document.getElementById('logDetailModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
     }
 
     function setToggle(toggleId, isOn) {
