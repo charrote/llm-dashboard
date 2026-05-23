@@ -1,0 +1,198 @@
+[
+  {
+    "timestamp": "2026-04-05T19:16:41.382Z",
+    "requestId": "21ff2563-c224-437d-8628-2484096e39ef",
+    "strategy": "preserve",
+    "before": {
+      "tokens": 10490,
+      "messageCount": 2
+    },
+    "after": {
+      "tokens": 10490,
+      "messageCount": 2
+    },
+    "saved": 0
+  },
+  {
+    "timestamp": "2026-04-05T19:17:02.322Z",
+    "requestId": "eefc4a5d-b200-4d82-9bb9-e05d4bade8d4",
+    "strategy": "preserve",
+    "before": {
+      "tokens": 10621,
+      "messageCount": 4
+    },
+    "after": {
+      "tokens": 10621,
+      "messageCount": 4
+    },
+    "saved": 0
+  },
+  {
+    "timestamp": "2026-04-05T19:17:04.142Z",
+    "requestId": "a20e1256-7c0c-4fba-b77e-bdfe6e8ca21b",
+    "strategy": "preserve",
+    "before": {
+      "tokens": 15147,
+      "messageCount": 6
+    },
+    "after": {
+      "tokens": 15147,
+      "messageCount": 6
+    },
+    "saved": 0
+  },
+  {
+    "timestamp": "2026-04-05T19:26:24.756Z",
+    "requestId": "3603f86a-145c-4523-8cc6-6c3ab2b113f1",
+    "strategy": "preserve",
+    "before": {
+      "tokens": 18243,
+      "messageCount": 49
+    },
+    "after": {
+      "tokens": 10521,
+      "messageCount": 4
+    },
+    "saved": 7722
+  },
+  {
+    "timestamp": "2026-04-05T19:26:44.667Z",
+    "requestId": "6736411d-dfcf-49be-ac52-f917bf6bed12",
+    "strategy": "preserve",
+    "before": {
+      "tokens": 18459,
+      "messageCount": 51
+    },
+    "after": {
+      "tokens": 10525,
+      "messageCount": 4
+    },
+    "saved": 7934
+  },
+  {
+    "timestamp": "2026-04-05T19:27:09.162Z",
+    "requestId": "b728d389-1018-4fea-a672-9a87744c3241",
+    "strategy": "preserve",
+    "before": {
+      "tokens": 18543,
+      "messageCount": 52
+    },
+    "after": {
+      "tokens": 10587,
+      "messageCount": 4
+    },
+    "saved": 7956
+  },
+  {
+    "timestamp": "2026-04-05T19:27:12.285Z",
+    "requestId": "61692234-d229-43f3-b6d7-ebc1075c5cc4",
+    "strategy": "preserve",
+    "before": {
+      "tokens": 20045,
+      "messageCount": 54
+    },
+    "after": {
+      "tokens": 20045,
+      "messageCount": 54
+    },
+    "saved": 0
+  },
+  {
+    "timestamp": "2026-04-05T19:27:30.058Z",
+    "requestId": "97caef33-fd5b-4be1-8c59-d1ced5fbd568",
+    "strategy": "preserve",
+    "before": {
+      "tokens": 20165,
+      "messageCount": 56
+    },
+    "after": {
+      "tokens": 20165,
+      "messageCount": 56
+    },
+    "saved": 0
+  },
+  {
+    "timestamp": "2026-04-05T19:27:33.780Z",
+    "requestId": "a856c20d-1935-4957-aaa9-6832d9aad369",
+    "strategy": "preserve",
+    "before": {
+      "tokens": 20256,
+      "messageCount": 58
+    },
+    "after": {
+      "tokens": 20256,
+      "messageCount": 58
+    },
+    "saved": 0
+  },
+  {
+    "timestamp": "2026-04-05T19:27:35.729Z",
+    "requestId": "bff24a5b-7d7a-45fe-bfe7-5bdb2996b1a9",
+    "strategy": "preserve",
+    "before": {
+      "tokens": 20717,
+      "messageCount": 60
+    },
+    "after": {
+      "tokens": 20717,
+      "messageCount": 60
+    },
+    "saved": 0
+  },
+  {
+    "timestamp": "2026-04-05T19:27:41.751Z",
+    "requestId": "39776c21-dca2-4ae4-a02c-e1fadbb6622b",
+    "strategy": "preserve",
+    "before": {
+      "tokens": 20847,
+      "messageCount": 62
+    },
+    "after": {
+      "tokens": 20847,
+      "messageCount": 62
+    },
+    "saved": 0
+  },
+  {
+    "timestamp": "2026-04-05T19:40:00.755Z",
+    "requestId": "e650cff0-00c1-498d-a5b7-e66839ca1b31",
+    "strategy": "preserve",
+    "before": {
+      "tokens": 10563,
+      "messageCount": 4
+    },
+    "after": {
+      "tokens": 10563,
+      "messageCount": 4
+    },
+    "saved": 0
+  },
+  {
+    "timestamp": "2026-04-05T19:40:04.202Z",
+    "requestId": "670804cf-56fe-49d6-9c29-363c6b8161fe",
+    "strategy": "preserve",
+    "before": {
+      "tokens": 12348,
+      "messageCount": 5
+    },
+    "after": {
+      "tokens": 12348,
+      "messageCount": 5
+    },
+    "saved": 0
+  },
+  {
+    "timestamp": "2026-04-05T19:41:03.268Z",
+    "requestId": "8cb6cf67-3ec3-4182-aa88-bba893fb7601",
+    "strategy": "preserve",
+    "before": {
+      "tokens": 12666,
+      "messageCount": 7
+    },
+    "after": {
+      "tokens": 12373,
+      "messageCount": 4
+    },
+    "saved": 293
+  }
+]

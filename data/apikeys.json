@@ -62,7 +62,7 @@
   {
     "id": "0de3d7c1-a188-4690-9b11-60bd7e241246",
     "apiKey": "ux-ERKC4IEWQSEUTAYD9KQL2V86WM6L3H3R",
-    "userName": "UantekCode",
+    "userName": "MAX-Coder",
     "userId": "UantekCode",
     "phone": "UantekCode",
     "enabled": true,
@@ -72,7 +72,7 @@
   {
     "id": "9573845d-c618-42bd-83a1-7b6b31513311",
     "apiKey": "ux-O3ZXIX5AKAS8AVS8CDA73X5EEU41YHOE",
-    "userName": "唐俊勇-Ob",
+    "userName": "MAX-RAG",
     "userId": "yoo.tangOB",
     "phone": "1234567OBSI",
     "enabled": true,
@@ -87,6 +87,26 @@
     "phone": "13712179000",
     "enabled": true,
     "createdAt": "2026-04-02T10:18:12.083Z",
+    "lastUsedAt": null
+  },
+  {
+    "id": "a8574b1d-82f9-4c3b-85bd-d3c955d94719",
+    "apiKey": "ux-7KWOLMNDF5M3XOG8DLJXDM270T8GV3VA",
+    "userName": "MAX-CMD",
+    "userId": "maxcmd",
+    "phone": "00000000000",
+    "enabled": true,
+    "createdAt": "2026-05-22T03:09:47.168Z",
+    "lastUsedAt": null
+  },
+  {
+    "id": "7716986c-87a8-4905-9330-85996cbc5e77",
+    "apiKey": "ux-MQ8XGX8ZWB5P0RA61AVVTIYZPMPDYTYX",
+    "userName": "MAX-Kimi",
+    "userId": "maxkimi",
+    "phone": "kimi202605221115",
+    "enabled": true,
+    "createdAt": "2026-05-22T03:15:43.914Z",
     "lastUsedAt": null
   }
 ]

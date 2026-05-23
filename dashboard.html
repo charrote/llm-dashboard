@@ -773,7 +773,7 @@
         costTrendChart.update('none');
         document.getElementById('costAvg').textContent = `￥${avg.toFixed(2)}/天`;
         document.getElementById('costAvg').style.color = 'rgba(251, 191, 36, 0.8)';
-      } else {
+      } else if (costTrendChart) {
         costTrendChart.data.labels = [];
         costTrendChart.data.datasets[0].data = [];
         costTrendChart.update('none');
@@ -1182,7 +1182,7 @@ function toggleLog() {
       toggle.classList.toggle('bg-blue-600');
       toggle.classList.toggle('bg-gray-600');
       toggle.querySelector('span').classList.toggle('left-6');
-      toggle.classList.toggle('left-0.5');
+      toggle.querySelector('span').classList.toggle('left-0.5');
     }
 
     function toggleSimCost() {

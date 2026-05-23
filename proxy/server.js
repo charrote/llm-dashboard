@@ -115,7 +115,12 @@ function cleanupOldOptimizationLogs() {
 
 const app = express();
 const PORT = process.env.PORT || 9234;
-let lmStudioUrl = config.lmStudioUrl || process.env.LMSTUDIO_URL || 'http://host.docker.internal:1234';
+let lmStudioUrl = '';
+if (config.lmStudio?.container && config.lmStudio?.port) {
+  lmStudioUrl = `http://${config.lmStudio.container}:${config.lmStudio.port}`;
+} else {
+  lmStudioUrl = config.lmStudioUrl || process.env.LMSTUDIO_URL || 'http://host.docker.internal:1234';
+}
 
 app.use(cors());
 app.use(express.json({ limit: '20mb' }));
@@ -131,6 +136,7 @@ const defaultStats = () => ({
   byApiKey: {},
   byModel: {},
   hourlyStats: new Array(24).fill(0).map(() => ({ requests: 0, tokens: 0, errors: 0 })),
+  hourlyStatsBase: (getCurrentBeijingHour() + 1) % 24,
   totalTokens: { prompt: 0, completion: 0 },
   latency: { sum: 0, count: 0, min: Infinity, max: 0 },
   errors: 0
@@ -145,9 +151,10 @@ if (!fs.existsSync(LOGS_DIR)) {
 }
 
 function getDateStr(date = new Date()) {
-  const yyyy = date.getFullYear();
-  const mm = String(date.getMonth() + 1).padStart(2, '0');
-  const dd = String(date.getDate()).padStart(2, '0');
+  const bj = new Date(date.getTime() + 8 * 3600 * 1000);
+  const yyyy = bj.getUTCFullYear();
+  const mm = String(bj.getUTCMonth() + 1).padStart(2, '0');
+  const dd = String(bj.getUTCDate()).padStart(2, '0');
   return `${yyyy}${mm}${dd}`;
 }
 
@@ -178,16 +185,45 @@ function loadCurrentStats() {
       const fileDate = data.date;
       const today = getDateStr();
       if (fileDate === today) {
+        const hasBase = data.hourlyStatsBase !== undefined && data.hourlyStatsBase !== null;
         stats = migrateStatsData({
           ...defaultStats(),
           ...data,
+          hourlyStatsBase: hasBase ? data.hourlyStatsBase : undefined,
           latency: data.latency || { sum: 0, count: 0, min: Infinity, max: 0 }
         });
+        if (!hasBase) {
+          const currentHour = getCurrentBeijingHour();
+          const newBase = (currentHour + 1) % 24;
+          const newArray = new Array(24).fill(0).map(() => ({ requests: 0, tokens: 0, errors: 0 }));
+          for (let i = 0; i < 24; i++) {
+            if (stats.hourlyStats[i] && (stats.hourlyStats[i].requests > 0 || stats.hourlyStats[i].tokens > 0 || stats.hourlyStats[i].errors > 0)) {
+              const newIndex = (i - newBase + 24) % 24;
+              newArray[newIndex] = { ...stats.hourlyStats[i] };
+            }
+          }
+          stats.hourlyStats = newArray;
+          stats.hourlyStatsBase = newBase;
+        }
         errorLogs = data.errorLogs || [];
       } else {
         const oldFile = getLogFileName(fileDate);
         fs.writeFileSync(oldFile, JSON.stringify(data, null, 2));
+        const oldHourlyStats = data.hourlyStats;
+        const oldBase = data.hourlyStatsBase;
         stats = defaultStats();
+        if (oldHourlyStats && oldHourlyStats.length === 24 && oldBase !== undefined) {
+          const currentHour = getCurrentBeijingHour();
+          const expectedBase = (currentHour + 1) % 24;
+          const newArray = new Array(24).fill(0).map(() => ({ requests: 0, tokens: 0, errors: 0 }));
+          for (let i = 0; i < 24; i++) {
+            const oldHour = (oldBase + i) % 24;
+            const newIndex = (oldHour - expectedBase + 24) % 24;
+            newArray[newIndex] = { ...oldHourlyStats[i] };
+          }
+          stats.hourlyStats = newArray;
+          stats.hourlyStatsBase = expectedBase;
+        }
         errorLogs = [];
       }
     }
@@ -195,6 +231,45 @@ function loadCurrentStats() {
     console.error('加载数据失败:', error.message);
     stats = defaultStats();
     errorLogs = [];
+  }
+  supplementHourlyStatsFromArchives();
+}
+
+function supplementHourlyStatsFromArchives() {
+  try {
+    const files = fs.readdirSync(LOGS_DIR)
+      .filter(f => /^\d{8}\.json$/.test(f))
+      .sort()
+      .reverse();
+    for (const file of files) {
+      if (file === 'current.json') continue;
+      const filePath = path.join(LOGS_DIR, file);
+      const content = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      const archiveHourly = content.hourlyStats;
+      const archiveBase = content.hourlyStatsBase;
+      if (!archiveHourly || archiveHourly.length !== 24 || archiveBase === undefined) continue;
+      const currentBase = stats.hourlyStatsBase;
+      let filled = 0;
+      for (let i = 0; i < 24; i++) {
+        const slot = stats.hourlyStats[i];
+        if (!slot.requests && !slot.tokens && !slot.errors) {
+          const hour = (currentBase + i) % 24;
+          const archiveSlot = archiveHourly[(hour - archiveBase + 24) % 24];
+          if (archiveSlot && (archiveSlot.requests || archiveSlot.tokens || archiveSlot.errors)) {
+            slot.requests = archiveSlot.requests || 0;
+            slot.tokens = archiveSlot.tokens || 0;
+            slot.errors = archiveSlot.errors || 0;
+            filled++;
+          }
+        }
+      }
+      if (filled > 0) {
+        console.log(`从归档 ${file} 补充了 ${filled} 个小时数据`);
+        break;
+      }
+    }
+  } catch (error) {
+    console.error('补充小时数据失败:', error.message);
   }
 }
 
@@ -205,7 +280,11 @@ function saveCurrentStats() {
       const oldFile = getLogFileName(currentDate);
       fs.writeFileSync(oldFile, JSON.stringify({ ...stats, date: currentDate, errorLogs }, null, 2));
       currentDate = today;
+      const keptHourly = stats.hourlyStats;
+      const keptBase = stats.hourlyStatsBase;
       stats = defaultStats();
+      stats.hourlyStats = keptHourly;
+      stats.hourlyStatsBase = keptBase;
       errorLogs = [];
     }
     fs.writeFileSync(CURRENT_LOG_FILE, JSON.stringify({ ...stats, date: today, errorLogs }, null, 2));
@@ -214,25 +293,54 @@ function saveCurrentStats() {
   }
 }
 
-setInterval(saveCurrentStats, 60000);
+setInterval(() => {
+  rotateHourlyStats();
+  saveCurrentStats();
+}, 60000);
 
 loadCurrentStats();
 
-function getHourIndex(date = new Date()) {
+function getCurrentBeijingHour(date = new Date()) {
   const hour = date.getUTCHours() + 8;
   return hour >= 24 ? hour - 24 : hour;
 }
 
+function rotateHourlyStats() {
+  const currentHour = getCurrentBeijingHour();
+  const expectedBase = (currentHour + 1) % 24;
+  let base = stats.hourlyStatsBase;
+  let diff = (expectedBase - base + 24) % 24;
+
+  if (diff > 12) {
+    const newArray = new Array(24).fill(0).map(() => ({ requests: 0, tokens: 0, errors: 0 }));
+    for (let i = 0; i < 24; i++) {
+      const oldHour = (base + i) % 24;
+      const newIndex = (oldHour - expectedBase + 24) % 24;
+      newArray[newIndex] = { ...stats.hourlyStats[i] };
+    }
+    stats.hourlyStats = newArray;
+  } else {
+    for (let i = 0; i < diff; i++) {
+      stats.hourlyStats.shift();
+      stats.hourlyStats.push({ requests: 0, tokens: 0, errors: 0 });
+    }
+  }
+  stats.hourlyStatsBase = expectedBase;
+}
+
 function updateStats(data) {
+  rotateHourlyStats();
+
   const requestDate = new Date(data.timestamp);
-  const hour = getHourIndex(requestDate);
+  const hour = getCurrentBeijingHour(requestDate);
+  const slotIndex = (hour - stats.hourlyStatsBase + 24) % 24;
   
   stats.requests.push(data);
   if (stats.requests.length > 1000) stats.requests.shift();
   stats.totalRequestCount++;
   
-  stats.hourlyStats[hour].requests++;
-  stats.hourlyStats[hour].tokens += data.tokens.total;
+  stats.hourlyStats[slotIndex].requests++;
+  stats.hourlyStats[slotIndex].tokens += data.tokens.total;
   stats.totalTokens.prompt += data.tokens.prompt;
   stats.totalTokens.completion += data.tokens.completion;
   
@@ -320,7 +428,7 @@ function updateStats(data) {
   
   if (data.error) {
     stats.errors++;
-    stats.hourlyStats[hour].errors++;
+    stats.hourlyStats[slotIndex].errors++;
     if (data.apiKey && stats.byApiKey[data.apiKey]) {
       stats.byApiKey[data.apiKey].errors++;
     }
@@ -348,9 +456,11 @@ function updateStats(data) {
   saveCurrentStats();
 }
 
-function finalizeRequest(requestId, completionTokens, latency, status, error, ttft = null) {
+function finalizeRequest(requestId, completionTokens, latency, status, error, ttft = null, forwardTime = 0, llmTime = 0) {
   const pending = pendingRequests.get(requestId);
   if (!pending) return;
+  
+  const tpot = (ttft && completionTokens > 0 && latency > ttft) ? Math.round((latency - ttft) / completionTokens) : (completionTokens > 0 ? Math.round(latency / completionTokens) : null);
   
   pending.tokens.completion = completionTokens;
   pending.tokens.total = pending.tokens.prompt + completionTokens;
@@ -358,6 +468,9 @@ function finalizeRequest(requestId, completionTokens, latency, status, error, tt
   pending.status = status;
   pending.error = error;
   pending.ttft = ttft;
+  pending.tpot = tpot;
+  pending.requestTime = forwardTime;
+  pending.llmTime = llmTime;
   
   updateStats(pending);
   pendingRequests.delete(requestId);
@@ -388,6 +501,7 @@ function extractTokenUsage(resData, reqBody = null, estimatedPrompt = 0) {
 
 const requestStartTimes = new Map();
 const requestFirstTokenTimes = new Map();
+const requestForwardTimes = new Map();
 const pendingRequests = new Map();
 
 async function proxyRequest(req, res) {
@@ -433,10 +547,15 @@ async function proxyRequest(req, res) {
     status: 200,
     tokens: { prompt: promptTokens, completion: 0, total: promptTokens },
     latency: 0,
-    error: null
+    error: null,
+    ttft: null,
+    tpot: null,
+    requestTime: 0,
+    llmTime: 0
   });
   
   requestStartTimes.set(requestId, startTime);
+  requestForwardTimes.set(requestId, Date.now());
   
   const targetPath = req.path.replace(/^\/v1/, '');
   const targetUrl = `${lmStudioUrl}/v1${targetPath}`;
@@ -472,7 +591,11 @@ async function proxyRequest(req, res) {
   const authHeader = req.headers['authorization']?.replace('Bearer ', '') || apiKey;
   const isGetOrHead = req.method === 'GET' || req.method === 'HEAD';
   
+  let forwardTime = 0;
+  let llmStart = Date.now();
+  
   try {
+    const forwardStart = requestForwardTimes.get(requestId) || Date.now();
     const response = await fetch(targetUrl, {
       method: req.method,
       headers: {
@@ -481,6 +604,10 @@ async function proxyRequest(req, res) {
       },
       ...(!isGetOrHead && { body: JSON.stringify(req.body) })
     });
+    requestForwardTimes.delete(requestId);
+    const forwardEnd = Date.now();
+    forwardTime = forwardEnd - forwardStart;
+    llmStart = forwardEnd;
 
     if (config.enableLog) {
       const endTime = Date.now();
@@ -518,7 +645,8 @@ async function proxyRequest(req, res) {
               
               const completionTokens = Math.ceil(Buffer.byteLength(streamContent) / 4);
               const ttft = firstTokenTime - startTime;
-              finalizeRequest(requestId, completionTokens, Math.max(0, endTime - startTime), response.status, null, ttft);
+              const llmTime = endTime - llmStart;
+              finalizeRequest(requestId, completionTokens, Math.max(0, endTime - startTime), response.status, null, ttft, forwardTime, llmTime);
               
               break;
             }
@@ -532,7 +660,14 @@ async function proxyRequest(req, res) {
             res.write(decoded);
           }
         } catch (error) {
-          res.status(500).json({ error: error.message });
+          try {
+            res.end();
+          } catch (_) {}
+          const endTime = Date.now();
+          const startTime = requestStartTimes.get(requestId) || endTime;
+          requestStartTimes.delete(requestId);
+          requestFirstTokenTimes.delete(requestId);
+          finalizeRequest(requestId, 0, Math.max(0, endTime - startTime), 500, error.message, null, forwardTime, 0);
         }
       }
       
@@ -547,14 +682,17 @@ async function proxyRequest(req, res) {
     requestStartTimes.delete(requestId);
     
     const data = await response.json();
+    const fwdEnd = Date.now();
+    forwardTime = fwdEnd - forwardStart;
+    llmStart = fwdEnd;
     
     if (config.enableLog) {
       console.log(`[PROXY] Response:`, JSON.stringify(data));
     }
     
     const tokens = extractTokenUsage(data, req.body, promptTokens);
-    
-    finalizeRequest(requestId, tokens.completion, latency, response.status, null);
+    const llmTime = Date.now() - llmStart;
+    finalizeRequest(requestId, tokens.completion, latency, response.status, null, null, forwardTime, llmTime);
     
     res.status(response.status).json(data);
     
@@ -562,6 +700,7 @@ async function proxyRequest(req, res) {
     const endTime = Date.now();
     const startTime = requestStartTimes.get(requestId) || endTime;
     requestStartTimes.delete(requestId);
+    requestForwardTimes.delete(requestId);
     const latency = Math.max(0, endTime - startTime);
     const timestamp = new Date(startTime).toISOString();
 
@@ -570,7 +709,7 @@ async function proxyRequest(req, res) {
       console.log(`[PROXY] Request:`, JSON.stringify(req.body));
     }
     
-    finalizeRequest(requestId, 0, latency, 500, error.message);
+    finalizeRequest(requestId, 0, latency, 500, error.message, null, forwardTime, 0);
     
     errorLogs.push({
       id: uuidv4(),
@@ -849,6 +988,8 @@ app.get('/api/logs/:date', (req, res) => {
 
 app.get('/api/config', (req, res) => {
   res.json({
+    lmStudioContainer: config.lmStudio?.container || '',
+    lmStudioPort: config.lmStudio?.port || 1234,
     lmStudioUrl: lmStudioUrl || '',
     enableAPIKey: config.enableAPIKey || false,
     enableLog: config.enableLog || false,
@@ -861,9 +1002,12 @@ app.get('/api/config', (req, res) => {
 });
 
 app.post('/api/config', (req, res) => {
-  const { lmStudioUrl: url, defaultAPIKey, enableAPIKey, enableLog, lmAuthEnabled, lmAuthValue, simCostEnabled, simPromptCost, simCompletionCost } = req.body;
+  const { lmStudioContainer, lmStudioPort, lmStudioUrl: url, defaultAPIKey, enableAPIKey, enableLog, lmAuthEnabled, lmAuthValue, simCostEnabled, simPromptCost, simCompletionCost } = req.body;
   
-  if (url) {
+  if (lmStudioContainer && lmStudioPort) {
+    config.lmStudio = { container: lmStudioContainer, port: parseInt(lmStudioPort) };
+    lmStudioUrl = `http://${lmStudioContainer}:${lmStudioPort}`;
+  } else if (url) {
     lmStudioUrl = url;
   }
   
@@ -958,6 +1102,7 @@ app.delete('/api/reset', (req, res) => {
   stats.byApiKey = {};
   stats.byModel = {};
   stats.hourlyStats = new Array(24).fill(0).map(() => ({ requests: 0, tokens: 0, errors: 0 }));
+  stats.hourlyStatsBase = (getCurrentBeijingHour() + 1) % 24;
   stats.totalTokens = { prompt: 0, completion: 0 };
   stats.latency = { sum: 0, count: 0, min: Infinity, max: 0 };
   stats.errors = 0;
@@ -1078,16 +1223,58 @@ app.get('/api/resource-monitor', async (req, res) => {
   }
 
   try {
-    const { stdout: vramInfo } = await execAsync(`docker exec ${dockerContainer} sh -c 'cat /sys/class/drm/card0/device/mem_info_vram_used 2>/dev/null || cat /sys/class/drm/card0/device/mem_info_gtt_used 2>/dev/null || echo 0'`);
-    const vramUsed = parseInt(vramInfo.trim()) || 0;
+    const { stdout: vramUsedInfo } = await execAsync(`docker exec ${dockerContainer} sh -c 'cat /sys/class/drm/card0/device/mem_info_gtt_used 2>/dev/null || cat /sys/class/drm/card0/device/mem_info_vram_used 2>/dev/null || echo 0'`);
+    const vramUsed = parseInt(vramUsedInfo.trim()) || 0;
     if (vramUsed > 0) {
       result.vramUsed = Math.round(vramUsed / 1024 / 1024);
+    }
+
+    const { stdout: vramTotalInfo } = await execAsync(`docker exec ${dockerContainer} sh -c 'cat /sys/class/drm/card0/device/mem_info_gtt_total 2>/dev/null || cat /sys/class/drm/card0/device/mem_info_vram_total 2>/dev/null || echo 0'`);
+    const vramTotal = parseInt(vramTotalInfo.trim()) || 0;
+    if (vramTotal > 0) {
+      result.vramTotal = Math.round(vramTotal / 1024 / 1024);
     }
   } catch (e) {
     console.error('VRAM usage error:', e.message);
   }
 
   res.json(result);
+});
+
+let recentEfficiency = { ttft: 0, tpot: 0, tps: 0, requestTime: 0, llmTime: 0 };
+
+app.get('/api/efficiency', (req, res) => {
+  const recentRequests = stats.requests.slice(-20).filter(r => r.ttft || r.tpot);
+  if (recentRequests.length > 0) {
+    const validRequests = recentRequests.filter(r => (r.ttft || r.tpot) && r.tokens?.completion > 0);
+    if (validRequests.length > 0) {
+      const totalTtft = validRequests.reduce((sum, r) => sum + (r.ttft || 0), 0);
+      const totalTpot = validRequests.reduce((sum, r) => sum + (r.tpot || 0), 0);
+      const totalTokens = validRequests.reduce((sum, r) => sum + r.tokens.completion, 0);
+      const totalLatency = validRequests.reduce((sum, r) => sum + r.latency, 0);
+      const totalRequestTime = validRequests.reduce((sum, r) => sum + (r.requestTime || 0), 0);
+      const totalLlmTime = validRequests.reduce((sum, r) => sum + (r.llmTime || 0), 0);
+      
+      recentEfficiency = {
+        ttft: Math.round(totalTtft / validRequests.length),
+        tpot: Math.round(totalTpot / validRequests.length),
+        tps: totalLatency > 0 ? Math.round(totalTokens / (totalLatency / 1000)) : 0,
+        requestTime: Math.round(totalRequestTime / validRequests.length),
+        llmTime: Math.round(totalLlmTime / validRequests.length)
+      };
+    }
+  }
+  res.json(recentEfficiency);
+});
+
+app.get('/api/containers', async (req, res) => {
+  try {
+    const { stdout } = await execAsync('docker ps --format "{{.Names}}"');
+    const containers = stdout.trim().split('\n').filter(c => c);
+    res.json(containers);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 app.listen(PORT, '0.0.0.0', () => {

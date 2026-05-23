@@ -1,5 +1,8 @@
 {
-  "lmStudioUrl": "http://host.docker.internal:1234",
+  "lmStudio": {
+    "container": "llamacppserver-mtp-llama-server-1",
+    "port": 1234
+  },
   "enableAPIKey": true,
   "enableLog": false,
   "promptOptimization": {
@@ -14,7 +17,7 @@
   "simPromptCost": 0.2,
   "simCompletionCost": 2,
   "resourceMonitor": {
-    "dockerContainer": "llamacppserver_llama-server_1",
+    "dockerContainer": "llamacppserver-mtp-llama-server-1",
     "maxConcurrent": 4,
     "enabled": true
   }
