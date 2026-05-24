@@ -73,9 +73,8 @@ http://localhost:9234/v1
 
 | 卡片 | 说明 |
 |------|------|
-| 📊 **当日请求** | 总请求数、错误请求、平均延迟 |
-| **Prompt Tokens** | 输入 Token 数量及模拟费用 |
-| **Completion Tokens** | 输出 Token 数量及模拟费用 |
+| 📊 **当日请求** | 总请求数、错误请求、Prompt/Completion Token 数量及模拟费用、平均延迟 |
+| 📡 **实时请求** | 容器实时日志（500ms 轮询） |
 | 🖥 **资源监控** | CPU 核数/负载、GPU 型号/负载/温度/功耗、系统内存用量 |
 
 ### 图表
@@ -126,6 +125,7 @@ lmstudio-dashboard/
 | GET | `/api/logs` | 历史日志日期列表 |
 | GET | `/api/logs/:date` | 指定日期日志详情 |
 | GET | `/api/containers` | Docker 容器列表 |
+| GET | `/api/container-logs` | 容器实时日志（末 10 行） |
 | POST | `/api/prompt-optimize` | 提示词压缩优化 |
 
 ## 工作原理
@@ -145,7 +145,7 @@ lmstudio-dashboard/
 
 1. AI 客户端请求发送到代理服务 (`localhost:9234`)
 2. 代理服务记录请求数据（Token 数、延迟、模型等）并转发给 LM Studio
-3. 前端仪表盘每 2 秒轮询 `/api/stats` 和 `/api/resource-monitor` 实时更新
+3. 前端仪表盘每 2 秒轮询 `/api/stats` 和 `/api/resource-monitor` 实时更新；容器日志每 500ms 独立轮询
 
 ## 注意事项
 

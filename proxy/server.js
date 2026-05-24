@@ -1358,6 +1358,19 @@ app.get('/api/containers', async (req, res) => {
   }
 });
 
+app.get('/api/container-logs', async (req, res) => {
+  try {
+    const resourceConfig = config.resourceMonitor || {};
+    const dockerContainer = resourceConfig.dockerContainer || 'llamacppserver_llama-server_1';
+    const safeName = dockerContainer.replace(/[^a-zA-Z0-9_.-]/g, '');
+    const { stdout } = await execAsync(`docker logs --tail 10 ${safeName}`);
+    const lines = stdout.replace(/\r\n/g, '\n').split('\n').filter(l => l);
+    res.json({ lines: lines.slice(-10) });
+  } catch (error) {
+    res.json({ lines: [], error: error.message });
+  }
+});
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`LM Studio Proxy running on http://0.0.0.0:${PORT}`);
   console.log(`Forwarding requests to ${lmStudioUrl}`);

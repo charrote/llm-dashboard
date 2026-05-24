@@ -277,9 +277,9 @@
     <!-- Stats Cards -->
     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-6">
       <!-- Today Request Card: Width x2 -->
-      <div class="bg-gray-800 rounded-xl p-5 col-span-1 xl:col-span-2">
-        <div class="text-gray-400 text-sm mb-3">📊 当日请求</div>
-        <div class="grid grid-cols-3 gap-4">
+      <div class="bg-gray-800 rounded-xl p-5 col-span-1 xl:col-span-1">
+        <h3 class="text-lg font-semibold mb-4">📊 当日请求</h3>
+        <div class="grid grid-cols-2 gap-4 mb-4">
           <div>
             <div class="text-gray-400 text-xs mb-1">总请求数</div>
             <div id="totalRequests" class="text-2xl font-bold text-white">0</div>
@@ -288,26 +288,27 @@
             <div class="text-gray-400 text-xs mb-1">错误请求</div>
             <div id="totalErrors" class="text-2xl font-bold text-red-400">0</div>
           </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4 mb-4">
           <div>
-            <div class="text-gray-400 text-xs mb-1">平均延迟</div>
-            <div id="avgLatency" class="text-2xl font-bold text-yellow-400">0ms</div>
+            <div class="text-gray-400 text-xs mb-1">Prompt Tokens</div>
+            <div id="promptTokens" class="text-2xl font-bold text-blue-400">0</div>
+            <div id="promptCost" class="text-sm text-yellow-400 mt-1"></div>
+          </div>
+          <div>
+            <div class="text-gray-400 text-xs mb-1">Completion</div>
+            <div id="completionTokens" class="text-2xl font-bold text-green-400">0</div>
+            <div id="completionCost" class="text-sm text-yellow-400 mt-1"></div>
           </div>
         </div>
-      </div>
-
-      <div class="bg-gray-800 rounded-xl p-4">
-        <div class="text-gray-400 text-sm mb-1">Prompt Tokens</div>
-        <div id="promptTokens" class="text-2xl font-bold text-blue-400">0</div>
-        <div id="promptCost" class="text-sm text-yellow-400 mt-1"></div>
-      </div>
-      <div class="bg-gray-800 rounded-xl p-4">
-        <div class="text-gray-400 text-sm mb-1">Completion Tokens</div>
-        <div id="completionTokens" class="text-2xl font-bold text-green-400">0</div>
-        <div id="completionCost" class="text-sm text-yellow-400 mt-1"></div>
+        <div>
+          <div class="text-gray-400 text-xs mb-1">平均延迟</div>
+          <div id="avgLatency" class="text-2xl font-bold text-yellow-400">0ms</div>
+        </div>
       </div>
       <!-- Resource Monitor Card: Width x2 -->
       <div class="bg-gray-800 rounded-xl p-5 col-span-1 xl:col-span-2">
-        <div class="text-gray-400 text-sm mb-3">🖥 资源监控</div>
+        <h3 class="text-lg font-semibold mb-4">🖥 资源监控</h3>
 
         <!-- CPU Section -->
         <div class="mb-3 pb-3 border-b border-gray-700/60">
@@ -360,6 +361,14 @@
             <span id="memPercent" class="text-sm font-bold text-yellow-400 w-12 text-right">0%</span>
           </div>
         </div>
+      </div>
+      <!-- Container Logs Card -->
+      <div class="bg-gray-800 rounded-xl p-5 col-span-1 xl:col-span-3 flex flex-col">
+        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+          <span id="logIndicator" class="w-2 h-2 rounded-full bg-green-400 inline-block"></span>
+          📡 实时请求
+        </h3>
+        <pre id="containerLogs" class="bg-gray-900 rounded-lg p-3 text-xs font-mono text-green-300 leading-relaxed overflow-y-auto flex-1" style="scrollbar-width: thin; scrollbar-color: #4a5568 transparent;">等待日志...</pre>
       </div>
     </div>
 
@@ -1045,6 +1054,30 @@
       }
     }
 
+    async function fetchContainerLogs() {
+      try {
+        const response = await fetch(`${API_BASE}/container-logs`);
+        if (!response.ok) throw new Error('Failed to fetch container logs');
+        return await response.json();
+      } catch (error) {
+        console.error('Fetch container logs error:', error);
+        return null;
+      }
+    }
+
+    function updateContainerLogs(data) {
+      const el = document.getElementById('containerLogs');
+      const indicator = document.getElementById('logIndicator');
+      if (!el) return;
+      if (!data || data.error || !data.lines || data.lines.length === 0) {
+        el.textContent = data?.error ? `[容器未运行] ${data.error}` : '等待日志...';
+        if (indicator) indicator.className = 'w-2 h-2 rounded-full bg-red-400';
+        return;
+      }
+      if (indicator) indicator.className = 'w-2 h-2 rounded-full bg-green-400';
+      el.textContent = data.lines.join('\n');
+    }
+
     function updateResourceMonitor(data) {
       if (!data || data.enabled === false) {
         document.getElementById('cpuInfo').textContent = '--';
@@ -1104,6 +1137,7 @@
       updateModelPerformance(stats);
       updateResourceMonitor(resourceData);
       if (currentTab === 'errors') fetchErrorLogs();
+      fetchContainerLogs().then(updateContainerLogs);
     }
 
     async function loadConfig() {
@@ -1904,6 +1938,7 @@ function toggleLog() {
     loadConfigWithoutModal();
     poll();
     setInterval(poll, 2000);
+    setInterval(() => fetchContainerLogs().then(updateContainerLogs), 500);
   </script>
 </body>
 </html>
