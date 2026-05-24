@@ -20,11 +20,14 @@ let config = fs.existsSync(CONFIG_FILE) ? JSON.parse(fs.readFileSync(CONFIG_FILE
 config.simCostEnabled = config.simCostEnabled || false;
 config.simPromptCost = config.simPromptCost || 0;
 config.simCompletionCost = config.simCompletionCost || 0;
+config.trendDays = config.trendDays || 30;
 config.resourceMonitor = config.resourceMonitor || {
   enabled: true,
   dockerContainer: 'llamacppserver_llama-server_1',
   maxConcurrent: 4
 };
+config.layoutGrid = config.layoutGrid || 6;
+config.cardWidths = config.cardWidths || {};
 
 function loadApiKeys() {
   try {
@@ -782,7 +785,8 @@ app.get('/api/weekly-trend', (req, res) => {
   const days = [];
   const today = new Date();
   
-  for (let i = 29; i >= 0; i--) {
+  const daysCount = config.trendDays || 30;
+  for (let i = daysCount - 1; i >= 0; i--) {
     const date = new Date(today);
     date.setDate(date.getDate() - i);
     const dateStr = getDateStr(date);
@@ -997,12 +1001,15 @@ app.get('/api/config', (req, res) => {
     lmAuthValue: config.lmAuthValue || '',
     simCostEnabled: config.simCostEnabled || false,
     simPromptCost: config.simPromptCost || 0,
-    simCompletionCost: config.simCompletionCost || 0
+    simCompletionCost: config.simCompletionCost || 0,
+    trendDays: config.trendDays || 30,
+    layoutGrid: config.layoutGrid || 6,
+    cardWidths: config.cardWidths || {}
   });
 });
 
 app.post('/api/config', (req, res) => {
-  const { lmStudioContainer, lmStudioPort, lmStudioUrl: url, defaultAPIKey, enableAPIKey, enableLog, lmAuthEnabled, lmAuthValue, simCostEnabled, simPromptCost, simCompletionCost } = req.body;
+  const { lmStudioContainer, lmStudioPort, lmStudioUrl: url, defaultAPIKey, enableAPIKey, enableLog, lmAuthEnabled, lmAuthValue, simCostEnabled, simPromptCost, simCompletionCost, trendDays, layoutGrid, cardWidths } = req.body;
   
   if (lmStudioContainer && lmStudioPort) {
     config.lmStudio = { container: lmStudioContainer, port: parseInt(lmStudioPort) };
@@ -1011,7 +1018,7 @@ app.post('/api/config', (req, res) => {
     lmStudioUrl = url;
   }
   
-  if (defaultAPIKey !== undefined || enableAPIKey !== undefined || enableLog !== undefined || lmAuthEnabled !== undefined || lmAuthValue !== undefined || simCostEnabled !== undefined || simPromptCost !== undefined || simCompletionCost !== undefined) {
+  if (defaultAPIKey !== undefined || enableAPIKey !== undefined || enableLog !== undefined || lmAuthEnabled !== undefined || lmAuthValue !== undefined || simCostEnabled !== undefined || simPromptCost !== undefined || simCompletionCost !== undefined || trendDays !== undefined || layoutGrid !== undefined || cardWidths !== undefined) {
     if (defaultAPIKey !== undefined) config.defaultAPIKey = defaultAPIKey;
     if (enableAPIKey !== undefined) config.enableAPIKey = enableAPIKey;
     if (enableLog !== undefined) config.enableLog = enableLog;
@@ -1020,6 +1027,9 @@ app.post('/api/config', (req, res) => {
     if (simCostEnabled !== undefined) config.simCostEnabled = simCostEnabled;
     if (simPromptCost !== undefined) config.simPromptCost = parseFloat(simPromptCost) || 0;
     if (simCompletionCost !== undefined) config.simCompletionCost = parseFloat(simCompletionCost) || 0;
+    if (trendDays !== undefined) config.trendDays = parseInt(trendDays) || 30;
+    if (layoutGrid !== undefined) config.layoutGrid = parseInt(layoutGrid) || 6;
+    if (cardWidths !== undefined) config.cardWidths = cardWidths;
     fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
   }
   
