@@ -476,59 +476,56 @@
         </div>
         <canvas id="modelPerformanceChart" height="180" class="mt-4"></canvas>
       </div>
-    </div>
-
-    <!-- Cost Trend Chart -->
-    <div data-card-id="cost-trend" class="bg-gray-800 rounded-xl p-4">
-      <div class="flex items-center justify-between mb-2">
-        <h3 class="text-lg font-semibold">成本趋势</h3>
-        <div class="flex items-center gap-4">
-          <button onclick="openCardWidthPopover('cost-trend', event)" class="text-gray-500 hover:text-white transition text-sm px-1" title="设置栅格宽度">⊞</button>
-          <span id="costAvg" class="text-yellow-400 font-bold text-sm"></span>
-          <span id="costPeak" class="text-orange-400 font-bold text-sm"></span>
-        </div>
-      </div>
-      <canvas id="costTrendChart" height="120"></canvas>
-    </div>
-
-    <!-- 实时日志 -->
-    <div data-card-id="logs-section" class="bg-gray-800 rounded-xl p-4">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-semibold">日志</h3>
-        <div class="flex items-center gap-2">
-          <button onclick="openCardWidthPopover('logs-section', event)" class="text-gray-500 hover:text-white transition text-sm px-1" title="设置栅格宽度">⊞</button>
-          <div class="flex gap-2">
-            <button id="tabLive" onclick="switchTab('live')" class="px-4 py-1.5 rounded-lg text-sm bg-blue-600 text-white">实时日志</button>
-            <button id="tabErrors" onclick="switchTab('errors')" class="px-4 py-1.5 rounded-lg text-sm bg-gray-700 hover:bg-gray-600 transition">错误日志</button>
-          </div>
-        </div>
-      </div>
-      <div id="liveLogPanel">
-        <div class="flex justify-end mb-2">
-          <button onclick="loadMoreRequests()" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm transition">加载更多</button>
-        </div>
-        <div id="requestLog" class="font-mono text-xs space-y-1 max-h-80 overflow-y-auto scrollbar-thin">
-          <div class="text-gray-500 text-center py-8">等待请求...</div>
-        </div>
-      </div>
-      <div id="errorLogPanel" class="hidden">
-        <div class="flex items-center justify-between mb-3">
+      <!-- Cost Trend Chart -->
+      <div data-card-id="cost-trend" class="bg-gray-800 rounded-xl p-4">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-lg font-semibold">成本趋势</h3>
           <div class="flex items-center gap-4">
-            <label class="flex items-center gap-2 text-sm text-gray-400">
-              <input type="checkbox" id="filterUnresolved" onchange="fetchErrorLogs()" class="rounded">
-              只看未解决
-            </label>
-          </div>
-          <div class="flex gap-2">
-            <button onclick="clearResolvedErrors()" class="px-3 py-1 bg-yellow-600 hover:bg-yellow-700 rounded text-sm transition">清除已解决</button>
-            <button onclick="clearAllErrors()" class="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-sm transition">清空全部</button>
+            <button onclick="openCardWidthPopover('cost-trend', event)" class="text-gray-500 hover:text-white transition text-sm px-1" title="设置栅格宽度">⊞</button>
+            <span id="costAvg" class="text-yellow-400 font-bold text-sm"></span>
+            <span id="costPeak" class="text-orange-400 font-bold text-sm"></span>
           </div>
         </div>
-        <div id="errorLog" class="font-mono text-xs space-y-2 max-h-80 overflow-y-auto scrollbar-thin">
-          <div class="text-gray-500 text-center py-8">暂无错误日志</div>
+        <canvas id="costTrendChart" height="120"></canvas>
+      </div>
+      <!-- 实时日志 -->
+      <div data-card-id="logs-section" class="bg-gray-800 rounded-xl p-4">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold">日志</h3>
+          <div class="flex items-center gap-2">
+            <button onclick="openCardWidthPopover('logs-section', event)" class="text-gray-500 hover:text-white transition text-sm px-1" title="设置栅格宽度">⊞</button>
+            <div class="flex gap-2">
+              <button id="tabLive" onclick="switchTab('live')" class="px-4 py-1.5 rounded-lg text-sm bg-blue-600 text-white">实时日志</button>
+              <button id="tabErrors" onclick="switchTab('errors')" class="px-4 py-1.5 rounded-lg text-sm bg-gray-700 hover:bg-gray-600 transition">错误日志</button>
+            </div>
+          </div>
+        </div>
+        <div id="liveLogPanel">
+          <div class="flex justify-end mb-2">
+            <button onclick="loadMoreRequests()" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm transition">加载更多</button>
+          </div>
+          <div id="requestLog" class="font-mono text-xs space-y-1 max-h-80 overflow-y-auto scrollbar-thin">
+            <div class="text-gray-500 text-center py-8">等待请求...</div>
+          </div>
+        </div>
+        <div id="errorLogPanel" class="hidden">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-4">
+              <label class="flex items-center gap-2 text-sm text-gray-400">
+                <input type="checkbox" id="filterUnresolved" onchange="fetchErrorLogs()" class="rounded">
+                只看未解决
+              </label>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="clearResolvedErrors()" class="px-3 py-1 bg-yellow-600 hover:bg-yellow-700 rounded text-sm transition">清除已解决</button>
+              <button onclick="clearAllErrors()" class="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-sm transition">清空全部</button>
+            </div>
+          </div>
+          <div id="errorLog" class="font-mono text-xs space-y-2 max-h-80 overflow-y-auto scrollbar-thin">
+            <div class="text-gray-500 text-center py-8">暂无错误日志</div>
+          </div>
         </div>
       </div>
-    </div>
     </div>
     <!-- Card Width Popover -->
     <div id="cardWidthPopover" class="fixed z-50 hidden" style="position:fixed">
