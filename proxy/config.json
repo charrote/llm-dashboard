@@ -43,5 +43,6 @@
     "model-performance",
     "cost-trend",
     "logs-section"
-  ]
+  ],
+  "simCacheHitCost": 0.025
 }

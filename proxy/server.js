@@ -20,6 +20,7 @@ let config = fs.existsSync(CONFIG_FILE) ? JSON.parse(fs.readFileSync(CONFIG_FILE
 config.simCostEnabled = config.simCostEnabled || false;
 config.simPromptCost = config.simPromptCost || 0;
 config.simCompletionCost = config.simCompletionCost || 0;
+config.simCacheHitCost = config.simCacheHitCost || 0;
 config.trendDays = config.trendDays || 30;
 config.resourceMonitor = config.resourceMonitor || {
   enabled: true,
@@ -141,7 +142,7 @@ const defaultStats = () => ({
   byModel: {},
   hourlyStats: new Array(24).fill(0).map(() => ({ requests: 0, tokens: 0, errors: 0 })),
   hourlyStatsBase: (getCurrentBeijingHour() + 1) % 24,
-  totalTokens: { prompt: 0, completion: 0 },
+  totalTokens: { prompt: 0, completion: 0, cached: 0 },
   latency: { sum: 0, count: 0, min: Infinity, max: 0 },
   errors: 0
 });
@@ -193,6 +194,7 @@ function loadCurrentStats() {
         stats = migrateStatsData({
           ...defaultStats(),
           ...data,
+          totalTokens: { ...defaultStats().totalTokens, ...(data.totalTokens || {}) },
           hourlyStatsBase: hasBase ? data.hourlyStatsBase : undefined,
           latency: data.latency || { sum: 0, count: 0, min: Infinity, max: 0 }
         });
@@ -347,6 +349,7 @@ function updateStats(data) {
   stats.hourlyStats[slotIndex].tokens += data.tokens.total;
   stats.totalTokens.prompt += data.tokens.prompt;
   stats.totalTokens.completion += data.tokens.completion;
+  stats.totalTokens.cached += data.tokens.cached || 0;
   
   if (data.apiKey) {
     if (!stats.byApiKey[data.apiKey]) {
@@ -460,13 +463,14 @@ function updateStats(data) {
   saveCurrentStats();
 }
 
-function finalizeRequest(requestId, completionTokens, latency, status, error, ttft = null, forwardTime = 0, llmTime = 0) {
+function finalizeRequest(requestId, completionTokens, latency, status, error, ttft = null, forwardTime = 0, llmTime = 0, cachedTokens = 0) {
   const pending = pendingRequests.get(requestId);
   if (!pending) return;
   
   const tpot = (ttft && completionTokens > 0 && latency > ttft) ? Math.round((latency - ttft) / completionTokens) : (completionTokens > 0 ? Math.round(latency / completionTokens) : null);
   
   pending.tokens.completion = completionTokens;
+  pending.tokens.cached = cachedTokens;
   pending.tokens.total = pending.tokens.prompt + completionTokens;
   pending.latency = latency;
   pending.status = status;
@@ -499,8 +503,9 @@ function extractTokenUsage(resData, reqBody = null, estimatedPrompt = 0) {
   }
   
   const prompt = estimatedPrompt || (resData.usage?.prompt_tokens || 0);
+  const cached = resData.usage?.prompt_tokens_details?.cached_tokens || 0;
   
-  return { prompt, completion, total: prompt + completion };
+  return { prompt, completion, total: prompt + completion, cached };
 }
 
 const requestStartTimes = new Map();
@@ -696,7 +701,7 @@ async function proxyRequest(req, res) {
     
     const tokens = extractTokenUsage(data, req.body, promptTokens);
     const llmTime = Date.now() - llmStart;
-    finalizeRequest(requestId, tokens.completion, latency, response.status, null, null, forwardTime, llmTime);
+    finalizeRequest(requestId, tokens.completion, latency, response.status, null, null, forwardTime, llmTime, tokens.cached);
     
     res.status(response.status).json(data);
     
@@ -793,12 +798,13 @@ app.get('/api/weekly-trend', (req, res) => {
     const dateStr = getDateStr(date);
     const logFile = getLogFileName(dateStr);
     
-    let dayData = { date: dateStr, requests: 0, promptTokens: 0, completionTokens: 0, tokens: 0, cost: 0 };
+    let dayData = { date: dateStr, requests: 0, promptTokens: 0, completionTokens: 0, cachedTokens: 0, tokens: 0, cost: 0 };
     
     if (dateStr === getDateStr(today)) {
       dayData.requests = stats.totalRequestCount || stats.requests.length;
       dayData.promptTokens = stats.totalTokens.prompt;
       dayData.completionTokens = stats.totalTokens.completion;
+      dayData.cachedTokens = stats.totalTokens.cached || 0;
       dayData.tokens = stats.totalTokens.prompt + stats.totalTokens.completion;
     } else if (fs.existsSync(logFile)) {
       try {
@@ -806,14 +812,19 @@ app.get('/api/weekly-trend', (req, res) => {
         dayData.requests = data.totalRequestCount || data.requests?.length || 0;
         dayData.promptTokens = data.totalTokens?.prompt || 0;
         dayData.completionTokens = data.totalTokens?.completion || 0;
+        dayData.cachedTokens = data.totalTokens?.cached || 0;
         dayData.tokens = (data.totalTokens?.prompt || 0) + (data.totalTokens?.completion || 0);
       } catch (e) {
         console.error(`读取${dateStr}失败:`, e.message);
       }
     }
     
-    if (config.simCostEnabled && (config.simPromptCost > 0 || config.simCompletionCost > 0)) {
-      dayData.cost = ((dayData.promptTokens / 1000000) * config.simPromptCost) + ((dayData.completionTokens / 1000000) * config.simCompletionCost);
+    if (config.simCostEnabled && (config.simPromptCost > 0 || config.simCompletionCost > 0 || config.simCacheHitCost > 0)) {
+      const hitRate = dayData.promptTokens > 0 ? dayData.cachedTokens / dayData.promptTokens : 0;
+      const uncachedPromptCost = (dayData.promptTokens / 1000000) * config.simPromptCost * (1 - hitRate);
+      const cachedPromptCost = (dayData.promptTokens / 1000000) * (config.simCacheHitCost || 0) * hitRate;
+      const completionCost = (dayData.completionTokens / 1000000) * config.simCompletionCost;
+      dayData.cost = uncachedPromptCost + cachedPromptCost + completionCost;
     }
     
     const mmdd = dateStr.slice(4);
@@ -945,9 +956,15 @@ app.get('/api/logs', (req, res) => {
         const stats = JSON.parse(fs.readFileSync(filePath, 'utf8'));
         const promptTokens = stats.totalTokens?.prompt || 0;
         const completionTokens = stats.totalTokens?.completion || 0;
-        const cost = config.simCostEnabled && (config.simPromptCost > 0 || config.simCompletionCost > 0)
-          ? ((promptTokens / 1000000) * config.simPromptCost) + ((completionTokens / 1000000) * config.simCompletionCost)
-          : 0;
+        const cachedTokens = stats.totalTokens?.cached || 0;
+        let cost = 0;
+        if (config.simCostEnabled && (config.simPromptCost > 0 || config.simCompletionCost > 0 || config.simCacheHitCost > 0)) {
+          const hitRate = promptTokens > 0 ? cachedTokens / promptTokens : 0;
+          const uncachedPromptCost = (promptTokens / 1000000) * config.simPromptCost * (1 - hitRate);
+          const cachedPromptCost = (promptTokens / 1000000) * (config.simCacheHitCost || 0) * hitRate;
+          const completionCost = (completionTokens / 1000000) * config.simCompletionCost;
+          cost = uncachedPromptCost + cachedPromptCost + completionCost;
+        }
         return {
           date: dateStr,
           displayDate: isCurrent ? `${dateStr.slice(0,4)}-${dateStr.slice(4,6)}-${dateStr.slice(6,8)} (今日)` : `${dateStr.slice(0,4)}-${dateStr.slice(4,6)}-${dateStr.slice(6,8)}`,
@@ -1003,6 +1020,7 @@ app.get('/api/config', (req, res) => {
     simCostEnabled: config.simCostEnabled || false,
     simPromptCost: config.simPromptCost || 0,
     simCompletionCost: config.simCompletionCost || 0,
+    simCacheHitCost: config.simCacheHitCost || 0,
     trendDays: config.trendDays || 30,
     layoutGrid: config.layoutGrid || 6,
     cardWidths: config.cardWidths || {},
@@ -1011,7 +1029,7 @@ app.get('/api/config', (req, res) => {
 });
 
 app.post('/api/config', (req, res) => {
-  const { lmStudioContainer, lmStudioPort, lmStudioUrl: url, defaultAPIKey, enableAPIKey, enableLog, lmAuthEnabled, lmAuthValue, simCostEnabled, simPromptCost, simCompletionCost, trendDays, layoutGrid, cardWidths, cardOrder } = req.body;
+  const { lmStudioContainer, lmStudioPort, lmStudioUrl: url, defaultAPIKey, enableAPIKey, enableLog, lmAuthEnabled, lmAuthValue, simCostEnabled, simPromptCost, simCompletionCost, simCacheHitCost, trendDays, layoutGrid, cardWidths, cardOrder } = req.body;
   
   if (lmStudioContainer && lmStudioPort) {
     config.lmStudio = { container: lmStudioContainer, port: parseInt(lmStudioPort) };
@@ -1020,7 +1038,7 @@ app.post('/api/config', (req, res) => {
     lmStudioUrl = url;
   }
   
-  if (defaultAPIKey !== undefined || enableAPIKey !== undefined || enableLog !== undefined || lmAuthEnabled !== undefined || lmAuthValue !== undefined || simCostEnabled !== undefined || simPromptCost !== undefined || simCompletionCost !== undefined || trendDays !== undefined || layoutGrid !== undefined || cardWidths !== undefined || cardOrder !== undefined) {
+  if (defaultAPIKey !== undefined || enableAPIKey !== undefined || enableLog !== undefined || lmAuthEnabled !== undefined || lmAuthValue !== undefined || simCostEnabled !== undefined || simPromptCost !== undefined || simCompletionCost !== undefined || simCacheHitCost !== undefined || trendDays !== undefined || layoutGrid !== undefined || cardWidths !== undefined || cardOrder !== undefined) {
     if (defaultAPIKey !== undefined) config.defaultAPIKey = defaultAPIKey;
     if (enableAPIKey !== undefined) config.enableAPIKey = enableAPIKey;
     if (enableLog !== undefined) config.enableLog = enableLog;
@@ -1029,6 +1047,7 @@ app.post('/api/config', (req, res) => {
     if (simCostEnabled !== undefined) config.simCostEnabled = simCostEnabled;
     if (simPromptCost !== undefined) config.simPromptCost = parseFloat(simPromptCost) || 0;
     if (simCompletionCost !== undefined) config.simCompletionCost = parseFloat(simCompletionCost) || 0;
+    if (simCacheHitCost !== undefined) config.simCacheHitCost = parseFloat(simCacheHitCost) || 0;
     if (trendDays !== undefined) config.trendDays = parseInt(trendDays) || 30;
     if (layoutGrid !== undefined) config.layoutGrid = parseInt(layoutGrid) || 6;
     if (cardWidths !== undefined) config.cardWidths = cardWidths;

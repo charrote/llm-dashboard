@@ -103,12 +103,17 @@
                 <input type="number" id="simPromptCost" step="0.01" min="0" 
                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:border-blue-500 focus:outline-none">
               </div>
-              <div>
-                <label class="block text-sm text-gray-400 mb-2">输出成本 (元/1M token)</label>
-<input type="number" id="simCompletionCost" step="0.01" min="0" 
-                       class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:border-blue-500 focus:outline-none">
-              </div>
-            </div>
+          <div>
+            <label class="block text-sm text-gray-400 mb-2">输出成本 (元/1M token)</label>
+            <input type="number" id="simCompletionCost" step="0.01" min="0"
+                   class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:border-blue-500 focus:outline-none">
+          </div>
+        </div>
+        <div class="mt-4">
+          <label class="block text-sm text-gray-400 mb-2">输入缓存命中成本 (元/1M token)</label>
+          <input type="number" id="simCacheHitCost" step="0.01" min="0"
+                 class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:border-blue-500 focus:outline-none">
+        </div>
             <div class="mt-4">
               <label class="block text-sm text-gray-400 mb-2">成本趋势天数</label>
               <input type="number" id="trendDays" min="1" max="365" value="30"
@@ -324,9 +329,16 @@
             <div id="completionCost" class="text-sm text-yellow-400 mt-1"></div>
           </div>
         </div>
-        <div>
-          <div class="text-gray-400 text-xs mb-1">平均延迟</div>
-          <div id="avgLatency" class="text-2xl font-bold text-yellow-400">0ms</div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <div class="text-gray-400 text-xs mb-1">输入缓存命中</div>
+            <div id="inputHitRate" class="text-2xl font-bold text-purple-400">0%</div>
+            <div id="cacheHitCost" class="text-sm text-yellow-400 mt-1"></div>
+          </div>
+          <div>
+            <div class="text-gray-400 text-xs mb-1">平均延迟</div>
+            <div id="avgLatency" class="text-2xl font-bold text-yellow-400">0ms</div>
+          </div>
         </div>
       </div>
       <!-- Resource Monitor Card: Width x2 -->
@@ -551,7 +563,7 @@
     let currentTab = 'live';
     let requestOffset = 0;
     const REQUEST_PAGE_SIZE = 50;
-    let appConfig = { simCostEnabled: false, simPromptCost: 0, simCompletionCost: 0, trendDays: 30, layoutGrid: 6, cardWidths: {}, cardOrder: [] };
+    let appConfig = { simCostEnabled: false, simPromptCost: 0, simCompletionCost: 0, simCacheHitCost: 0, trendDays: 30, layoutGrid: 6, cardWidths: {}, cardOrder: [] };
 
     const CARD_DEFAULTS = {
       'today-requests': 2,
@@ -900,7 +912,19 @@
       
       window.__promptTokens = stats.totalTokens?.prompt || 0;
       window.__completionTokens = stats.totalTokens?.completion || 0;
+      window.__cachedTokens = stats.totalTokens?.cached || 0;
       updateSimCostDisplay();
+
+      const cached = stats.totalTokens?.cached || 0;
+      const promptTotal = stats.totalTokens?.prompt || 0;
+      const hitRateEl = document.getElementById('inputHitRate');
+      if (hitRateEl) {
+        if (cached > 0 && promptTotal > 0) {
+          hitRateEl.textContent = `${((cached / promptTotal) * 100).toFixed(1)}%`;
+        } else {
+          hitRateEl.textContent = '0%';
+        }
+      }
       
       const latency = stats.latency || {};
       const avgLatency = latency.count > 0 ? Math.round(latency.sum / latency.count) : 0;
@@ -1288,6 +1312,7 @@
         setToggle('simCostToggle', data.simCostEnabled);
         document.getElementById('simPromptCost').value = data.simPromptCost !== undefined ? data.simPromptCost : '';
         document.getElementById('simCompletionCost').value = data.simCompletionCost !== undefined ? data.simCompletionCost : '';
+        document.getElementById('simCacheHitCost').value = data.simCacheHitCost !== undefined ? data.simCacheHitCost : '';
         document.getElementById('trendDays').value = data.trendDays !== undefined ? data.trendDays : 30;
         document.getElementById('layoutGrid').value = data.layoutGrid || 6;
         
@@ -1295,6 +1320,7 @@
           simCostEnabled: data.simCostEnabled || false,
           simPromptCost: data.simPromptCost || 0,
           simCompletionCost: data.simCompletionCost || 0,
+          simCacheHitCost: data.simCacheHitCost || 0,
           trendDays: data.trendDays || 30,
           layoutGrid: data.layoutGrid || 6,
           cardWidths: data.cardWidths || {},
@@ -1323,6 +1349,7 @@
           simCostEnabled: data.simCostEnabled || false,
           simPromptCost: data.simPromptCost || 0,
           simCompletionCost: data.simCompletionCost || 0,
+          simCacheHitCost: data.simCacheHitCost || 0,
           trendDays: data.trendDays || 30,
           layoutGrid: data.layoutGrid || 6,
           cardWidths: data.cardWidths || {},
@@ -1368,17 +1395,24 @@ function toggleLog() {
     function updateSimCostDisplay() {
       const promptTokens = window.__promptTokens || 0;
       const completionTokens = window.__completionTokens || 0;
+      const cachedTokens = window.__cachedTokens || 0;
       const promptCostEl = document.getElementById('promptCost');
       const completionCostEl = document.getElementById('completionCost');
+      const cacheHitCostEl = document.getElementById('cacheHitCost');
       
-      if (appConfig.simCostEnabled && (appConfig.simPromptCost > 0 || appConfig.simCompletionCost > 0)) {
-        const promptCost = (promptTokens / 1000000) * appConfig.simPromptCost;
+      if (appConfig.simCostEnabled && (appConfig.simPromptCost > 0 || appConfig.simCompletionCost > 0 || appConfig.simCacheHitCost > 0)) {
+        const hitRate = promptTokens > 0 ? cachedTokens / promptTokens : 0;
+        const uncachedPromptCost = (promptTokens / 1000000) * appConfig.simPromptCost * (1 - hitRate);
+        const cachedPromptCost = (promptTokens / 1000000) * appConfig.simCacheHitCost * hitRate;
+        const promptCost = uncachedPromptCost + cachedPromptCost;
         const completionCost = (completionTokens / 1000000) * appConfig.simCompletionCost;
         promptCostEl.textContent = `¥${promptCost.toFixed(2)}`;
         completionCostEl.textContent = `¥${completionCost.toFixed(2)}`;
+        if (cacheHitCostEl) cacheHitCostEl.textContent = `¥${cachedPromptCost.toFixed(2)}`;
       } else {
         promptCostEl.textContent = '';
         completionCostEl.textContent = '';
+        if (cacheHitCostEl) cacheHitCostEl.textContent = '';
       }
     }
 
@@ -1461,6 +1495,7 @@ function toggleLog() {
       const simCostEnabled = isToggleOn('simCostToggle');
       const simPromptCost = document.getElementById('simPromptCost').value;
       const simCompletionCost = document.getElementById('simCompletionCost').value;
+      const simCacheHitCost = document.getElementById('simCacheHitCost').value;
       const trendDays = document.getElementById('trendDays').value;
       const layoutGrid = document.getElementById('layoutGrid').value;
       
@@ -1482,6 +1517,7 @@ function toggleLog() {
             simCostEnabled: simCostEnabled,
             simPromptCost: simPromptCost,
             simCompletionCost: simCompletionCost,
+            simCacheHitCost: simCacheHitCost,
             trendDays: trendDays,
             layoutGrid: parseInt(layoutGrid) || 6,
             cardWidths: appConfig.cardWidths || {}
@@ -1493,6 +1529,7 @@ function toggleLog() {
             simCostEnabled: simCostEnabled,
             simPromptCost: parseFloat(simPromptCost) || 0,
             simCompletionCost: parseFloat(simCompletionCost) || 0,
+            simCacheHitCost: parseFloat(simCacheHitCost) || 0,
             trendDays: parseInt(document.getElementById('trendDays').value) || 30,
             layoutGrid: parseInt(layoutGrid) || 6,
             cardWidths: appConfig.cardWidths || {}
