@@ -532,17 +532,9 @@
     </div>
     <!-- Card Width Popover -->
     <div id="cardWidthPopover" class="fixed z-50 hidden" style="position:fixed">
-      <div class="bg-gray-800 rounded-xl p-4 shadow-xl border border-gray-700 w-48">
+      <div class="bg-gray-800 rounded-xl p-4 shadow-xl border border-gray-700">
         <div class="text-sm text-gray-400 mb-2">栅格宽度</div>
-        <div class="flex items-center gap-2">
-          <input type="number" id="cardWidthInput" min="1" max="24" value="1"
-                 class="w-20 bg-gray-700 border border-gray-600 rounded-lg px-3 py-1.5 text-white text-sm focus:border-blue-500 focus:outline-none">
-          <span class="text-gray-400 text-sm">/ <span id="cardWidthMax">6</span></span>
-        </div>
-        <div class="flex gap-2 mt-3">
-          <button onclick="saveCardWidth()" class="flex-1 bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded-lg text-sm transition">确定</button>
-          <button onclick="closeCardWidthPopover()" class="flex-1 bg-gray-600 hover:bg-gray-500 px-3 py-1.5 rounded-lg text-sm transition">取消</button>
-        </div>
+        <div id="cardWidthOptions" class="flex flex-wrap gap-1.5"></div>
       </div>
     </div>
   </div>
@@ -589,15 +581,20 @@
       const cols = appConfig.layoutGrid || 6;
       const current = (appConfig.cardWidths && appConfig.cardWidths[cardId]) || CARD_DEFAULTS[cardId] || 1;
 
-      const input = document.getElementById('cardWidthInput');
-      input.value = current;
-      input.max = cols;
-      document.getElementById('cardWidthMax').textContent = cols;
+      const container = document.getElementById('cardWidthOptions');
+      container.innerHTML = '';
+      for (let i = 1; i <= cols; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        btn.className = 'w-9 h-9 rounded-lg text-sm font-medium transition ' + (i === current ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600');
+        btn.onclick = () => selectCardWidth(i);
+        container.appendChild(btn);
+      }
 
       const popover = document.getElementById('cardWidthPopover');
       const rect = event.currentTarget.getBoundingClientRect();
       popover.style.top = (rect.bottom + 8) + 'px';
-      popover.style.left = Math.max(8, rect.left - 140) + 'px';
+      popover.style.left = Math.max(8, rect.left + rect.width - 180) + 'px';
       popover.classList.remove('hidden');
     }
 
@@ -606,11 +603,10 @@
       activeCardId = null;
     }
 
-    async function saveCardWidth() {
+    async function selectCardWidth(span) {
       if (!activeCardId) return;
       const cols = appConfig.layoutGrid || 6;
-      const val = parseInt(document.getElementById('cardWidthInput').value) || 1;
-      const span = Math.max(1, Math.min(val, cols));
+      span = Math.min(span, cols);
 
       appConfig.cardWidths = appConfig.cardWidths || {};
       appConfig.cardWidths[activeCardId] = span;
