@@ -1337,7 +1337,9 @@ function toggleLog() {
             simCostEnabled: simCostEnabled,
             simPromptCost: parseFloat(simPromptCost) || 0,
             simCompletionCost: parseFloat(simCompletionCost) || 0,
-            trendDays: parseInt(document.getElementById('trendDays').value) || 30
+            trendDays: parseInt(document.getElementById('trendDays').value) || 30,
+            layoutGrid: parseInt(layoutGrid) || 6,
+            cardWidths: appConfig.cardWidths || {}
           };
           updateSimCostDisplay();
           closeConfig();
