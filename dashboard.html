@@ -289,7 +289,10 @@
     <div id="cardsGrid" class="grid gap-4 mb-6">
       <!-- Today Request Card: Width x2 -->
       <div data-card-id="today-requests" class="bg-gray-800 rounded-xl p-5">
-        <h3 class="text-lg font-semibold mb-4">📊 当日请求</h3>
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold">📊 当日请求</h3>
+          <button onclick="openCardWidthPopover('today-requests', event)" class="text-gray-500 hover:text-white transition text-sm px-1" title="设置栅格宽度">⊞</button>
+        </div>
         <div class="grid grid-cols-2 gap-4 mb-4">
           <div>
             <div class="text-gray-400 text-xs mb-1">总请求数</div>
@@ -319,7 +322,10 @@
       </div>
       <!-- Resource Monitor Card: Width x2 -->
       <div data-card-id="resource-monitor" class="bg-gray-800 rounded-xl p-5">
-        <h3 class="text-lg font-semibold mb-4">🖥 资源监控</h3>
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold">🖥 资源监控</h3>
+          <button onclick="openCardWidthPopover('resource-monitor', event)" class="text-gray-500 hover:text-white transition text-sm px-1" title="设置栅格宽度">⊞</button>
+        </div>
 
         <!-- CPU Section -->
         <div class="mb-3 pb-3 border-b border-gray-700/60">
@@ -375,24 +381,36 @@
       </div>
       <!-- Container Logs Card -->
       <div data-card-id="container-logs" class="bg-gray-800 rounded-xl p-5 flex flex-col">
-        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
-          <span id="logIndicator" class="w-2 h-2 rounded-full bg-green-400 inline-block"></span>
-          📡 实时请求
-        </h3>
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold flex items-center gap-2">
+            <span id="logIndicator" class="w-2 h-2 rounded-full bg-green-400 inline-block"></span>
+            📡 实时请求
+          </h3>
+          <button onclick="openCardWidthPopover('container-logs', event)" class="text-gray-500 hover:text-white transition text-sm px-1" title="设置栅格宽度">⊞</button>
+        </div>
         <pre id="containerLogs" class="bg-gray-900 rounded-lg p-3 text-xs font-mono text-green-300 leading-relaxed overflow-y-auto flex-1" style="scrollbar-width: thin; scrollbar-color: #4a5568 transparent;">等待日志...</pre>
       </div>
       <!-- trend-chart -->
       <div data-card-id="trend-chart" class="bg-gray-800 rounded-xl p-4">
-        <h3 class="text-lg font-semibold mb-4">用量趋势</h3>
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold">用量趋势</h3>
+          <button onclick="openCardWidthPopover('trend-chart', event)" class="text-gray-500 hover:text-white transition text-sm px-1" title="设置栅格宽度">⊞</button>
+        </div>
         <canvas id="weeklyTrendChart" height="180"></canvas>
       </div>
       <div data-card-id="hourly-chart" class="bg-gray-800 rounded-xl p-4">
-        <h3 class="text-lg font-semibold mb-4">24小时请求分布</h3>
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold">24小时请求分布</h3>
+          <button onclick="openCardWidthPopover('hourly-chart', event)" class="text-gray-500 hover:text-white transition text-sm px-1" title="设置栅格宽度">⊞</button>
+        </div>
         <canvas id="hourlyChart" height="180"></canvas>
       </div>
       <!-- API Key统计 -->
       <div data-card-id="apikey-table" class="bg-gray-800 rounded-xl p-4">
-        <h3 class="text-lg font-semibold mb-4">KEY用量</h3>
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold">KEY用量</h3>
+          <button onclick="openCardWidthPopover('apikey-table', event)" class="text-gray-500 hover:text-white transition text-sm px-1" title="设置栅格宽度">⊞</button>
+        </div>
         <div class="overflow-x-auto">
           <table class="w-full text-sm">
             <thead>
@@ -412,7 +430,10 @@
 
       <!-- 模型统计 -->
       <div data-card-id="model-table" class="bg-gray-800 rounded-xl p-4">
-        <h3 class="text-lg font-semibold mb-4">模型用量</h3>
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold">模型用量</h3>
+          <button onclick="openCardWidthPopover('model-table', event)" class="text-gray-500 hover:text-white transition text-sm px-1" title="设置栅格宽度">⊞</button>
+        </div>
         <div class="overflow-x-auto">
           <table class="w-full text-sm">
             <thead>
@@ -431,7 +452,10 @@
       </div>
       <!-- 模型性能 -->
       <div data-card-id="model-performance" class="bg-gray-800 rounded-xl p-4">
-        <h3 class="text-lg font-semibold mb-4">模型性能</h3>
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold">模型性能</h3>
+          <button onclick="openCardWidthPopover('model-performance', event)" class="text-gray-500 hover:text-white transition text-sm px-1" title="设置栅格宽度">⊞</button>
+        </div>
         <div id="modelPerformance" class="grid grid-cols-3 gap-4">
           <div class="bg-gray-700/50 rounded-lg p-3 text-center">
             <div class="text-sm text-gray-400 mb-1">TTFT</div>
@@ -458,6 +482,7 @@
       <div class="flex items-center justify-between mb-2">
         <h3 class="text-lg font-semibold">成本趋势</h3>
         <div class="flex items-center gap-4">
+          <button onclick="openCardWidthPopover('cost-trend', event)" class="text-gray-500 hover:text-white transition text-sm px-1" title="设置栅格宽度">⊞</button>
           <span id="costAvg" class="text-yellow-400 font-bold text-sm"></span>
           <span id="costPeak" class="text-orange-400 font-bold text-sm"></span>
         </div>
@@ -469,9 +494,12 @@
     <div data-card-id="logs-section" class="bg-gray-800 rounded-xl p-4">
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-lg font-semibold">日志</h3>
-        <div class="flex gap-2">
-          <button id="tabLive" onclick="switchTab('live')" class="px-4 py-1.5 rounded-lg text-sm bg-blue-600 text-white">实时日志</button>
-          <button id="tabErrors" onclick="switchTab('errors')" class="px-4 py-1.5 rounded-lg text-sm bg-gray-700 hover:bg-gray-600 transition">错误日志</button>
+        <div class="flex items-center gap-2">
+          <button onclick="openCardWidthPopover('logs-section', event)" class="text-gray-500 hover:text-white transition text-sm px-1" title="设置栅格宽度">⊞</button>
+          <div class="flex gap-2">
+            <button id="tabLive" onclick="switchTab('live')" class="px-4 py-1.5 rounded-lg text-sm bg-blue-600 text-white">实时日志</button>
+            <button id="tabErrors" onclick="switchTab('errors')" class="px-4 py-1.5 rounded-lg text-sm bg-gray-700 hover:bg-gray-600 transition">错误日志</button>
+          </div>
         </div>
       </div>
       <div id="liveLogPanel">
@@ -500,6 +528,21 @@
         </div>
       </div>
     </div>
+    </div>
+    <!-- Card Width Popover -->
+    <div id="cardWidthPopover" class="fixed z-50 hidden" style="position:fixed">
+      <div class="bg-gray-800 rounded-xl p-4 shadow-xl border border-gray-700 w-48">
+        <div class="text-sm text-gray-400 mb-2">栅格宽度</div>
+        <div class="flex items-center gap-2">
+          <input type="number" id="cardWidthInput" min="1" max="24" value="1"
+                 class="w-20 bg-gray-700 border border-gray-600 rounded-lg px-3 py-1.5 text-white text-sm focus:border-blue-500 focus:outline-none">
+          <span class="text-gray-400 text-sm">/ <span id="cardWidthMax">6</span></span>
+        </div>
+        <div class="flex gap-2 mt-3">
+          <button onclick="saveCardWidth()" class="flex-1 bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded-lg text-sm transition">确定</button>
+          <button onclick="closeCardWidthPopover()" class="flex-1 bg-gray-600 hover:bg-gray-500 px-3 py-1.5 rounded-lg text-sm transition">取消</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -537,6 +580,61 @@
         el.style.gridColumn = `span ${Math.min(span, cols)}`;
       });
     }
+
+    let activeCardId = null;
+
+    function openCardWidthPopover(cardId, event) {
+      activeCardId = cardId;
+      const cols = appConfig.layoutGrid || 6;
+      const current = (appConfig.cardWidths && appConfig.cardWidths[cardId]) || CARD_DEFAULTS[cardId] || 1;
+
+      const input = document.getElementById('cardWidthInput');
+      input.value = current;
+      input.max = cols;
+      document.getElementById('cardWidthMax').textContent = cols;
+
+      const popover = document.getElementById('cardWidthPopover');
+      const rect = event.currentTarget.getBoundingClientRect();
+      popover.style.top = (rect.bottom + 8) + 'px';
+      popover.style.left = Math.max(8, rect.left - 140) + 'px';
+      popover.classList.remove('hidden');
+    }
+
+    function closeCardWidthPopover() {
+      document.getElementById('cardWidthPopover').classList.add('hidden');
+      activeCardId = null;
+    }
+
+    async function saveCardWidth() {
+      if (!activeCardId) return;
+      const cols = appConfig.layoutGrid || 6;
+      const val = parseInt(document.getElementById('cardWidthInput').value) || 1;
+      const span = Math.max(1, Math.min(val, cols));
+
+      appConfig.cardWidths = appConfig.cardWidths || {};
+      appConfig.cardWidths[activeCardId] = span;
+
+      try {
+        await fetch(`${API_BASE}/config`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cardWidths: appConfig.cardWidths })
+        });
+      } catch (e) {
+        console.error('Save card width error:', e);
+      }
+
+      applyGridLayout();
+      closeCardWidthPopover();
+    }
+
+    document.addEventListener('click', function(e) {
+      const popover = document.getElementById('cardWidthPopover');
+      if (popover.classList.contains('hidden')) return;
+      if (!popover.contains(e.target) && !e.target.closest('[onclick*="openCardWidthPopover"]')) {
+        closeCardWidthPopover();
+      }
+    });
 
     function formatNumber(num) {
       if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
@@ -1349,7 +1447,8 @@ function toggleLog() {
             simPromptCost: simPromptCost,
             simCompletionCost: simCompletionCost,
             trendDays: trendDays,
-            layoutGrid: parseInt(layoutGrid) || 6
+            layoutGrid: parseInt(layoutGrid) || 6,
+            cardWidths: appConfig.cardWidths || {}
           })
         });
         
@@ -1362,6 +1461,7 @@ function toggleLog() {
             layoutGrid: parseInt(layoutGrid) || 6,
             cardWidths: appConfig.cardWidths || {}
           };
+          applyGridLayout();
           updateSimCostDisplay();
           closeConfig();
         } else {
