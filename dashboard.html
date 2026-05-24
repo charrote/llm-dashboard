@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Uantek LM 监控仪表盘</title>
+  <title>Uantek LLM 监控</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
@@ -19,7 +19,7 @@
     <!-- Header -->
     <header class="flex items-center justify-between mb-6">
       <div>
-        <h1 class="text-2xl font-bold text-white">Uantek LM 监控仪表盘</h1>
+        <h1 class="text-2xl font-bold text-white">Uantek LLM 监控</h1>
         <p class="text-gray-400 text-sm">实时请求监控与统计分析</p>
       </div>
       <div class="flex items-center gap-4">
@@ -270,20 +270,29 @@
         <div class="text-gray-400 text-sm mb-1">平均延迟</div>
         <div id="avgLatency" class="text-2xl font-bold text-yellow-400">0ms</div>
       </div>
-      <div class="bg-gray-800 rounded-xl p-4">
-        <div class="text-gray-400 text-sm mb-1">资源监控</div>
-        <div class="space-y-2 text-sm">
-          <div class="flex justify-between">
-            <span class="text-gray-400">并发数</span>
-            <span id="concurrentCount" class="text-purple-400 font-bold">- / -</span>
+      <!-- Resource Monitor Card: Width x2 -->
+      <div class="bg-gray-800 rounded-xl p-5 col-span-1 xl:col-span-2">
+        <!-- CPU Section -->
+        <div class="mb-3 pb-3 border-b border-gray-700/60">
+          <div class="flex items-center justify-between mb-2">
+            <span id="cpuModel" class="text-blue-400 text-xs font-semibold">CPU</span>
+            <span><span style="margin-right: 3px;"><span>负载 </span></span><span id="cpuLoad"></span>%<style>#cpuload{font-weight:bold;color:#22d3ee;font-size:.875rem}</style></span>
           </div>
-          <div class="flex justify-between">
-            <span class="text-gray-400">GPU使用率</span>
-            <span id="gpuUsage" class="text-green-400 font-bold">-</span>
+        </div>
+
+        <!-- GPU Section -->
+        <div class="mb-3 pb-3 border-b border-gray-700/60">
+          <div class="flex items-center justify-between mb-2">
+            <span id="gpuModel" class="text-purple-400 text-xs font-semibold">GPU</span>
+            <span><span style="margin-right: 3px;"><span>负载 </span></span><span id="gpuLoad"></span>%<style>#gpuload{font-weight:bold;color:#a78bfa;font-size:.875rem}</style></span>
           </div>
-          <div class="flex justify-between">
-            <span class="text-gray-400">VRAM</span>
-            <span id="vramUsage" class="text-blue-400 font-bold">- / -</span>
+        </div>
+
+        <!-- Memory Section -->
+        <div class">
+          <div class="flex items-center justify-between mb-2">
+            <span id="memUsed" style="font-weight:bold;color:#fbbf24;font-size:.875rem">-- GB</span> 
+            /<style>#mempct{margin-left:3px}</style><span></span>
           </div>
         </div>
       </div>
@@ -305,7 +314,7 @@
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-10">
       <!-- API Key统计 -->
       <div class="bg-gray-800 rounded-xl p-4">
-        <h3 class="text-lg font-semibold mb-4">API Key 使用统计</h3>
+        <h3 class="text-lg font-semibold mb-4">KEY用量</h3>
         <div class="overflow-x-auto">
           <table class="w-full text-sm">
             <thead>
@@ -325,7 +334,7 @@
 
       <!-- 模型统计 -->
       <div class="bg-gray-800 rounded-xl p-4">
-        <h3 class="text-lg font-semibold mb-4">模型使用排行</h3>
+        <h3 class="text-lg font-semibold mb-4">模型用量</h3>
         <div class="overflow-x-auto">
           <table class="w-full text-sm">
             <thead>
@@ -342,9 +351,9 @@
           </table>
         </div>
       </div>
-      <!-- 模型性能指标 -->
+      <!-- 模型性能 -->
       <div class="bg-gray-800 rounded-xl p-4">
-        <h3 class="text-lg font-semibold mb-4">模型性能指标</h3>
+        <h3 class="text-lg font-semibold mb-4">模型性能</h3>
         <div id="modelPerformance" class="grid grid-cols-3 gap-4">
           <div class="bg-gray-700/50 rounded-lg p-3 text-center">
             <div class="text-sm text-gray-400 mb-1">TTFT</div>
@@ -369,7 +378,7 @@
     <!-- Cost Trend Chart -->
     <div class="bg-gray-800 rounded-xl p-4 mb-6">
       <div class="flex items-center justify-between mb-2">
-        <h3 class="text-lg font-semibold">成本趋势（模拟预估）</h3>
+        <h3 class="text-lg font-semibold">成本趋势</h3>
         <div class="flex items-center gap-4">
           <span id="costAvg" class="text-yellow-400 font-bold text-sm"></span>
           <span id="costPeak" class="text-orange-400 font-bold text-sm"></span>
@@ -480,11 +489,22 @@
             const maxVal = Math.max(...dataset.data, 0);
             ctx.font = '10px sans-serif';
             ctx.textAlign = 'center';
+            const base = chart._hourlyBase || 0;
+            const currentSlot = chart._currentSlot;
             meta.data.forEach((bar, i) => {
               const val = dataset.data[i];
               if (val > 0) {
-                ctx.fillStyle = val === maxVal ? 'rgba(251, 191, 36, 1)' : 'rgba(156, 163, 175, 1)';
-                ctx.fillText(val, bar.x, bar.y - 4);
+                const hour = (base + i) % 24;
+                if (hour === currentSlot) {
+                  ctx.fillStyle = 'rgba(251, 191, 36, 1)';
+                  ctx.font = '8px sans-serif';
+                  ctx.fillText('近时', bar.x, bar.y - 10);
+                  ctx.fillText(val, bar.x, bar.y - 2);
+                  ctx.font = '10px sans-serif';
+                } else {
+                  ctx.fillStyle = val === maxVal ? 'rgba(251, 191, 36, 1)' : 'rgba(156, 163, 175, 1)';
+                  ctx.fillText(val, bar.x, bar.y - 4);
+                }
               }
             });
           }
@@ -689,11 +709,12 @@
         const currentSlot = (currentHour < 24 ? currentHour : currentHour - 24);
         const colors = hourlyData.map((v, i) => {
           const hour = (base + i) % 24;
-          if (v > 0 && v === maxVal) return 'rgba(251, 191, 36, 0.9)';
-          if (hour === currentSlot) return 'rgba(59, 130, 246, 0.9)';
-          return 'rgba(59, 130, 246, 0.5)';
+          if (hour === currentSlot) return 'rgba(251, 191, 36, 0.9)';
+          return 'rgba(59, 130, 246, 0.6)';
         });
-        const borderColors = colors.map(c => c.replace('0.9', '1').replace('0.5', '0.8'));
+        const borderColors = colors.map(c => c.replace('0.9', '1').replace('0.6', '1'));
+        hourlyChart._hourlyBase = base;
+        hourlyChart._currentSlot = currentSlot;
         hourlyChart.data.labels = labels;
         hourlyChart.data.datasets[0].data = hourlyData;
         hourlyChart.data.datasets[0].backgroundColor = colors;
@@ -742,7 +763,7 @@
         costTrendChart.update('none');
         document.getElementById('costAvg').textContent = `均值: ￥${avg.toFixed(2)}/天`;
         document.getElementById('costAvg').style.color = 'rgba(251, 191, 36, 0.8)';
-        document.getElementById('costPeak').textContent = `峰值: ￥${peak.toFixed(2)}元`;
+        document.getElementById('costPeak').textContent = `日峰值: ￥${peak.toFixed(2)}元`;
         document.getElementById('costPeak').style.color = 'rgba(249, 115, 22, 0.9)';
       } else if (costTrendChart) {
         costTrendChart.data.labels = [];

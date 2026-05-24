@@ -2,6 +2,7 @@ node_modules/
 *.log
 .DS_Store
 dist/
-.envdata/logs/*.json
+.env
+data/logs/**/*.json
 !docs/superpowers/plans/*
 !.env.local
