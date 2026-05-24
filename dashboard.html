@@ -546,7 +546,7 @@
     let currentTab = 'live';
     let requestOffset = 0;
     const REQUEST_PAGE_SIZE = 50;
-    let appConfig = { simCostEnabled: false, simPromptCost: 0, simCompletionCost: 0, trendDays: 30, layoutGrid: 6, cardWidths: {} };
+    let appConfig = { simCostEnabled: false, simPromptCost: 0, simCompletionCost: 0, trendDays: 30, layoutGrid: 6, cardWidths: {}, cardOrder: [] };
 
     const CARD_DEFAULTS = {
       'today-requests': 2,
@@ -1289,7 +1289,8 @@
           simCompletionCost: data.simCompletionCost || 0,
           trendDays: data.trendDays || 30,
           layoutGrid: data.layoutGrid || 6,
-          cardWidths: data.cardWidths || {}
+          cardWidths: data.cardWidths || {},
+          cardOrder: data.cardOrder || []
         };
       } catch (error) {
         console.error('Load config error:', error);
@@ -1314,8 +1315,16 @@
           simCompletionCost: data.simCompletionCost || 0,
           trendDays: data.trendDays || 30,
           layoutGrid: data.layoutGrid || 6,
-          cardWidths: data.cardWidths || {}
+          cardWidths: data.cardWidths || {},
+          cardOrder: data.cardOrder || []
         };
+        if (data.cardOrder && data.cardOrder.length) {
+          const grid = document.getElementById('cardsGrid');
+          data.cardOrder.forEach(id => {
+            const el = grid.querySelector(`[data-card-id="${id}"]`);
+            if (el) grid.appendChild(el);
+          });
+        }
         applyGridLayout();
       } catch (error) {
         console.error('Load config error:', error);
@@ -2030,8 +2039,39 @@ function toggleLog() {
       return div.innerHTML;
     }
 
+    let sortableInstance = null;
+
+    function initSortable() {
+      if (sortableInstance) sortableInstance.destroy();
+      sortableInstance = new Sortable(document.getElementById('cardsGrid'), {
+        animation: 200,
+        delay: 300,
+        delayOnTouchOnly: true,
+        handle: '.card-header',
+        filter: '.card-header button',
+        preventOnFilter: false,
+        onEnd: saveCardOrder
+      });
+    }
+
+    async function saveCardOrder() {
+      const order = Array.from(document.querySelectorAll('[data-card-id]'))
+        .map(el => el.dataset.cardId);
+      appConfig.cardOrder = order;
+      try {
+        await fetch(`${API_BASE}/config`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cardOrder: order })
+        });
+      } catch (e) {
+        console.error('Save card order error:', e);
+      }
+    }
+
     initCharts();
     loadConfigWithoutModal();
+    initSortable();
     poll();
     setInterval(poll, 2000);
     setInterval(() => fetchContainerLogs().then(updateContainerLogs), 500);
