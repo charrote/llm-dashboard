@@ -248,14 +248,25 @@
 
     <!-- Stats Cards -->
     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-6">
-      <div class="bg-gray-800 rounded-xl p-4">
-        <div class="text-gray-400 text-sm mb-1">总请求数</div>
-        <div id="totalRequests" class="text-2xl font-bold text-white">0</div>
+      <!-- Today Request Card: Width x2 -->
+      <div class="bg-gray-800 rounded-xl p-5 col-span-1 xl:col-span-2">
+        <div class="text-gray-400 text-sm mb-3">📊 当日请求</div>
+        <div class="grid grid-cols-3 gap-4">
+          <div>
+            <div class="text-gray-400 text-xs mb-1">总请求数</div>
+            <div id="totalRequests" class="text-2xl font-bold text-white">0</div>
+          </div>
+          <div>
+            <div class="text-gray-400 text-xs mb-1">错误请求</div>
+            <div id="totalErrors" class="text-2xl font-bold text-red-400">0</div>
+          </div>
+          <div>
+            <div class="text-gray-400 text-xs mb-1">平均延迟</div>
+            <div id="avgLatency" class="text-2xl font-bold text-yellow-400">0ms</div>
+          </div>
+        </div>
       </div>
-      <div class="bg-gray-800 rounded-xl p-4">
-        <div class="text-gray-400 text-sm mb-1">错误请求</div>
-        <div id="totalErrors" class="text-2xl font-bold text-red-400">0</div>
-      </div>
+
       <div class="bg-gray-800 rounded-xl p-4">
         <div class="text-gray-400 text-sm mb-1">Prompt Tokens</div>
         <div id="promptTokens" class="text-2xl font-bold text-blue-400">0</div>
@@ -266,33 +277,59 @@
         <div id="completionTokens" class="text-2xl font-bold text-green-400">0</div>
         <div id="completionCost" class="text-sm text-yellow-400 mt-1"></div>
       </div>
-      <div class="bg-gray-800 rounded-xl p-4">
-        <div class="text-gray-400 text-sm mb-1">平均延迟</div>
-        <div id="avgLatency" class="text-2xl font-bold text-yellow-400">0ms</div>
-      </div>
       <!-- Resource Monitor Card: Width x2 -->
       <div class="bg-gray-800 rounded-xl p-5 col-span-1 xl:col-span-2">
+        <div class="text-gray-400 text-sm mb-3">🖥 资源监控</div>
+
         <!-- CPU Section -->
         <div class="mb-3 pb-3 border-b border-gray-700/60">
-          <div class="flex items-center justify-between mb-2">
-            <span id="cpuModel" class="text-blue-400 text-xs font-semibold">CPU</span>
-            <span><span style="margin-right: 3px;"><span>负载 </span></span><span id="cpuLoad"></span>%<style>#cpuload{font-weight:bold;color:#22d3ee;font-size:.875rem}</style></span>
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-blue-400 text-xs font-semibold">CPU</span>
+            <span id="cpuInfo" class="text-gray-400 text-xs"></span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-gray-400 text-xs">负载</span>
+            <div class="flex items-center gap-2 flex-1 ml-2">
+              <div class="flex-1 h-1.5 bg-gray-700 rounded-full overflow-hidden">
+                <div id="cpuLoadBar" class="h-full rounded-full transition-all duration-700" style="width:0%;background:#22d3ee"></div>
+              </div>
+              <span id="cpuLoad" class="text-sm font-bold text-cyan-400 w-10 text-right">0%</span>
+            </div>
           </div>
         </div>
 
         <!-- GPU Section -->
         <div class="mb-3 pb-3 border-b border-gray-700/60">
-          <div class="flex items-center justify-between mb-2">
-            <span id="gpuModel" class="text-purple-400 text-xs font-semibold">GPU</span>
-            <span><span style="margin-right: 3px;"><span>负载 </span></span><span id="gpuLoad"></span>%<style>#gpuload{font-weight:bold;color:#a78bfa;font-size:.875rem}</style></span>
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-purple-400 text-xs font-semibold">GPU</span>
+            <span id="gpuModel" class="text-gray-400 text-xs"></span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-gray-400 text-xs">负载</span>
+            <div class="flex items-center gap-2 flex-1 ml-2">
+              <div class="flex-1 h-1.5 bg-gray-700 rounded-full overflow-hidden">
+                <div id="gpuLoadBar" class="h-full rounded-full transition-all duration-700" style="width:0%;background:#a78bfa"></div>
+              </div>
+              <span id="gpuLoad" class="text-sm font-bold text-purple-400 w-10 text-right">0%</span>
+            </div>
+          </div>
+          <div class="flex gap-4 mt-1 text-xs text-gray-400">
+            <span>温度 <span id="gpuTemp" class="text-white font-medium">--</span>°C</span>
+            <span>功耗 <span id="gpuPower" class="text-white font-medium">--</span>W</span>
           </div>
         </div>
 
         <!-- Memory Section -->
-        <div class">
-          <div class="flex items-center justify-between mb-2">
-            <span id="memUsed" style="font-weight:bold;color:#fbbf24;font-size:.875rem">-- GB</span> 
-            /<style>#mempct{margin-left:3px}</style><span></span>
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-yellow-400 text-xs font-semibold">💾 内存</span>
+            <span id="memInfo" class="text-gray-400 text-xs">-- GB / -- GB</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="flex-1 h-1.5 bg-gray-700 rounded-full overflow-hidden">
+              <div id="memBar" class="h-full rounded-full transition-all duration-700" style="width:0%;background:#fbbf24"></div>
+            </div>
+            <span id="memPercent" class="text-sm font-bold text-yellow-400 w-12 text-right">0%</span>
           </div>
         </div>
       </div>
@@ -981,25 +1018,48 @@
     }
 
     function updateResourceMonitor(data) {
-      const concurrentEl = document.getElementById('concurrentCount');
-      const gpuEl = document.getElementById('gpuUsage');
-      const vramEl = document.getElementById('vramUsage');
-      if (!concurrentEl || !gpuEl || !vramEl) return;
-
       if (!data || data.enabled === false) {
-        concurrentEl.textContent = '- / -';
-        gpuEl.textContent = '-';
-        vramEl.textContent = '- / -';
+        document.getElementById('cpuInfo').textContent = '--';
+        document.getElementById('cpuLoad').textContent = '--';
+        document.getElementById('cpuLoadBar').style.width = '0%';
+        document.getElementById('gpuModel').textContent = '--';
+        document.getElementById('gpuLoad').textContent = '--';
+        document.getElementById('gpuLoadBar').style.width = '0%';
+        document.getElementById('gpuTemp').textContent = '--';
+        document.getElementById('gpuPower').textContent = '--';
+        document.getElementById('memInfo').textContent = '-- GB / -- GB';
+        document.getElementById('memPercent').textContent = '--%';
+        document.getElementById('memBar').style.width = '0%';
         return;
       }
-      concurrentEl.textContent = `${data.concurrent} / ${data.maxConcurrent}`;
-      gpuEl.textContent = `${data.gpuUsage}%`;
-      if (data.vramTotal > 0) {
-        vramEl.textContent = `${data.vramUsed} / ${data.vramTotal} MiB`;
-      } else if (data.vramPercent) {
-        vramEl.textContent = `${data.vramPercent}%`;
-      } else {
-        vramEl.textContent = '-';
+
+      // CPU
+      const cpu = data.cpu;
+      if (cpu) {
+        document.getElementById('cpuInfo').textContent = cpu.cores && cpu.threads ? `${cpu.cores}核/${cpu.threads}线程` : '';
+        const load = Math.min(cpu.load, 100);
+        document.getElementById('cpuLoad').textContent = `${load}%`;
+        document.getElementById('cpuLoadBar').style.width = `${load}%`;
+      }
+
+      // GPU
+      const gpu = data.gpu;
+      if (gpu) {
+        document.getElementById('gpuModel').textContent = gpu.model || '';
+        const load = Math.min(gpu.load, 100);
+        document.getElementById('gpuLoad').textContent = `${load}%`;
+        document.getElementById('gpuLoadBar').style.width = `${load}%`;
+        document.getElementById('gpuTemp').textContent = gpu.temp || '--';
+        document.getElementById('gpuPower').textContent = gpu.power || '--';
+      }
+
+      // Memory (system)
+      const mem = data.memory;
+      if (mem) {
+        document.getElementById('memInfo').textContent = `${mem.usedGB} GB / ${mem.totalGB} GB`;
+        const pct = Math.min(mem.percent, 100);
+        document.getElementById('memPercent').textContent = `${pct}%`;
+        document.getElementById('memBar').style.width = `${pct}%`;
       }
     }
 

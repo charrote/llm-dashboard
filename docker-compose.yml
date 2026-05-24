@@ -14,6 +14,7 @@ services:
       - ./proxy/config.json:/app/proxy/config.json
       - ./proxy/server.js:/app/proxy/server.js
       - ./dashboard.html:/app/dashboard.html
+      - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
     networks:
       - lmstudio-proxy

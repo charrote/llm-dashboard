@@ -1178,6 +1178,81 @@ app.delete('/api/apikeys/:id', (req, res) => {
   res.json({ success: true });
 });
 
+let _prevCpuStat = null;
+
+function calcCpuPct(line) {
+  const parts = line.trim().split(/\s+/);
+  const idle = parseInt(parts[4]) || 0;
+  const total = parts.slice(1).reduce((s, v) => s + (parseInt(v) || 0), 0);
+  return { idle, total };
+}
+
+async function getCpuInfo() {
+  const out = { cores: 0, threads: 0, load: 0 };
+  try {
+    const { stdout: cpuinfo } = await execAsync("grep -c ^processor /proc/cpuinfo");
+    out.threads = parseInt(cpuinfo.trim()) || 0;
+  } catch {}
+  try {
+    const { stdout: coreinfo } = await execAsync("grep 'cpu cores' /proc/cpuinfo | head -1 | awk '{print $4}'");
+    out.cores = parseInt(coreinfo.trim()) || out.threads;
+  } catch {}
+  try {
+    const { stdout: stat } = await execAsync("head -1 /proc/stat");
+    const cur = calcCpuPct(stat);
+    if (_prevCpuStat) {
+      const idleDelta = cur.idle - _prevCpuStat.idle;
+      const totalDelta = cur.total - _prevCpuStat.total;
+      out.load = totalDelta > 0 ? Math.round((1 - idleDelta / totalDelta) * 100) : 0;
+    }
+    _prevCpuStat = cur;
+  } catch {}
+  return out;
+}
+
+async function getGpuDetails(container, modelFallback) {
+  const info = { model: modelFallback || '', load: 0, temp: 0, power: 0 };
+  try {
+    const { stdout: gpuUse } = await execAsync(`docker exec ${container} sh -c 'cat /sys/class/drm/card0/device/gpu_busy_percent 2>/dev/null || echo 0'`);
+    info.load = parseInt(gpuUse.trim()) || 0;
+  } catch {}
+
+  try {
+    const { stdout: tmp } = await execAsync(`docker exec ${container} sh -c 'cat /sys/class/drm/card0/device/hwmon/hwmon*/temp1_input 2>/dev/null || echo 0'`);
+    const t = parseInt(tmp.trim());
+    if (t > 0) info.temp = Math.round(t / 1000);
+  } catch {}
+
+  try {
+    const { stdout: pwr } = await execAsync(`docker exec ${container} sh -c 'cat /sys/class/drm/card0/device/hwmon/hwmon*/power1_average 2>/dev/null || echo 0'`);
+    const p = parseInt(pwr.trim());
+    if (p > 0) info.power = Math.round(p / 1000000);
+  } catch {}
+
+  try {
+    const { stdout: name } = await execAsync(`docker exec ${container} sh -c 'rocm-smi --showproductname 2>/dev/null' | grep 'Product Name' | head -1 | sed 's/.*: *//'`);
+    const n = name.trim();
+    if (n) info.model = n;
+  } catch {}
+
+  return info;
+}
+
+async function getMemInfo() {
+  const out = { totalGB: 0, usedGB: 0, percent: 0 };
+  try {
+    const { stdout: mem } = await execAsync("awk '/MemTotal/{t=$2} /MemAvailable/{a=$2} END{printf \"%.0f %.0f\", t, a}' /proc/meminfo");
+    const [totalKb, availKb] = mem.trim().split(/\s+/).map(Number);
+    if (totalKb > 0) {
+      out.totalGB = +(totalKb / 1024 / 1024).toFixed(1);
+      const usedKb = totalKb - availKb;
+      out.usedGB = +(usedKb / 1024 / 1024).toFixed(1);
+      out.percent = Math.round((usedKb / totalKb) * 100);
+    }
+  } catch {}
+  return out;
+}
+
 app.get('/api/resource-monitor', async (req, res) => {
   const resourceConfig = config.resourceMonitor || {};
   if (!resourceConfig.enabled) {
@@ -1194,6 +1269,9 @@ app.get('/api/resource-monitor', async (req, res) => {
     gpuUsage: 0,
     vramUsed: 0,
     vramTotal: 0,
+    cpu: null,
+    gpu: null,
+    memory: null,
     timestamp: new Date().toISOString()
   };
 
@@ -1211,13 +1289,7 @@ app.get('/api/resource-monitor', async (req, res) => {
 
   try {
     const { stdout: gpuUse } = await execAsync(`docker exec ${dockerContainer} sh -c 'cat /sys/class/drm/card0/device/gpu_busy_percent 2>/dev/null || echo 0'`);
-    const gpuVal = parseInt(gpuUse.trim()) || 0;
-    if (gpuVal > 0) {
-      result.gpuUsage = gpuVal;
-    } else {
-      const { stdout: gpuUse2 } = await execAsync(`docker exec ${dockerContainer} sh -c 'cat /sys/class/drm/card0/device/gpu_busy_percent 2>/dev/null || echo 0'`);
-      result.gpuUsage = parseInt(gpuUse2.trim()) || 0;
-    }
+    result.gpuUsage = parseInt(gpuUse.trim()) || 0;
   } catch (e) {
     console.error('GPU usage error:', e.message);
   }
@@ -1237,6 +1309,15 @@ app.get('/api/resource-monitor', async (req, res) => {
   } catch (e) {
     console.error('VRAM usage error:', e.message);
   }
+
+  const [cpu, gpu, memory] = await Promise.all([
+    getCpuInfo(),
+    getGpuDetails(dockerContainer, resourceConfig.gpuModel),
+    getMemInfo()
+  ]);
+  result.cpu = cpu;
+  result.gpu = gpu;
+  result.memory = memory;
 
   res.json(result);
 });
