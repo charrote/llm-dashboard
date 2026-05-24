@@ -39,6 +39,9 @@
         <a href="/apikey-search" target="_blank" class="bg-orange-600 hover:bg-orange-700 px-4 py-2 rounded-lg text-sm transition inline-block">
           APIKey查询
         </a>
+        <button onclick="openModelQuery()" class="bg-teal-600 hover:bg-teal-700 px-4 py-2 rounded-lg text-sm transition">
+          模型查询
+        </button>
         <button onclick="openPromptOptimization()" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg text-sm transition">
           请求优化
         </button>
@@ -243,6 +246,31 @@
         </div>
         <div id="logStats" class="grid grid-cols-4 gap-4 mb-4 p-4 bg-gray-700/50 rounded-lg"></div>
         <div id="logRequests" class="font-mono text-xs space-y-1 flex-1 overflow-y-auto scrollbar-thin"></div>
+      </div>
+    </div>
+
+    <!-- Model Query Modal -->
+    <div id="modelQueryModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+      <div class="bg-gray-800 rounded-xl p-6 w-full max-w-2xl mx-4 max-h-[80vh] flex flex-col">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-bold">模型列表</h2>
+          <button onclick="closeModelQuery()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+        </div>
+        <div id="modelQueryLoading" class="text-center py-8 text-gray-400">加载中...</div>
+        <div id="modelQueryContent" class="hidden flex-1 overflow-hidden">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-gray-400 border-b border-gray-700">
+                <th class="text-left py-2 px-3">模型ID</th>
+                <th class="text-left py-2 px-3">别名</th>
+                <th class="text-left py-2 px-3">类型</th>
+                <th class="text-right py-2 px-3">上下文大小</th>
+              </tr>
+            </thead>
+            <tbody id="modelQueryList" class="scrollbar-thin max-h-96 overflow-y-auto"></tbody>
+          </table>
+        </div>
+        <div id="modelQueryError" class="hidden text-center py-8 text-red-400"></div>
       </div>
     </div>
 
@@ -1152,6 +1180,7 @@
     }
 
     async function openConfig() {
+      document.body.style.overflow = 'hidden';
       await loadConfig();
       document.getElementById('configModal').classList.remove('hidden');
       document.getElementById('configModal').classList.add('flex');
@@ -1222,6 +1251,7 @@ function toggleLog() {
     }
 
     function closeConfig() {
+      document.body.style.overflow = '';
       document.getElementById('configModal').classList.add('hidden');
       document.getElementById('configModal').classList.remove('flex');
     }
@@ -1310,12 +1340,14 @@ function toggleLog() {
     }
 
     async function openApiKeyManager() {
+      document.body.style.overflow = 'hidden';
       document.getElementById('apiKeyModal').classList.remove('hidden');
       document.getElementById('apiKeyModal').classList.add('flex');
       await loadApiKeys();
     }
 
     function closeApiKeyManager() {
+      document.body.style.overflow = '';
       document.getElementById('apiKeyModal').classList.add('hidden');
       document.getElementById('apiKeyModal').classList.remove('flex');
     }
@@ -1747,6 +1779,7 @@ function toggleLog() {
     }
 
     async function openPromptOptimization() {
+      document.body.style.overflow = 'hidden';
       const config = await loadPromptConfig();
       document.getElementById('promptOptModal').classList.remove('hidden');
       document.getElementById('promptOptModal').classList.add('flex');
@@ -1762,6 +1795,7 @@ function toggleLog() {
     }
 
     function closePromptOptimization() {
+      document.body.style.overflow = '';
       document.getElementById('promptOptModal').classList.add('hidden');
       document.getElementById('promptOptModal').classList.remove('flex');
     }
@@ -1790,6 +1824,80 @@ function toggleLog() {
       });
       
       closePromptOptimization();
+    }
+
+    function parseCtxSize(args) {
+      if (!args || !Array.isArray(args)) return '';
+      const idx = args.indexOf('--ctx-size');
+      if (idx !== -1 && idx + 1 < args.length) {
+        const val = parseInt(args[idx + 1]);
+        if (val >= 1024) return (val / 1024).toFixed(0) + 'K';
+        return val.toString();
+      }
+      return '';
+    }
+
+    function openModelQuery() {
+      document.body.style.overflow = 'hidden';
+      document.getElementById('modelQueryModal').classList.remove('hidden');
+      document.getElementById('modelQueryModal').classList.add('flex');
+      document.getElementById('modelQueryLoading').classList.remove('hidden');
+      document.getElementById('modelQueryContent').classList.add('hidden');
+      document.getElementById('modelQueryError').classList.add('hidden');
+      loadModels();
+    }
+
+    function closeModelQuery() {
+      document.body.style.overflow = '';
+      document.getElementById('modelQueryModal').classList.add('hidden');
+      document.getElementById('modelQueryModal').classList.remove('flex');
+    }
+
+    async function loadModels() {
+      try {
+        const resp = await fetch('http://nat.ywapi.com:9234/models');
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        const json = await resp.json();
+        const models = json.data || [];
+        const tbody = document.getElementById('modelQueryList');
+        if (models.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-gray-500">暂无模型</td></tr>';
+        } else {
+          tbody.innerHTML = models.map(m => {
+            const alias = (m.aliases || []).filter(a => a !== m.id).join(', ') || '-';
+            const ctx = parseCtxSize(m.status && m.status.args);
+            const type = getModelType(m);
+            return '<tr class="border-b border-gray-700/50 hover:bg-gray-700/30">'
+              + '<td class="py-2 px-3 text-white">' + escapeHtml(m.id) + '</td>'
+              + '<td class="py-2 px-3 text-gray-300">' + escapeHtml(alias) + '</td>'
+              + '<td class="py-2 px-3"><span class="px-2 py-0.5 rounded text-xs bg-gray-700 text-gray-300">' + escapeHtml(type) + '</span></td>'
+              + '<td class="py-2 px-3 text-right text-blue-400">' + ctx + '</td>'
+              + '</tr>';
+          }).join('');
+        }
+        document.getElementById('modelQueryLoading').classList.add('hidden');
+        document.getElementById('modelQueryContent').classList.remove('hidden');
+      } catch (err) {
+        document.getElementById('modelQueryLoading').classList.add('hidden');
+        document.getElementById('modelQueryError').classList.remove('hidden');
+        document.getElementById('modelQueryError').textContent = '加载失败: ' + err.message;
+      }
+    }
+
+    function getModelType(model) {
+      const id = (model.id || '').toLowerCase();
+      const aliases = (model.aliases || []).join(' ').toLowerCase();
+      const combined = id + ' ' + aliases;
+      if (/embed|rerank/.test(combined)) return '嵌入';
+      if (/summarize|summary/.test(combined)) return '摘要';
+      return '文本生成';
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
     }
 
     initCharts();
