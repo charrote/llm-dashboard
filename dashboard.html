@@ -2070,8 +2070,7 @@ function toggleLog() {
     }
 
     initCharts();
-    loadConfigWithoutModal();
-    initSortable();
+    loadConfigWithoutModal().then(() => initSortable());
     poll();
     setInterval(poll, 2000);
     setInterval(() => fetchContainerLogs().then(updateContainerLogs), 500);
