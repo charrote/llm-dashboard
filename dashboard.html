@@ -12,6 +12,7 @@
     .scrollbar-thin::-webkit-scrollbar { width: 6px; }
     .scrollbar-thin::-webkit-scrollbar-track { background: #1f2937; }
     .scrollbar-thin::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 3px; }
+    #cardsGrid > [data-card-id] { min-width: 0; }
   </style>
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen">
@@ -286,7 +287,7 @@
     </div>
 
     <!-- Cards Grid -->
-    <div id="cardsGrid" class="grid gap-4 mb-6">
+    <div id="cardsGrid" class="grid gap-4 mb-6" style="min-width:0">
       <!-- Today Request Card: Width x2 -->
       <div data-card-id="today-requests" class="bg-gray-800 rounded-xl p-5">
         <div class="flex items-center justify-between mb-4">
@@ -388,7 +389,7 @@
           </h3>
           <button onclick="openCardWidthPopover('container-logs', event)" class="text-gray-500 hover:text-white transition text-sm px-1" title="设置栅格宽度">⊞</button>
         </div>
-        <pre id="containerLogs" class="bg-gray-900 rounded-lg p-3 text-xs font-mono text-green-300 leading-relaxed overflow-y-auto flex-1" style="scrollbar-width: thin; scrollbar-color: #4a5568 transparent;">等待日志...</pre>
+        <pre id="containerLogs" class="bg-gray-900 rounded-lg p-3 text-xs font-mono text-green-300 leading-relaxed overflow-y-auto overflow-x-auto flex-1" style="scrollbar-width: thin; scrollbar-color: #4a5568 transparent;">等待日志...</pre>
       </div>
       <!-- trend-chart -->
       <div data-card-id="trend-chart" class="bg-gray-800 rounded-xl p-4">
@@ -572,7 +573,7 @@
       const grid = document.getElementById('cardsGrid');
       if (!grid) return;
       const cols = appConfig.layoutGrid || 6;
-      grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+      grid.style.gridTemplateColumns = `repeat(${cols}, minmax(0, 1fr))`;
 
       document.querySelectorAll('[data-card-id]').forEach(el => {
         const id = el.dataset.cardId;
