@@ -18,5 +18,30 @@
     "maxConcurrent": 4,
     "enabled": true,
     "gpuModel": "Radeon 8060S (ROCm)"
-  }
+  },
+  "trendDays": 30,
+  "layoutGrid": 6,
+  "cardWidths": {
+    "today-requests": 2,
+    "trend-chart": 3,
+    "hourly-chart": 3,
+    "resource-monitor": 1,
+    "apikey-table": 2,
+    "model-table": 2,
+    "model-performance": 2,
+    "cost-trend": 6,
+    "logs-section": 6
+  },
+  "cardOrder": [
+    "container-logs",
+    "today-requests",
+    "resource-monitor",
+    "trend-chart",
+    "hourly-chart",
+    "apikey-table",
+    "model-table",
+    "model-performance",
+    "cost-trend",
+    "logs-section"
+  ]
 }
