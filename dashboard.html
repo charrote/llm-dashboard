@@ -6,6 +6,7 @@
   <title>Uantek LLM 监控</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
   <style>
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
     .live-indicator { animation: pulse 2s infinite; }
@@ -13,6 +14,8 @@
     .scrollbar-thin::-webkit-scrollbar-track { background: #1f2937; }
     .scrollbar-thin::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 3px; }
     #cardsGrid > [data-card-id] { min-width: 0; }
+    .card-header { cursor: grab; }
+    .card-header:active { cursor: grabbing; }
   </style>
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen">
@@ -290,7 +293,7 @@
     <div id="cardsGrid" class="grid gap-4 mb-6" style="min-width:0">
       <!-- Today Request Card: Width x2 -->
       <div data-card-id="today-requests" class="bg-gray-800 rounded-xl p-5">
-        <div class="flex items-center justify-between mb-4">
+        <div class="card-header flex items-center justify-between mb-4">
           <h3 class="text-lg font-semibold">📊 当日请求</h3>
           <button onclick="openCardWidthPopover('today-requests', event)" class="text-gray-500 hover:text-white transition text-sm px-1" title="设置栅格宽度">⊞</button>
         </div>
@@ -323,7 +326,7 @@
       </div>
       <!-- Resource Monitor Card: Width x2 -->
       <div data-card-id="resource-monitor" class="bg-gray-800 rounded-xl p-5">
-        <div class="flex items-center justify-between mb-4">
+        <div class="card-header flex items-center justify-between mb-4">
           <h3 class="text-lg font-semibold">🖥 资源监控</h3>
           <button onclick="openCardWidthPopover('resource-monitor', event)" class="text-gray-500 hover:text-white transition text-sm px-1" title="设置栅格宽度">⊞</button>
         </div>
@@ -382,7 +385,7 @@
       </div>
       <!-- Container Logs Card -->
       <div data-card-id="container-logs" class="bg-gray-800 rounded-xl p-5 flex flex-col">
-        <div class="flex items-center justify-between mb-4">
+        <div class="card-header flex items-center justify-between mb-4">
           <h3 class="text-lg font-semibold flex items-center gap-2">
             <span id="logIndicator" class="w-2 h-2 rounded-full bg-green-400 inline-block"></span>
             📡 实时请求
@@ -393,14 +396,14 @@
       </div>
       <!-- trend-chart -->
       <div data-card-id="trend-chart" class="bg-gray-800 rounded-xl p-4">
-        <div class="flex items-center justify-between mb-4">
+        <div class="card-header flex items-center justify-between mb-4">
           <h3 class="text-lg font-semibold">用量趋势</h3>
           <button onclick="openCardWidthPopover('trend-chart', event)" class="text-gray-500 hover:text-white transition text-sm px-1" title="设置栅格宽度">⊞</button>
         </div>
         <canvas id="weeklyTrendChart" height="180"></canvas>
       </div>
       <div data-card-id="hourly-chart" class="bg-gray-800 rounded-xl p-4">
-        <div class="flex items-center justify-between mb-4">
+        <div class="card-header flex items-center justify-between mb-4">
           <h3 class="text-lg font-semibold">24小时请求分布</h3>
           <button onclick="openCardWidthPopover('hourly-chart', event)" class="text-gray-500 hover:text-white transition text-sm px-1" title="设置栅格宽度">⊞</button>
         </div>
@@ -408,7 +411,7 @@
       </div>
       <!-- API Key统计 -->
       <div data-card-id="apikey-table" class="bg-gray-800 rounded-xl p-4">
-        <div class="flex items-center justify-between mb-4">
+        <div class="card-header flex items-center justify-between mb-4">
           <h3 class="text-lg font-semibold">KEY用量</h3>
           <button onclick="openCardWidthPopover('apikey-table', event)" class="text-gray-500 hover:text-white transition text-sm px-1" title="设置栅格宽度">⊞</button>
         </div>
@@ -431,7 +434,7 @@
 
       <!-- 模型统计 -->
       <div data-card-id="model-table" class="bg-gray-800 rounded-xl p-4">
-        <div class="flex items-center justify-between mb-4">
+        <div class="card-header flex items-center justify-between mb-4">
           <h3 class="text-lg font-semibold">模型用量</h3>
           <button onclick="openCardWidthPopover('model-table', event)" class="text-gray-500 hover:text-white transition text-sm px-1" title="设置栅格宽度">⊞</button>
         </div>
@@ -453,7 +456,7 @@
       </div>
       <!-- 模型性能 -->
       <div data-card-id="model-performance" class="bg-gray-800 rounded-xl p-4">
-        <div class="flex items-center justify-between mb-4">
+        <div class="card-header flex items-center justify-between mb-4">
           <h3 class="text-lg font-semibold">模型性能</h3>
           <button onclick="openCardWidthPopover('model-performance', event)" class="text-gray-500 hover:text-white transition text-sm px-1" title="设置栅格宽度">⊞</button>
         </div>
@@ -478,7 +481,7 @@
       </div>
       <!-- Cost Trend Chart -->
       <div data-card-id="cost-trend" class="bg-gray-800 rounded-xl p-4">
-        <div class="flex items-center justify-between mb-2">
+        <div class="card-header flex items-center justify-between mb-2">
           <h3 class="text-lg font-semibold">成本趋势</h3>
           <div class="flex items-center gap-4">
             <span id="costAvg" class="text-yellow-400 font-bold text-sm"></span>
@@ -490,7 +493,7 @@
       </div>
       <!-- 实时日志 -->
       <div data-card-id="logs-section" class="bg-gray-800 rounded-xl p-4">
-        <div class="flex items-center justify-between mb-4">
+        <div class="card-header flex items-center justify-between mb-4">
           <h3 class="text-lg font-semibold">日志</h3>
           <div class="flex items-center gap-2">
             <div class="flex gap-2">
