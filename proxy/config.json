@@ -12,7 +12,7 @@
   "lmAuthValue": "sk-lm-Qwgo0fsU:03usFUHghwG9mBZCQJSh",
   "simCostEnabled": true,
   "simPromptCost": 0.2,
-  "simCompletionCost": 2,
+  "simCompletionCost": 0.5,
   "resourceMonitor": {
     "dockerContainer": "llamacppserver-mtp-llama-server-1",
     "maxConcurrent": 4,
@@ -20,29 +20,30 @@
     "gpuModel": "Radeon 8060S (ROCm)"
   },
   "trendDays": 30,
-  "layoutGrid": 6,
+  "layoutGrid": 8,
   "cardWidths": {
     "today-requests": 2,
-    "trend-chart": 3,
-    "hourly-chart": 3,
-    "resource-monitor": 1,
-    "apikey-table": 2,
-    "model-table": 2,
+    "trend-chart": 4,
+    "hourly-chart": 4,
+    "resource-monitor": 2,
+    "apikey-table": 3,
+    "model-table": 3,
     "model-performance": 2,
     "cost-trend": 6,
-    "logs-section": 6
+    "logs-section": 8,
+    "container-logs": 6
   },
   "cardOrder": [
     "container-logs",
-    "today-requests",
     "resource-monitor",
     "trend-chart",
     "hourly-chart",
-    "apikey-table",
-    "model-table",
-    "model-performance",
+    "today-requests",
     "cost-trend",
+    "model-table",
+    "apikey-table",
+    "model-performance",
     "logs-section"
   ],
-  "simCacheHitCost": 0.025
+  "simCacheHitCost": 0.02
 }

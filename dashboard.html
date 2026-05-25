@@ -16,6 +16,68 @@
     #cardsGrid > [data-card-id] { min-width: 0; }
     .card-header { cursor: grab; }
     .card-header:active { cursor: grabbing; }
+    #menuToggle { display: none; }
+    #mobileSidebar {
+      position: fixed;
+      top: 0; right: 0;
+      width: 260px; height: 100%;
+      background: #1f2937;
+      z-index: 100;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      overflow-y: auto;
+      padding: 20px 16px;
+    }
+    #mobileSidebar.open { transform: translateX(0); }
+    #sidebarOverlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 99;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    #sidebarOverlay.open { opacity: 1; pointer-events: auto; }
+    #mobileSidebar button,
+    #mobileSidebar a {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 10px 14px;
+      margin-bottom: 6px;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: background 0.15s;
+    }
+    @media (max-width: 1024px) {
+      #cardsGrid {
+        grid-template-columns: 1fr !important;
+      }
+      #cardsGrid > [data-card-id] {
+        grid-column: span 1 !important;
+      }
+      #headerActions { display: none !important; }
+      #menuToggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px; height: 40px;
+        background: #374151;
+        border: none;
+        border-radius: 8px;
+        color: #d1d5db;
+        font-size: 20px;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+      #menuToggle:hover { background: #4b5563; }
+      header {
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+      }
+      header > div:first-child { flex: 1; min-width: 0; }
+      header h1 { font-size: 1.25rem; }
+    }
   </style>
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen">
@@ -26,7 +88,8 @@
         <h1 class="text-2xl font-bold text-white">Uantek LLM 监控</h1>
         <p class="text-gray-400 text-sm">实时请求监控与统计分析</p>
       </div>
-      <div class="flex items-center gap-4">
+      <button id="menuToggle" onclick="openSidebar()" aria-label="菜单">☰</button>
+      <div id="headerActions" class="flex items-center gap-4">
         <div class="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-lg">
           <span class="w-3 h-3 bg-green-500 rounded-full live-indicator"></span>
           <span class="text-sm text-gray-300">实时更新中</span>
@@ -51,6 +114,26 @@
         </button>
       </div>
     </header>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div id="sidebarOverlay" onclick="closeSidebar()"></div>
+    <!-- Mobile Sidebar -->
+    <div id="mobileSidebar">
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-white font-bold">导航菜单</span>
+        <button onclick="closeSidebar()" class="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <div class="flex items-center gap-2 bg-gray-700/50 px-3 py-2 rounded-lg mb-3">
+        <span class="w-3 h-3 bg-green-500 rounded-full live-indicator"></span>
+        <span class="text-sm text-gray-300">实时更新中</span>
+      </div>
+      <button onclick="closeSidebar();openConfig()" class="bg-blue-600 hover:bg-blue-700">设置</button>
+      <button onclick="closeSidebar();openLogs()" class="bg-purple-600 hover:bg-purple-700">查看日志</button>
+      <button onclick="closeSidebar();openApiKeyManager()" class="bg-cyan-600 hover:bg-cyan-700">APIKey管理</button>
+      <a href="/apikey-search" target="_blank" class="bg-orange-600 hover:bg-orange-700 no-underline text-white" onclick="closeSidebar()">APIKey查询</a>
+      <button onclick="closeSidebar();openModelQuery()" class="bg-teal-600 hover:bg-teal-700">模型查询</button>
+      <button onclick="closeSidebar();openPromptOptimization()" class="bg-indigo-600 hover:bg-indigo-700">请求优化</button>
+    </div>
 
     <!-- Config Modal -->
     <div id="configModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
@@ -578,17 +661,28 @@
       'logs-section': 1
     };
 
+    function isMobile() {
+      return window.innerWidth <= 1024;
+    }
+
     function applyGridLayout() {
       const grid = document.getElementById('cardsGrid');
       if (!grid) return;
-      const cols = appConfig.layoutGrid || 6;
-      grid.style.gridTemplateColumns = `repeat(${cols}, minmax(0, 1fr))`;
 
-      document.querySelectorAll('[data-card-id]').forEach(el => {
-        const id = el.dataset.cardId;
-        const span = (appConfig.cardWidths && appConfig.cardWidths[id]) || CARD_DEFAULTS[id] || 1;
-        el.style.gridColumn = `span ${Math.min(span, cols)}`;
-      });
+      if (isMobile()) {
+        grid.style.setProperty('grid-template-columns', '1fr', 'important');
+        document.querySelectorAll('[data-card-id]').forEach(el => {
+          el.style.setProperty('grid-column', 'span 1', 'important');
+        });
+      } else {
+        const cols = appConfig.layoutGrid || 6;
+        grid.style.setProperty('grid-template-columns', `repeat(${cols}, minmax(0, 1fr))`, 'important');
+        document.querySelectorAll('[data-card-id]').forEach(el => {
+          const id = el.dataset.cardId;
+          const span = (appConfig.cardWidths && appConfig.cardWidths[id]) || CARD_DEFAULTS[id] || 1;
+          el.style.setProperty('grid-column', `span ${Math.min(span, cols)}`, 'important');
+        });
+      }
     }
 
     let activeCardId = null;
@@ -1408,7 +1502,9 @@ function toggleLog() {
         const completionCost = (completionTokens / 1000000) * appConfig.simCompletionCost;
         promptCostEl.textContent = `¥${promptCost.toFixed(2)}`;
         completionCostEl.textContent = `¥${completionCost.toFixed(2)}`;
-        if (cacheHitCostEl) cacheHitCostEl.textContent = `¥${cachedPromptCost.toFixed(2)}`;
+        if (cacheHitCostEl) {
+          cacheHitCostEl.textContent = cachedTokens > 0 ? `¥${cachedPromptCost.toFixed(4)}` : `¥0.00`;
+        }
       } else {
         promptCostEl.textContent = '';
         completionCostEl.textContent = '';
@@ -2137,11 +2233,24 @@ function toggleLog() {
       }
     }
 
+    function openSidebar() {
+      document.getElementById('mobileSidebar').classList.add('open');
+      document.getElementById('sidebarOverlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSidebar() {
+      document.getElementById('mobileSidebar').classList.remove('open');
+      document.getElementById('sidebarOverlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
     initCharts();
     loadConfigWithoutModal().then(() => initSortable());
     poll();
     setInterval(poll, 2000);
     setInterval(() => fetchContainerLogs().then(updateContainerLogs), 500);
+    window.addEventListener('resize', applyGridLayout);
   </script>
 </body>
 </html>

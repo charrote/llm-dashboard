@@ -641,21 +641,37 @@ async function proxyRequest(req, res) {
             const { done, value } = await reader.read();
             if (done) {
               res.end();
-              
+
               const endTime = Date.now();
               const startTime = requestStartTimes.get(requestId) || endTime;
               const firstTokenTime = requestFirstTokenTimes.get(requestId) || endTime;
               requestStartTimes.delete(requestId);
               requestFirstTokenTimes.delete(requestId);
-              
+
               if (config.enableLog) {
                 console.log(`[PROXY] Stream Response:`, streamContent);
               }
-              
+
               const completionTokens = Math.ceil(Buffer.byteLength(streamContent) / 4);
               const ttft = firstTokenTime - startTime;
               const llmTime = endTime - llmStart;
-              finalizeRequest(requestId, completionTokens, Math.max(0, endTime - startTime), response.status, null, ttft, forwardTime, llmTime);
+
+              let cachedTokens = 0;
+              const lines = streamContent.split('\n');
+              for (let i = lines.length - 1; i >= 0; i--) {
+                const line = lines[i].trim();
+                if (line.startsWith('data: ') && !line.includes('[DONE]')) {
+                  try {
+                    const data = JSON.parse(line.slice(6));
+                    if (data.usage?.prompt_tokens_details?.cached_tokens) {
+                      cachedTokens = data.usage.prompt_tokens_details.cached_tokens;
+                      break;
+                    }
+                  } catch (_) {}
+                }
+              }
+
+              finalizeRequest(requestId, completionTokens, Math.max(0, endTime - startTime), response.status, null, ttft, forwardTime, llmTime, cachedTokens);
               
               break;
             }
