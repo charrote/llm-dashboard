@@ -91,6 +91,17 @@ http://localhost:9234/v1
 - **24 小时分布**: 按小时统计请求分布
 - **Token 使用比例**: Prompt / Completion Token 环形图
 
+### 性能测试 (Benchmark)
+仪表盘内置性能测试工具，支持对已加载的文本生成模型进行多轮压力测试。
+
+- **上下文大小**: 单选/多选 8K/16K/32K/64K/128K/256K
+- **迭代次数**: 1/2/3/5 次
+- **结果实时流式展示**: 每完成一个上下文大小立即更新图表和表格
+- **对比图表**: 双 Y 轴折线图（左: 延迟 ms, 右: 生成 TPS），含冷启动/缓存命中对比
+- **模型调整**: 读写模型配置文件（models.ini），需重启模型生效
+- **一键重载模型**: `docker restart` 重启 LLM 容器
+- **测试中自动屏蔽外部请求**: 返回 503 "模型服务准备中"
+
 ### 数据表格
 - **API Key 统计**: 按 Key 分组的请求数、Token 消耗、错误次数
 - **模型统计**: 各模型使用情况排行
@@ -106,7 +117,7 @@ http://localhost:9234/v1
 lmstudio-dashboard/
 ├── Dockerfile                  # Docker 镜像配置（含 docker-cli）
 ├── docker-compose.yml          # Docker Compose 配置
-├── dashboard.html              # 前端仪表盘（单页应用）
+├── dashboard.html              # 前端仪表盘（单页应用，含性能测试模块）
 ├── apikey-search.html          # API Key 搜索页面
 ├── 启动仪表盘.bat              # Windows 一键启动脚本
 ├── proxy/
@@ -136,6 +147,11 @@ lmstudio-dashboard/
 | GET | `/api/containers` | Docker 容器列表 |
 | GET | `/api/container-logs` | 容器实时日志（末 10 行） |
 | POST | `/api/prompt-optimize` | 提示词压缩优化 |
+| GET | `/api/benchmark` | SSE 流式接口，启动性能测试 |
+| POST | `/api/benchmark/cancel` | 取消正在进行的性能测试 |
+| GET | `/api/model-config` | 读取模型配置（models.ini） |
+| POST | `/api/model-config` | 保存模型配置 |
+| POST | `/api/reload-model` | 重启 LLM 容器重载模型 |
 
 ## 工作原理
 

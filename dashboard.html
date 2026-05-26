@@ -10,6 +10,7 @@
   <style>
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
     .live-indicator { animation: pulse 2s infinite; }
+    .model-glow td { background-color: rgba(74,222,128,0.1) !important; }
     .scrollbar-thin::-webkit-scrollbar { width: 6px; }
     .scrollbar-thin::-webkit-scrollbar-track { background: #1f2937; }
     .scrollbar-thin::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 3px; }
@@ -112,6 +113,9 @@
         <button onclick="openPromptOptimization()" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg text-sm transition">
           请求优化
         </button>
+        <button onclick="openBenchmark()" class="bg-pink-600 hover:bg-pink-700 px-4 py-2 rounded-lg text-sm transition">
+          性能测试
+        </button>
       </div>
     </header>
 
@@ -133,6 +137,7 @@
       <a href="/apikey-search" target="_blank" class="bg-orange-600 hover:bg-orange-700 no-underline text-white" onclick="closeSidebar()">APIKey查询</a>
       <button onclick="closeSidebar();openModelQuery()" class="bg-teal-600 hover:bg-teal-700">模型查询</button>
       <button onclick="closeSidebar();openPromptOptimization()" class="bg-indigo-600 hover:bg-indigo-700">请求优化</button>
+      <button onclick="closeSidebar();openBenchmark()" class="bg-pink-600 hover:bg-pink-700">性能测试</button>
     </div>
 
     <!-- Config Modal -->
@@ -382,6 +387,113 @@
       </div>
     </div>
 
+    <!-- Benchmark Modal -->
+    <div id="benchmarkModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+      <div class="bg-gray-800 rounded-xl p-6 w-full max-w-4xl mx-4 max-h-[90vh] flex flex-col">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-bold">⚡ 性能测试</h2>
+          <button onclick="closeBenchmark()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+        </div>
+        <div id="benchmarkConfig" class="relative flex flex-wrap items-end gap-4 mb-2 p-4 bg-gray-700/30 rounded-lg">
+          <div>
+            <label class="text-sm text-gray-400 block mb-2">上下文大小（可多选）</label>
+            <div class="flex flex-wrap gap-2">
+              <label class="flex items-center gap-1.5 bg-gray-700 px-3 py-1.5 rounded-lg cursor-pointer hover:bg-gray-600 text-sm"><input type="checkbox" class="bm-ctx" value="8000"> 8K</label>
+              <label class="flex items-center gap-1.5 bg-gray-700 px-3 py-1.5 rounded-lg cursor-pointer hover:bg-gray-600 text-sm"><input type="checkbox" class="bm-ctx" value="16000"> 16K</label>
+              <label class="flex items-center gap-1.5 bg-gray-700 px-3 py-1.5 rounded-lg cursor-pointer hover:bg-gray-600 text-sm"><input type="checkbox" class="bm-ctx" value="32000" checked> 32K</label>
+              <label class="flex items-center gap-1.5 bg-gray-700 px-3 py-1.5 rounded-lg cursor-pointer hover:bg-gray-600 text-sm"><input type="checkbox" class="bm-ctx" value="64000"> 64K</label>
+              <label class="flex items-center gap-1.5 bg-gray-700 px-3 py-1.5 rounded-lg cursor-pointer hover:bg-gray-600 text-sm"><input type="checkbox" class="bm-ctx" value="128000"> 128K</label>
+              <label class="flex items-center gap-1.5 bg-gray-700 px-3 py-1.5 rounded-lg cursor-pointer hover:bg-gray-600 text-sm"><input type="checkbox" class="bm-ctx" value="256000"> 256K</label>
+            </div>
+          </div>
+          <div>
+            <label class="text-sm text-gray-400 block mb-2">目标模型</label>
+            <select id="benchmarkModel" onchange="onBenchmarkModelChange()" class="bg-gray-700 border border-gray-600 rounded-lg px-3 py-1.5 text-sm min-w-[200px]">
+              <option value="">加载中...</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-sm text-gray-400 block mb-2">迭代次数</label>
+            <select id="benchmarkIterations" class="bg-gray-700 border border-gray-600 rounded-lg px-3 py-1.5 text-sm">
+              <option value="1">1</option>
+              <option value="2" selected>2</option>
+              <option value="3">3</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+          <button id="benchmarkStartBtn" onclick="runBenchmark()" class="bg-pink-600 hover:bg-pink-700 px-5 py-2 rounded-lg text-sm transition h-fit">
+            开始测试
+          </button>
+          <button onclick="openModelTuning()" class="bg-yellow-600 hover:bg-yellow-700 px-4 py-2 rounded-lg text-sm transition h-fit">
+            模型调整
+          </button>
+          <button onclick="reloadModel()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-sm transition h-fit">
+            重载模型
+          </button>
+          <div id="benchmarkMask" class="hidden absolute inset-0 bg-gray-900/85 backdrop-blur-sm rounded-lg flex flex-col items-center justify-center z-10 gap-2">
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 border-2 border-pink-500 border-t-transparent rounded-full animate-spin"></div>
+              <span class="text-gray-200 text-sm font-medium">测试中...</span>
+            </div>
+            <div class="text-gray-400 text-xs">模型服务暂拒绝所有外部请求</div>
+            <button onclick="stopBenchmark()" class="mt-1 bg-red-600 hover:bg-red-700 px-4 py-1.5 rounded-lg text-xs transition">停止测试</button>
+          </div>
+        </div>
+        <div id="benchmarkModelDetail" class="hidden mb-3 p-3 bg-gray-700/20 rounded-lg text-xs grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-1.5"></div>
+        <div id="benchmarkLoading" class="hidden text-center py-8">
+          <div class="inline-block w-8 h-8 border-4 border-pink-500 border-t-transparent rounded-full animate-spin mb-3"></div>
+          <div class="text-gray-400 text-sm">正在测试中，请稍候...</div>
+          <div id="benchmarkProgress" class="text-gray-500 text-xs mt-2"></div>
+        </div>
+        <div id="benchmarkResult" class="hidden flex-1 flex flex-col overflow-hidden">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4" id="benchmarkSummaryCards"></div>
+          <div class="flex items-center justify-between mb-2">
+            <div class="text-sm text-gray-400">测试总用时: <span id="bmTotalTime" class="text-white font-medium"></span></div>
+          </div>
+          <div class="flex-1 min-h-0 mb-4">
+            <canvas id="benchmarkChart" height="200"></canvas>
+          </div>
+          <div class="overflow-x-auto flex-1 min-h-0">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="text-gray-400 border-b border-gray-700">
+                  <th class="text-left py-2 px-2">上下文</th>
+                  <th class="text-right py-2 px-2">Prompt Tokens</th>
+                  <th class="text-right py-2 px-2">冷启动延迟</th>
+                  <th class="text-right py-2 px-2">缓存命中延迟</th>
+                  <th class="text-right py-2 px-2">生成 TPS</th>
+                  <th class="text-right py-2 px-2">TPOT</th>
+                </tr>
+              </thead>
+              <tbody id="benchmarkDetailTable"></tbody>
+            </table>
+          </div>
+        </div>
+        <div id="benchmarkError" class="hidden text-center py-8 text-red-400"></div>
+      </div>
+    </div>
+
+    <!-- Model Config Modal -->
+    <div id="modelConfigModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+      <div class="bg-gray-800 rounded-xl p-6 w-full max-w-3xl mx-4 max-h-[85vh] flex flex-col">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-bold">⚙️ 模型调整 - <span id="modelConfigTitle" class="text-green-400"></span></h2>
+          <button onclick="closeModelConfig()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+        </div>
+        <div id="modelConfigLoading" class="text-center py-8 text-gray-400">加载中...</div>
+        <div id="modelConfigEditor" class="hidden flex-1 flex flex-col min-h-0">
+          <div class="text-xs text-gray-500 mb-2">编辑模型配置参数，保存后将写入 models.ini。</div>
+          <div class="text-xs text-yellow-500 mb-2">⚠️ 修改需重载模型才能生效。</div>
+          <textarea id="modelConfigText" class="flex-1 bg-gray-900 border border-gray-700 rounded-lg p-3 text-sm font-mono text-green-300 resize-none scrollbar-thin min-h-[300px]"></textarea>
+          <div class="flex justify-end gap-3 mt-4">
+            <button onclick="closeModelConfig()" class="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded-lg text-sm transition">取消</button>
+            <button id="modelConfigSaveBtn" onclick="saveModelConfig()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm transition">保存</button>
+          </div>
+        </div>
+        <div id="modelConfigError" class="hidden text-center py-8 text-red-400"></div>
+      </div>
+    </div>
+
     <!-- Cards Grid -->
     <div id="cardsGrid" class="grid gap-4 mb-6" style="min-width:0">
       <!-- Today Request Card: Width x2 -->
@@ -481,6 +593,28 @@
             </div>
             <span id="memPercent" class="text-sm font-bold text-yellow-400 w-12 text-right">0%</span>
           </div>
+        </div>
+      </div>
+      <!-- 实时模型性能 -->
+      <div data-card-id="model-realtime" class="bg-gray-800 rounded-xl p-4">
+        <div class="card-header flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold">实时模型性能</h3>
+          <button onclick="openCardWidthPopover('model-realtime', event)" class="text-gray-500 hover:text-white transition text-sm px-1" title="设置栅格宽度">⊞</button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-gray-400 border-b border-gray-700">
+                <th class="text-left py-2 px-2">模型</th>
+                <th class="text-right py-2 px-2">TTFT</th>
+                <th class="text-right py-2 px-2">TPOT</th>
+                <th class="text-right py-2 px-2">TPS</th>
+              </tr>
+            </thead>
+            <tbody id="modelRealtimeTable" class="scrollbar-thin">
+              <tr><td colspan="4" class="text-center py-8 text-gray-500">暂无数据</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
       <!-- Container Logs Card -->
@@ -657,6 +791,7 @@
       'apikey-table': 1,
       'model-table': 1,
       'model-performance': 1,
+      'model-realtime': 1,
       'cost-trend': 1,
       'logs-section': 1
     };
@@ -1164,6 +1299,75 @@
       }
     }
 
+
+
+    let lastActiveModels = new Set();
+
+    function updateModelRealtime(stats) {
+      if (!stats) return;
+      const tbody = document.getElementById('modelRealtimeTable');
+      if (!tbody) return;
+
+      const requests = stats.requests || [];
+      if (requests.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center py-8 text-gray-500">暂无数据</td></tr>';
+        return;
+      }
+
+      const latestPerModel = {};
+      for (const req of requests) {
+        const model = req.model;
+        if (!latestPerModel[model]) {
+          latestPerModel[model] = req;
+        }
+      }
+
+      const byModel = stats.byModel || {};
+      const allModels = new Set([...Object.keys(latestPerModel), ...Object.keys(byModel)]);
+
+      const now = stats.serverTime || Date.now();
+      const activeModels = new Set();
+      for (const [model, req] of Object.entries(latestPerModel)) {
+        const age = now - new Date(req.timestamp).getTime();
+        if (age < 5000) activeModels.add(model);
+      }
+      lastActiveModels = activeModels;
+
+      tbody.innerHTML = Array.from(allModels)
+        .sort((a, b) => {
+          const ta = byModel[a]?.tokens || latestPerModel[a]?.tokens?.total || 0;
+          const tb = byModel[b]?.tokens || latestPerModel[b]?.tokens?.total || 0;
+          return tb - ta;
+        })
+        .map(name => {
+          const activeClass = activeModels.has(name) ? ' model-active' : '';
+          const req = latestPerModel[name];
+          if (req) {
+            const ttft = req.ttft ? req.ttft + 'ms' : '-';
+            const tpot = req.tpot ? req.tpot + 'ms' : '-';
+            const completionTokens = req.tokens?.completion || 0;
+            const latency = req.latency || 0;
+            const tps = completionTokens > 0 && latency > 0 ? (completionTokens / (latency / 1000)).toFixed(1) : '-';
+            return `<tr class="border-b border-gray-700/50 hover:bg-gray-700/30${activeClass}">
+              <td class="py-2 px-2 text-green-400 truncate max-w-[140px]" title="${name}">${name.length > 18 ? name.substring(0, 18) + '...' : name}</td>
+              <td class="py-2 px-2 text-right text-blue-400 font-mono">${ttft}</td>
+              <td class="py-2 px-2 text-right text-green-400 font-mono">${tpot}</td>
+              <td class="py-2 px-2 text-right text-purple-400 font-mono">${tps}</td>
+            </tr>`;
+          }
+          const data = byModel[name];
+          const ttft = data.ttft?.count > 0 ? Math.round(data.ttft.sum / data.ttft.count) + 'ms' : '-';
+          const tpot = data.tpot?.count > 0 ? (data.tpot.sum / data.tpot.count).toFixed(1) + 'ms' : '-';
+          const tps = data.tps?.count > 0 ? (data.tps.sum / data.tps.count).toFixed(1) : '-';
+          return `<tr class="border-b border-gray-700/50 hover:bg-gray-700/30${activeClass}">
+            <td class="py-2 px-2 text-green-400 truncate max-w-[140px]" title="${name}">${name.length > 18 ? name.substring(0, 18) + '...' : name}</td>
+            <td class="py-2 px-2 text-right text-blue-400 font-mono">${ttft}</td>
+            <td class="py-2 px-2 text-right text-green-400 font-mono">${tpot}</td>
+            <td class="py-2 px-2 text-right text-purple-400 font-mono">${tps}</td>
+          </tr>`;
+        }).join('');
+    }
+
     function updateRequestLog(requests, isInitial = false) {
       const logContainer = document.getElementById('requestLog');
       if (isInitial) {
@@ -1377,19 +1581,24 @@
     }
 
     async function poll() {
-      const stats = await fetchStats();
-      const newRequests = await fetchRequests(0);
-      const resourceData = await fetchResourceMonitor();
-      if (newRequests.length > 0) {
-        cachedRequests = newRequests;
-        requestOffset = newRequests.length;
-        updateRequestLog(cachedRequests);
+      try {
+        const stats = await fetchStats();
+        const newRequests = await fetchRequests(0);
+        const resourceData = await fetchResourceMonitor();
+        if (newRequests.length > 0) {
+          cachedRequests = newRequests;
+          requestOffset = newRequests.length;
+          updateRequestLog(cachedRequests);
+        }
+        await updateUI(stats);
+        updateModelPerformance(stats);
+        updateModelRealtime(stats);
+        updateResourceMonitor(resourceData);
+        if (currentTab === 'errors') fetchErrorLogs();
+        fetchContainerLogs().then(updateContainerLogs);
+      } catch (e) {
+        console.error('Poll error:', e);
       }
-      await updateUI(stats);
-      updateModelPerformance(stats);
-      updateResourceMonitor(resourceData);
-      if (currentTab === 'errors') fetchErrorLogs();
-      fetchContainerLogs().then(updateContainerLogs);
     }
 
     async function loadConfig() {
@@ -2155,9 +2364,370 @@ function toggleLog() {
       document.getElementById('modelQueryModal').classList.remove('flex');
     }
 
+    let benchmarkChartInstance = null;
+
+    function openBenchmark() {
+      document.getElementById('benchmarkModal').classList.remove('hidden');
+      document.getElementById('benchmarkModal').classList.add('flex');
+      document.getElementById('benchmarkResult').classList.add('hidden');
+      document.getElementById('benchmarkLoading').classList.add('hidden');
+      document.getElementById('benchmarkError').classList.add('hidden');
+      document.getElementById('benchmarkConfig').classList.remove('hidden');
+      document.getElementById('benchmarkMask').classList.add('hidden');
+      document.getElementById('benchmarkStartBtn').disabled = false;
+      document.getElementById('benchmarkStartBtn').textContent = '开始测试';
+      document.body.style.overflow = 'hidden';
+      loadBenchmarkModels();
+    }
+
+    function closeBenchmark() {
+      stopBenchmark();
+      document.body.style.overflow = '';
+      document.getElementById('benchmarkModal').classList.add('hidden');
+      document.getElementById('benchmarkModal').classList.remove('flex');
+    }
+
+    let benchmarkModelsData = [];
+
+    function extractModelParams(args) {
+      const p = {};
+      if (!args || !Array.isArray(args)) return p;
+      for (let i = 0; i < args.length; i++) {
+        const a = args[i];
+        if (a.startsWith('--')) {
+          const key = a.replace(/^--/, '');
+          const val = i + 1 < args.length && !args[i + 1].startsWith('--') ? args[i + 1] : true;
+          p[key] = val;
+        }
+      }
+      return p;
+    }
+
+    function formatModelParams(params, meta) {
+      const items = [];
+      const modelArg = (params['model'] || '').match(/\/([^/]+)\.gguf$/);
+      const modelName = modelArg ? modelArg[1] : (params['model'] || '').split('/').pop() || '-';
+      const quant = modelName.match(/Q\d+_K_\w+|IQ\d+_\w+|q\d+/i);
+      const paramCount = meta?.n_params;
+      const modelSize = paramCount ? (paramCount / 1e9).toFixed(1) + 'B' : '-';
+      const fileSize = meta?.size ? (meta.size / 1e9).toFixed(1) + 'GB' : '-';
+
+      items.push({ label: '模型', value: modelName, highlight: true });
+      items.push({ label: '参数量', value: modelSize });
+      items.push({ label: '文件大小', value: fileSize });
+      items.push({ label: '量化', value: quant ? quant[0] : '?' });
+      items.push({ label: '上下文', value: (params['ctx-size'] || meta?.n_ctx || '?') + (meta?.n_ctx_train ? ' / ' + meta.n_ctx_train : '') });
+      items.push({ label: 'GPU 层数', value: params['n-gpu-layers'] || '0' });
+      items.push({ label: '推理线程', value: (params['threads'] || '?') + ' / batch: ' + (params['threads-batch'] || '?') });
+      items.push({ label: '批次大小', value: 'batch=' + (params['batch-size'] || '?') + ' ubatch=' + (params['ubatch-size'] || '?') });
+      items.push({ label: 'Cache KV', value: (params['cache-type-k'] || '?') + ' / ' + (params['cache-type-v'] || '?') });
+      items.push({ label: 'Flash Attn', value: params['flash-attn'] || '0' });
+      items.push({ label: '并行数', value: params['parallel'] || '1' });
+      items.push({ label: '嵌入维度', value: meta?.n_embd || '-' });
+      if (params['model-draft']) {
+        const draft = params['model-draft'].match(/\/([^/]+)\.gguf$/);
+        items.push({ label: '草稿模型', value: draft ? draft[1] : 'yes', highlight: true });
+      }
+      return items;
+    }
+
+    async function loadBenchmarkModels() {
+      const sel = document.getElementById('benchmarkModel');
+      try {
+        const resp = await fetch(`${API_BASE}/models`);
+        const json = await resp.json();
+        const models = (json.data || []).filter(m => getModelType(m) === '文本生成');
+        benchmarkModelsData = models;
+        if (models.length === 0) {
+          sel.innerHTML = '<option value="">暂无已加载模型</option>';
+        } else {
+          sel.innerHTML = models.map(m => `<option value="${escapeHtml(m.id)}">${escapeHtml(m.id)}</option>`).join('');
+          onBenchmarkModelChange();
+        }
+      } catch (e) {
+        sel.innerHTML = '<option value="">加载失败</option>';
+      }
+    }
+
+    function onBenchmarkModelChange() {
+      const sel = document.getElementById('benchmarkModel');
+      const detail = document.getElementById('benchmarkModelDetail');
+      const modelId = sel.value;
+      if (!modelId) { detail.classList.add('hidden'); return; }
+      const model = benchmarkModelsData.find(m => m.id === modelId);
+      if (!model) { detail.classList.add('hidden'); return; }
+      const params = extractModelParams(model.status?.args);
+      const items = formatModelParams(params, model.meta);
+      detail.innerHTML = items.map(i =>
+        `<div class="${i.highlight ? 'text-green-300' : 'text-gray-300'}"><span class="text-gray-500">${i.label}:</span> ${escapeHtml(i.value)}</div>`
+      ).join('');
+      detail.classList.remove('hidden');
+    }
+
+    let benchmarkAccum = { ctxSizes: [], results: {}, totalTime: 0, model: '', iterations: 0 };
+    let benchmarkEventSource = null;
+
+    function buildBenchmarkChart() {
+      const ctxSizes = benchmarkAccum.ctxSizes.sort((a, b) => a - b);
+      const results = benchmarkAccum.results;
+      const canvas = document.getElementById('benchmarkChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      if (benchmarkChartInstance) benchmarkChartInstance.destroy();
+
+      const labels = ctxSizes.map(v => (v / 1000) + 'K');
+      const coldData = ctxSizes.map(v => results[v]?.summary?.coldStart?.latency ?? null);
+      const warmData = ctxSizes.map(v => results[v]?.summary?.warmLatency ?? null);
+      const tpsData = ctxSizes.map(v => results[v]?.summary?.avgGenTps ?? null);
+
+      const hasData = coldData.some(d => d !== null) || warmData.some(d => d !== null);
+      if (!hasData) return;
+
+      benchmarkChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            { label: '冷启动延迟 (ms)', data: coldData, borderColor: '#fb923c', backgroundColor: 'rgba(251,146,60,0.1)', borderWidth: 2, pointBackgroundColor: '#fb923c', pointRadius: 4, tension: 0.3, fill: true, yAxisID: 'y' },
+            { label: '缓存命中延迟 (ms)', data: warmData, borderColor: '#4ade80', backgroundColor: 'rgba(74,222,128,0.1)', borderWidth: 2, pointBackgroundColor: '#4ade80', pointRadius: 4, tension: 0.3, fill: true, yAxisID: 'y' },
+            { label: '生成 TPS', data: tpsData, borderColor: '#c084fc', backgroundColor: 'rgba(192,132,252,0.1)', borderWidth: 2, pointBackgroundColor: '#c084fc', pointRadius: 4, tension: 0.3, fill: true, yAxisID: 'y1' }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { position: 'top', labels: { color: '#9ca3af', boxWidth: 12, padding: 12 } }
+          },
+          scales: {
+            x: { ticks: { color: '#9ca3af' }, grid: { color: '#374151' } },
+            y: {
+              position: 'left',
+              title: { display: true, text: '延迟 (ms)', color: '#9ca3af' },
+              ticks: { color: '#9ca3af' },
+              grid: { color: '#374151' },
+              beginAtZero: true
+            },
+            y1: {
+              position: 'right',
+              title: { display: true, text: 'TPS', color: '#9ca3af' },
+              ticks: { color: '#9ca3af' },
+              grid: { display: false },
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+
+    function updateBenchmarkTable() {
+      const ctxSizes = benchmarkAccum.ctxSizes.sort((a, b) => a - b);
+      const results = benchmarkAccum.results;
+      const tbody = document.getElementById('benchmarkDetailTable');
+
+      tbody.innerHTML = ctxSizes.map(ctx => {
+        const r = results[ctx];
+        if (!r || !r.summary) {
+          return `<tr class="border-b border-gray-700/50 hover:bg-gray-700/30 opacity-60">
+            <td class="py-2 px-2 font-medium">${ctx/1000}K</td>
+            <td class="py-2 px-2 text-right text-gray-500" colspan="5">测试中...</td>
+          </tr>`;
+        }
+        const s = r.summary;
+        const firstIter = r.results[0];
+        return `<tr class="border-b border-gray-700/50 hover:bg-gray-700/30">
+          <td class="py-2 px-2 font-medium">${ctx/1000}K</td>
+          <td class="py-2 px-2 text-right text-blue-400">${firstIter ? firstIter.promptTokens : '-'}</td>
+          <td class="py-2 px-2 text-right text-orange-400">${s.coldStart ? s.coldStart.latency + 'ms' : '-'}</td>
+          <td class="py-2 px-2 text-right text-green-400">${s.warmLatency ? s.warmLatency + 'ms' : '-'}</td>
+          <td class="py-2 px-2 text-right text-purple-400">${s.avgGenTps || '-'}</td>
+          <td class="py-2 px-2 text-right text-blue-400">${s.avgTpot ? s.avgTpot + 'ms' : '-'}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    async function runBenchmark() {
+      const ctxChecks = document.querySelectorAll('.bm-ctx:checked');
+      if (ctxChecks.length === 0) { alert('请至少选择一个上下文大小'); return; }
+      const contextSizes = Array.from(ctxChecks).map(c => parseInt(c.value));
+      const model = document.getElementById('benchmarkModel').value;
+      const iterations = parseInt(document.getElementById('benchmarkIterations').value);
+      if (!model) { alert('请选择目标模型'); return; }
+
+      document.getElementById('benchmarkResult').classList.add('hidden');
+      document.getElementById('benchmarkError').classList.add('hidden');
+      document.getElementById('benchmarkMask').classList.remove('hidden');
+      document.getElementById('benchmarkStartBtn').disabled = true;
+      document.getElementById('benchmarkStartBtn').textContent = '测试中...';
+
+      benchmarkAccum = { ctxSizes: [], results: {}, totalTime: 0, model, iterations };
+
+      if (benchmarkEventSource) { benchmarkEventSource.close(); benchmarkEventSource = null; }
+
+      const qs = `contextSizes=${contextSizes.join(',')}&iterations=${iterations}&model=${encodeURIComponent(model)}`;
+      benchmarkEventSource = new EventSource(`${API_BASE}/benchmark?${qs}`);
+
+      benchmarkEventSource.onmessage = function(event) {
+        try {
+          const data = JSON.parse(event.data);
+
+          if (data.type === 'progress') {
+            document.getElementById('benchmarkProgress').textContent =
+              `模型: ${model} | 正在测试 ${data.ctxSize/1000}K...`;
+
+          } else if (data.type === 'iteration') {
+            const ctx = data.ctxSize;
+            if (!benchmarkAccum.results[ctx]) {
+              benchmarkAccum.results[ctx] = { results: [], summary: null };
+            }
+            benchmarkAccum.results[ctx].results[data.iteration - 1] = data.result;
+
+          } else if (data.type === 'ctxDone') {
+            const ctx = data.ctxSize;
+            if (!benchmarkAccum.ctxSizes.includes(ctx)) benchmarkAccum.ctxSizes.push(ctx);
+            if (!benchmarkAccum.results[ctx]) {
+              benchmarkAccum.results[ctx] = { results: [], summary: data.summary };
+            } else {
+              benchmarkAccum.results[ctx].summary = data.summary;
+            }
+            document.getElementById('benchmarkResult').classList.remove('hidden');
+            updateBenchmarkTable();
+            buildBenchmarkChart();
+
+          } else if (data.type === 'complete') {
+            benchmarkAccum.totalTime = data.totalTime;
+            document.getElementById('bmTotalTime').textContent = (data.totalTime / 1000).toFixed(1) + 's';
+            document.getElementById('benchmarkMask').classList.add('hidden');
+            document.getElementById('benchmarkResult').classList.remove('hidden');
+            document.getElementById('benchmarkStartBtn').disabled = false;
+            document.getElementById('benchmarkStartBtn').textContent = '重新测试';
+            benchmarkEventSource.close();
+            benchmarkEventSource = null;
+
+          } else if (data.type === 'error') {
+            throw new Error(data.message);
+          }
+        } catch (err) {
+          document.getElementById('benchmarkMask').classList.add('hidden');
+          document.getElementById('benchmarkError').classList.remove('hidden');
+          document.getElementById('benchmarkError').textContent = '测试出错: ' + err.message;
+          document.getElementById('benchmarkStartBtn').disabled = false;
+          document.getElementById('benchmarkStartBtn').textContent = '重新测试';
+          if (benchmarkEventSource) { benchmarkEventSource.close(); benchmarkEventSource = null; }
+        }
+      };
+
+      benchmarkEventSource.onerror = function() {
+        if (benchmarkEventSource && benchmarkEventSource.readyState === EventSource.CLOSED) {
+          document.getElementById('benchmarkMask').classList.add('hidden');
+          document.getElementById('benchmarkError').classList.remove('hidden');
+          document.getElementById('benchmarkError').textContent = '测试连接中断，请重试。';
+          document.getElementById('benchmarkStartBtn').disabled = false;
+          document.getElementById('benchmarkStartBtn').textContent = '重新测试';
+          benchmarkEventSource = null;
+        }
+      };
+    }
+
+    async function stopBenchmark() {
+      if (benchmarkEventSource) {
+        benchmarkEventSource.close();
+        benchmarkEventSource = null;
+      }
+      try {
+        await fetch(`${API_BASE}/benchmark/cancel`, { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+      } catch (e) {
+        // ignore network errors
+      }
+      document.getElementById('benchmarkMask').classList.add('hidden');
+      document.getElementById('benchmarkStartBtn').disabled = false;
+      document.getElementById('benchmarkStartBtn').textContent = '开始测试';
+    }
+
+    let currentConfigModel = '';
+
+    function openModelTuning() {
+      const sel = document.getElementById('benchmarkModel');
+      const modelId = sel.value;
+      if (!modelId) { alert('请先选择目标模型'); return; }
+      currentConfigModel = modelId;
+      document.getElementById('modelConfigModal').classList.remove('hidden');
+      document.getElementById('modelConfigModal').classList.add('flex');
+      document.getElementById('modelConfigTitle').textContent = modelId;
+      document.getElementById('modelConfigLoading').classList.remove('hidden');
+      document.getElementById('modelConfigEditor').classList.add('hidden');
+      document.getElementById('modelConfigError').classList.add('hidden');
+      document.body.style.overflow = 'hidden';
+      loadModelConfig(modelId);
+    }
+
+    function closeModelConfig() {
+      document.body.style.overflow = '';
+      document.getElementById('modelConfigModal').classList.add('hidden');
+      document.getElementById('modelConfigModal').classList.remove('flex');
+    }
+
+    async function loadModelConfig(modelId) {
+      try {
+        const resp = await fetch(`${API_BASE}/model-config?model=${encodeURIComponent(modelId)}`);
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        const data = await resp.json();
+        document.getElementById('modelConfigLoading').classList.add('hidden');
+        document.getElementById('modelConfigEditor').classList.remove('hidden');
+        document.getElementById('modelConfigText').value = data.content;
+      } catch (err) {
+        document.getElementById('modelConfigLoading').classList.add('hidden');
+        document.getElementById('modelConfigError').classList.remove('hidden');
+        document.getElementById('modelConfigError').textContent = '加载失败: ' + err.message;
+      }
+    }
+
+    async function saveModelConfig() {
+      const content = document.getElementById('modelConfigText').value;
+      const btn = document.getElementById('modelConfigSaveBtn');
+      btn.disabled = true;
+      btn.textContent = '保存中...';
+      try {
+        const resp = await fetch(`${API_BASE}/model-config`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: currentConfigModel, content })
+        });
+        const data = await resp.json();
+        if (!data.success) throw new Error(data.error || '保存失败');
+        alert('保存成功！需要重载模型才能生效。');
+        closeModelConfig();
+      } catch (err) {
+        alert('保存失败: ' + err.message);
+      }
+      btn.disabled = false;
+      btn.textContent = '保存';
+    }
+
+    async function reloadModel() {
+      if (!confirm('确定要重载模型吗？所有进行中的请求将被中断。')) return;
+      const btn = event.target;
+      btn.disabled = true;
+      btn.textContent = '重载中...';
+      try {
+        const resp = await fetch(`${API_BASE}/reload-model`, { method: 'POST' });
+        const data = await resp.json();
+        if (data.success) {
+          alert('重载成功！模型已重启。');
+        } else {
+          alert('重载失败: ' + (data.error || '未知错误'));
+        }
+      } catch (err) {
+        alert('重载失败: ' + err.message);
+      }
+      btn.disabled = false;
+      btn.textContent = '重载模型';
+    }
+
     async function loadModels() {
       try {
-        const resp = await fetch('http://nat.ywapi.com:9234/models');
+        const resp = await fetch(`${API_BASE}/models`);
         if (!resp.ok) throw new Error('HTTP ' + resp.status);
         const json = await resp.json();
         const models = json.data || [];
@@ -2250,6 +2820,11 @@ function toggleLog() {
     poll();
     setInterval(poll, 2000);
     setInterval(() => fetchContainerLogs().then(updateContainerLogs), 500);
+    setInterval(() => {
+      document.querySelectorAll('#modelRealtimeTable tr.model-active').forEach(el => {
+        el.classList.toggle('model-glow');
+      });
+    }, 600);
     window.addEventListener('resize', applyGridLayout);
   </script>
 </body>

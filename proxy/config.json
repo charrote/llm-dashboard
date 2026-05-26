@@ -19,7 +19,7 @@
     "enabled": true,
     "gpuModel": "Radeon 8060S (ROCm)"
   },
-  "trendDays": 30,
+  "trendDays": 60,
   "layoutGrid": 8,
   "cardWidths": {
     "today-requests": 2,
@@ -31,11 +31,13 @@
     "model-performance": 2,
     "cost-trend": 6,
     "logs-section": 8,
-    "container-logs": 6
+    "container-logs": 4,
+    "model-realtime": 2
   },
   "cardOrder": [
     "container-logs",
     "resource-monitor",
+    "model-realtime",
     "trend-chart",
     "hourly-chart",
     "today-requests",

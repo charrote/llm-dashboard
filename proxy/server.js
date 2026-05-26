@@ -150,6 +150,7 @@ const defaultStats = () => ({
 let stats = defaultStats();
 let errorLogs = [];
 let currentDate = getDateStr();
+let isBenchmarking = false;
 
 if (!fs.existsSync(LOGS_DIR)) {
   fs.mkdirSync(LOGS_DIR, { recursive: true });
@@ -543,6 +544,10 @@ async function proxyRequest(req, res) {
     return res.status(401).json({ error: 'Invalid API Key', message: 'API Key不在允许列表中' });
   }
   
+  if (isBenchmarking && req.headers['x-internal'] !== 'benchmark') {
+    return res.status(503).json({ error: '模型服务准备中，请稍后再试' });
+  }
+  
   const promptTokens = Math.ceil(Buffer.byteLength(JSON.stringify(req.body?.messages || [])) / 4);
   
   pendingRequests.set(requestId, {
@@ -792,6 +797,7 @@ app.get('/api/stats', (req, res) => {
     .slice(0, 30);
   res.json({
     ...stats,
+    serverTime: Date.now(),
     requests: sortedRequests,
     latency: stats.latency.count > 0 ? {
       avg: Math.round(stats.latency.sum / stats.latency.count),
@@ -1416,6 +1422,206 @@ app.get('/api/container-logs', async (req, res) => {
     res.json({ lines: lines.slice(-10) });
   } catch (error) {
     res.json({ lines: [], error: error.message });
+  }
+});
+
+const BENCHMARK_PARAGRAPH = '深度学习模型在大规模语言理解任务中表现出了卓越的性能。这些模型通过海量文本数据的预训练，能够捕捉到丰富的语义信息和语法结构。在自然语言处理领域，transformer架构的引入彻底改变了模型的设计范式，使得模型能够更好地处理长距离依赖关系。上下文理解能力是大语言模型最核心的能力之一，它决定了模型在复杂任务上的表现。模型通过自注意力机制可以同时关注输入序列中的所有位置，从而建立全局依赖关系。这种机制使得模型在处理长文本时能够保持对前后文的一致性理解。随着模型规模的不断扩大，大语言模型展现出了许多令人惊叹的涌现能力，包括少样本学习、逻辑推理和代码生成等。';
+
+function generateBenchmarkPrompt(targetTokens) {
+  let result = '';
+  let estimatedTokens = 0;
+  while (estimatedTokens < targetTokens) {
+    result += BENCHMARK_PARAGRAPH;
+    estimatedTokens = Math.ceil(Buffer.byteLength(result, 'utf-8') / 4);
+  }
+  return result;
+}
+
+const PROXY_INTERNAL = `http://127.0.0.1:${PORT}`;
+
+async function runBenchmarkIteration(model, targetTokens, iteration, prompt) {
+  const url = `${PROXY_INTERNAL}/v1/chat/completions`;
+  const startTime = Date.now();
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 600000);
+    const response = await fetch(url, {
+      method: 'POST',
+      signal: controller.signal,
+      headers: { 'Content-Type': 'application/json', 'x-internal': 'benchmark' },
+      body: JSON.stringify({
+        model,
+        messages: [
+          { role: 'system', content: '你是AI助手，请用简洁的语言回答问题。回答不超过50个字。' },
+          { role: 'user', content: `${prompt}\n请用一句话总结以上内容的核心观点。` }
+        ],
+        temperature: 0.7,
+        max_tokens: 100,
+        stream: false
+      })
+    });
+    clearTimeout(timeout);
+    const latency = Date.now() - startTime;
+    const data = await response.json();
+    const usage = data.usage || {};
+    const promptTokens = usage.prompt_tokens || 0;
+    const completionTokens = usage.completion_tokens || 0;
+    const totalTokens = usage.total_tokens || 0;
+    const totalSpeed = totalTokens > 0 && latency > 0 ? Math.round(totalTokens / (latency / 1000)) : 0;
+    const genTps = completionTokens > 0 && latency > 0 ? parseFloat((completionTokens / (latency / 1000)).toFixed(1)) : 0;
+    const tpot = completionTokens > 0 ? Math.round(latency / completionTokens) : 0;
+    console.log(`[BENCHMARK] ${model} ${targetTokens} iter ${iteration}: ${latency}ms`);
+    return { iteration, latency, promptTokens, completionTokens, totalTokens, totalSpeed, genTps, tpot, error: null };
+  } catch (err) {
+    console.log(`[BENCHMARK] ${model} ${targetTokens} iter ${iteration} error: ${err.message}`);
+    return { iteration, error: err.message };
+  }
+}
+
+function sendSSE(res, data) {
+  res.write(`data: ${JSON.stringify(data)}\n\n`);
+}
+
+app.get('/api/benchmark', async (req, res) => {
+  const rawCtx = req.query.contextSizes || '8000';
+  const contextSizes = rawCtx.split(',').map(Number).filter(n => n > 0);
+  const iterations = parseInt(req.query.iterations) || 2;
+  const model = req.query.model || '';
+
+  if (contextSizes.length === 0 || !model) {
+    return res.status(400).json({ error: 'contextSizes and model required' });
+  }
+
+  let aborted = false;
+  req.on('close', () => {
+    aborted = true;
+    isBenchmarking = false;
+  });
+
+  const allResults = {};
+  const benchStart = Date.now();
+
+  isBenchmarking = true;
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive',
+    'X-Accel-Buffering': 'no'
+  });
+
+  sendSSE(res, { type: 'start', model, iterations, contextSizes });
+
+  for (const ctxSize of contextSizes) {
+    if (aborted) break;
+    const prompt = generateBenchmarkPrompt(ctxSize);
+    sendSSE(res, { type: 'progress', ctxSize, message: `开始测试 ${ctxSize/1000}K...` });
+
+    const iterResults = [];
+    for (let i = 1; i <= iterations; i++) {
+      if (aborted) break;
+      const startTime = Date.now();
+      const result = await runBenchmarkIteration(model, ctxSize, i, prompt);
+      result.ctxSize = ctxSize;
+      iterResults.push(result);
+      sendSSE(res, { type: 'iteration', ctxSize, iteration: i, result });
+    }
+
+    if (aborted) break;
+
+    const valid = iterResults.filter(r => !r.error);
+    const summary = valid.length > 0 ? {
+      coldStart: valid[0] ? { latency: valid[0].latency, totalSpeed: valid[0].totalSpeed, genTps: valid[0].genTps, tpot: valid[0].tpot } : null,
+      warmLatency: valid.length > 1 ? Math.round(valid.slice(1).reduce((s, r) => s + r.latency, 0) / (valid.length - 1)) : null,
+      warmGenTps: valid.length > 1 ? parseFloat((valid.slice(1).reduce((s, r) => s + r.genTps, 0) / (valid.length - 1)).toFixed(1)) : null,
+      warmTpot: valid.length > 1 ? Math.round(valid.slice(1).reduce((s, r) => s + r.tpot, 0) / (valid.length - 1)) : null,
+      avgLatency: Math.round(valid.reduce((s, r) => s + r.latency, 0) / valid.length),
+      avgGenTps: parseFloat((valid.reduce((s, r) => s + r.genTps, 0) / valid.length).toFixed(1)),
+      avgTpot: Math.round(valid.reduce((s, r) => s + r.tpot, 0) / valid.length),
+      avgTotalSpeed: Math.round(valid.reduce((s, r) => s + r.totalSpeed, 0) / valid.length)
+    } : null;
+
+    allResults[ctxSize] = { results: iterResults, summary };
+    sendSSE(res, { type: 'ctxDone', ctxSize, summary });
+  }
+
+  const totalTime = Date.now() - benchStart;
+  isBenchmarking = false;
+
+  if (aborted) {
+    console.log(`[BENCHMARK] Aborted after ${totalTime}ms`);
+    return res.end();
+  }
+
+  sendSSE(res, { type: 'complete', totalTime, allResults, contextSizes, model, iterations });
+  console.log(`[BENCHMARK] Complete: ${totalTime}ms`);
+  res.end();
+});
+
+app.post('/api/benchmark/cancel', (req, res) => {
+  isBenchmarking = false;
+  res.json({ success: true, message: 'Benchmark cancelled' });
+});
+
+const LLM_CONTAINER = 'llamacppserver-mtp-llama-server-1';
+
+app.get('/api/model-config', async (req, res) => {
+  const { model } = req.query;
+  if (!model) return res.status(400).json({ error: 'model required' });
+  try {
+    const { stdout } = await execAsync(`docker exec ${LLM_CONTAINER} cat /app/models.ini`);
+    const lines = stdout.split('\n');
+    const sectionStart = lines.findIndex(l => l.trim() === `[${model}]`);
+    if (sectionStart === -1) return res.status(404).json({ error: 'model section not found' });
+    let sectionEnd = lines.length;
+    for (let i = sectionStart + 1; i < lines.length; i++) {
+      if (lines[i].trim().startsWith('[') && lines[i].trim().endsWith(']')) {
+        sectionEnd = i;
+        break;
+      }
+    }
+    const sectionLines = lines.slice(sectionStart, sectionEnd);
+    res.json({ model, content: sectionLines.join('\n') });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/model-config', async (req, res) => {
+  const { model, content } = req.body;
+  if (!model || !content) return res.status(400).json({ error: 'model and content required' });
+  try {
+    const { stdout } = await execAsync(`docker exec ${LLM_CONTAINER} cat /app/models.ini`);
+    const lines = stdout.split('\n');
+    const sectionStart = lines.findIndex(l => l.trim() === `[${model}]`);
+    if (sectionStart === -1) return res.status(404).json({ error: 'model section not found' });
+    let sectionEnd = lines.length;
+    for (let i = sectionStart + 1; i < lines.length; i++) {
+      if (lines[i].trim().startsWith('[') && lines[i].trim().endsWith(']')) {
+        sectionEnd = i;
+        break;
+      }
+    }
+    const newLines = [...lines.slice(0, sectionStart), ...content.split('\n'), ...lines.slice(sectionEnd)];
+    const newContent = newLines.join('\n');
+    const b64 = Buffer.from(newContent, 'utf-8').toString('base64');
+    await execAsync(`docker run --rm -i -v /home/uantek/dev/llama.cpp.server-mtp:/target busybox sh -c 'echo ${b64} | base64 -d > /target/models.ini'`);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/reload-model', async (req, res) => {
+  try {
+    await execAsync('docker compose restart');
+    res.json({ success: true, message: 'Docker compose restarted' });
+  } catch (err) {
+    try {
+      await execAsync('docker restart llamacppserver-mtp-llama-server-1');
+      res.json({ success: true, message: 'Container restarted' });
+    } catch (err2) {
+      res.status(500).json({ error: err2.message });
+    }
   }
 });
 
