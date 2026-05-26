@@ -463,6 +463,7 @@
                   <th class="text-right py-2 px-2">缓存命中延迟</th>
                   <th class="text-right py-2 px-2">生成 TPS</th>
                   <th class="text-right py-2 px-2">TPOT</th>
+                  <th class="text-right py-2 px-2">用时</th>
                 </tr>
               </thead>
               <tbody id="benchmarkDetailTable"></tbody>
@@ -2531,11 +2532,12 @@ function toggleLog() {
         if (!r || !r.summary) {
           return `<tr class="border-b border-gray-700/50 hover:bg-gray-700/30 opacity-60">
             <td class="py-2 px-2 font-medium">${ctx/1000}K</td>
-            <td class="py-2 px-2 text-right text-gray-500" colspan="5">测试中...</td>
+            <td class="py-2 px-2 text-right text-gray-500" colspan="6">测试中...</td>
           </tr>`;
         }
         const s = r.summary;
         const firstIter = r.results[0];
+        const duration = r.ctxDuration ? (r.ctxDuration / 1000).toFixed(1) + 's' : '-';
         return `<tr class="border-b border-gray-700/50 hover:bg-gray-700/30">
           <td class="py-2 px-2 font-medium">${ctx/1000}K</td>
           <td class="py-2 px-2 text-right text-blue-400">${firstIter ? firstIter.promptTokens : '-'}</td>
@@ -2543,6 +2545,7 @@ function toggleLog() {
           <td class="py-2 px-2 text-right text-green-400">${s.warmLatency ? s.warmLatency + 'ms' : '-'}</td>
           <td class="py-2 px-2 text-right text-purple-400">${s.avgGenTps || '-'}</td>
           <td class="py-2 px-2 text-right text-blue-400">${s.avgTpot ? s.avgTpot + 'ms' : '-'}</td>
+          <td class="py-2 px-2 text-right text-yellow-400">${duration}</td>
         </tr>`;
       }).join('');
     }
@@ -2561,7 +2564,14 @@ function toggleLog() {
       document.getElementById('benchmarkStartBtn').disabled = true;
       document.getElementById('benchmarkStartBtn').textContent = '测试中...';
 
-      benchmarkAccum = { ctxSizes: [], results: {}, totalTime: 0, model, iterations };
+      for (const ctx of contextSizes) {
+        delete benchmarkAccum.results[ctx];
+        const idx = benchmarkAccum.ctxSizes.indexOf(ctx);
+        if (idx !== -1) benchmarkAccum.ctxSizes.splice(idx, 1);
+      }
+      benchmarkAccum.totalTime = 0;
+      benchmarkAccum.model = model;
+      benchmarkAccum.iterations = iterations;
 
       if (benchmarkEventSource) { benchmarkEventSource.close(); benchmarkEventSource = null; }
 
@@ -2587,9 +2597,10 @@ function toggleLog() {
             const ctx = data.ctxSize;
             if (!benchmarkAccum.ctxSizes.includes(ctx)) benchmarkAccum.ctxSizes.push(ctx);
             if (!benchmarkAccum.results[ctx]) {
-              benchmarkAccum.results[ctx] = { results: [], summary: data.summary };
+              benchmarkAccum.results[ctx] = { results: [], summary: data.summary, ctxDuration: data.ctxDuration };
             } else {
               benchmarkAccum.results[ctx].summary = data.summary;
+              benchmarkAccum.results[ctx].ctxDuration = data.ctxDuration;
             }
             document.getElementById('benchmarkResult').classList.remove('hidden');
             updateBenchmarkTable();

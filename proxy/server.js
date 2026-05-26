@@ -1513,6 +1513,7 @@ app.get('/api/benchmark', async (req, res) => {
 
   for (const ctxSize of contextSizes) {
     if (aborted) break;
+    const ctxStartTime = Date.now();
     const prompt = generateBenchmarkPrompt(ctxSize);
     sendSSE(res, { type: 'progress', ctxSize, message: `开始测试 ${ctxSize/1000}K...` });
 
@@ -1540,8 +1541,9 @@ app.get('/api/benchmark', async (req, res) => {
       avgTotalSpeed: Math.round(valid.reduce((s, r) => s + r.totalSpeed, 0) / valid.length)
     } : null;
 
+    const ctxDuration = Date.now() - ctxStartTime;
     allResults[ctxSize] = { results: iterResults, summary };
-    sendSSE(res, { type: 'ctxDone', ctxSize, summary });
+    sendSSE(res, { type: 'ctxDone', ctxSize, summary, ctxDuration });
   }
 
   const totalTime = Date.now() - benchStart;
