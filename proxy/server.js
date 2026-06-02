@@ -142,12 +142,41 @@ function cleanupOldOptimizationLogs() {
 
 const app = express();
 const PORT = process.env.PORT || 9234;
-let lmStudioUrl = '';
-if (config.lmStudio?.container && config.lmStudio?.port) {
-  lmStudioUrl = `http://${config.lmStudio.container}:${config.lmStudio.port}`;
-} else {
-  lmStudioUrl = config.lmStudioUrl || process.env.LMSTUDIO_URL || 'http://host.docker.internal:1234';
+
+// Migrate legacy config fields to inferenceContainer/inferencePort.
+// Priority: new fields > lmStudio.container/port > lmStudioUrl parse > resourceMonitor.dockerContainer > defaults
+if (!config.inferenceContainer || !config.inferencePort) {
+  let migratedContainer = config.inferenceContainer || '';
+  let migratedPort = config.inferencePort;
+
+  if (!migratedContainer && config.lmStudio?.container) {
+    migratedContainer = config.lmStudio.container;
+    if (!migratedPort && config.lmStudio.port) migratedPort = config.lmStudio.port;
+  }
+
+  if (!migratedContainer && config.lmStudioUrl) {
+    const m = config.lmStudioUrl.match(/^https?:\/\/([^:/]+):(\d+)/);
+    if (m) {
+      migratedContainer = m[1];
+      if (!migratedPort) migratedPort = parseInt(m[2]);
+    }
+  }
+
+  if (!migratedContainer && config.resourceMonitor?.dockerContainer) {
+    migratedContainer = config.resourceMonitor.dockerContainer;
+  }
+
+  if (!migratedContainer) migratedContainer = 'llamacppserver_llama-server_1';
+  if (!migratedPort) migratedPort = 1234;
+
+  config.inferenceContainer = migratedContainer;
+  config.inferencePort = migratedPort;
+  fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
+  console.log(`[MIGRATE] inferenceContainer=${migratedContainer} inferencePort=${migratedPort}`);
 }
+
+const inference = getInferenceConfig();
+let lmStudioUrl = inference.url;
 
 app.use(cors());
 app.use(express.json({ limit: '20mb' }));
