@@ -1119,41 +1119,63 @@ app.post('/api/config', (req, res) => {
     trendDays, layoutGrid, cardWidths, cardOrder
   } = req.body;
 
-  // Handle inference container/port. Accept either new fields or legacy lmStudioUrl parse for backward compat.
-  let containerChanged = false;
+  let inferenceChanged = false;
+
   if (typeof inferenceContainer === 'string' && inferenceContainer.trim()) {
     const trimmed = inferenceContainer.trim();
     if (trimmed !== config.inferenceContainer) {
       config.inferenceContainer = trimmed;
-      containerChanged = true;
+      inferenceChanged = true;
     }
   }
-  if (inferencePort !== undefined && inferencePort !== null) {
+  if (inferencePort !== undefined && inferencePort !== null && inferencePort !== '') {
     const port = parseInt(inferencePort);
     if (Number.isFinite(port) && port >= 1 && port <= 65535) {
       if (port !== config.inferencePort) {
         config.inferencePort = port;
-        containerChanged = true;
+        inferenceChanged = true;
       }
     } else {
       return res.status(400).json({ error: 'inferencePort 必须是 1-65535 的整数' });
     }
   }
-  if (containerChanged) {
-    // Backward compat: if old client only sent lmStudioUrl, parse it
-    if (!inferenceContainer && url) {
-      const m = url.match(/^https?:\/\/([^:/]+):(\d+)/);
-      if (m) {
+
+  // Backward compat: legacy client sends only lmStudioUrl
+  const hasNewFields = (typeof inferenceContainer === 'string' && inferenceContainer.trim()) ||
+                       (inferencePort !== undefined && inferencePort !== null && inferencePort !== '');
+  if (!hasNewFields && url) {
+    const m = url.match(/^https?:\/\/([^:/]+):(\d+)/);
+    if (m) {
+      if (config.inferenceContainer !== m[1]) {
         config.inferenceContainer = m[1];
-        config.inferencePort = parseInt(m[2]);
+        inferenceChanged = true;
+      }
+      const parsedPort = parseInt(m[2]);
+      if (Number.isFinite(parsedPort) && parsedPort >= 1 && parsedPort <= 65535 && config.inferencePort !== parsedPort) {
+        config.inferencePort = parsedPort;
+        inferenceChanged = true;
       }
     }
-    // Re-derive lmStudioUrl from current inference config
+  }
+
+  if (inferenceChanged) {
     const inf = getInferenceConfig();
     lmStudioUrl = inf.url;
   }
-  
-  if (defaultAPIKey !== undefined || enableAPIKey !== undefined || enableLog !== undefined || lmAuthEnabled !== undefined || lmAuthValue !== undefined || simCostEnabled !== undefined || simPromptCost !== undefined || simCompletionCost !== undefined || simCacheHitCost !== undefined || trendDays !== undefined || layoutGrid !== undefined || cardWidths !== undefined || cardOrder !== undefined) {
+
+  if (
+    inferenceContainer !== undefined || inferencePort !== undefined ||
+    defaultAPIKey !== undefined || enableAPIKey !== undefined || enableLog !== undefined ||
+    lmAuthEnabled !== undefined || lmAuthValue !== undefined ||
+    simCostEnabled !== undefined || simPromptCost !== undefined || simCompletionCost !== undefined || simCacheHitCost !== undefined ||
+    trendDays !== undefined || layoutGrid !== undefined || cardWidths !== undefined || cardOrder !== undefined
+  ) {
+    if (inferenceContainer !== undefined && typeof inferenceContainer === 'string' && inferenceContainer.trim()) {
+      config.inferenceContainer = inferenceContainer.trim();
+    }
+    if (inferencePort !== undefined && inferencePort !== null && inferencePort !== '') {
+      config.inferencePort = parseInt(inferencePort) || 1234;
+    }
     if (defaultAPIKey !== undefined) config.defaultAPIKey = defaultAPIKey;
     if (enableAPIKey !== undefined) config.enableAPIKey = enableAPIKey;
     if (enableLog !== undefined) config.enableLog = enableLog;
@@ -1169,7 +1191,7 @@ app.post('/api/config', (req, res) => {
     if (cardOrder !== undefined) config.cardOrder = cardOrder;
     fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
   }
-  
+
   res.json({ success: true, lmStudioUrl });
 });
 
