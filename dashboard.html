@@ -1646,7 +1646,8 @@
 
     async function openConfig() {
       document.body.style.overflow = 'hidden';
-      await Promise.all([loadConfig(), loadContainers()]);
+      await loadConfig();
+      await loadContainers();
       setToggle('gridEditToggle', false);
       updateGridEditState();
       document.getElementById('configModal').classList.remove('hidden');
