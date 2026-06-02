@@ -149,10 +149,17 @@
         </div>
         <div class="space-y-4">
           <div>
-            <label class="block text-sm text-gray-400 mb-2">模型地址</label>
-            <input type="text" id="lmStudioUrl" placeholder="http://192.168.x.x:1234" 
+            <label class="block text-sm text-gray-400 mb-2">推理引擎容器</label>
+            <div class="flex gap-2 mb-2">
+              <select id="inferenceContainer" class="flex-1 bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:border-blue-500 focus:outline-none">
+                <option value="">加载中...</option>
+              </select>
+              <button type="button" onclick="refreshContainers()" class="bg-gray-600 hover:bg-gray-700 px-3 py-2 rounded-lg text-sm transition" title="重新加载容器列表">↻ 刷新</button>
+            </div>
+            <label class="block text-sm text-gray-400 mb-2">端口</label>
+            <input type="number" id="inferencePort" min="1" max="65535" value="1234"
                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:border-blue-500 focus:outline-none">
-            <p class="text-xs text-gray-500 mt-1">Docker部署时使用: http://host.docker.internal:1234</p>
+            <p class="text-xs text-gray-500 mt-1">URL: <span id="inferenceUrlPreview" class="text-blue-400">http://...:1234</span>（自动派生）</p>
           </div>
           <div class="flex items-center justify-between">
             <label class="text-sm text-gray-400">启用 APIKey</label>
@@ -1607,7 +1614,9 @@
         const response = await fetch(`${API_BASE}/config`);
         const data = await response.json();
         console.log('loadConfig data:', data);
-        document.getElementById('lmStudioUrl').value = data.lmStudioUrl || '';
+        document.getElementById('inferenceContainer').value = data.inferenceContainer || '';
+        document.getElementById('inferencePort').value = data.inferencePort || 1234;
+        updateInferenceUrlPreview();
         
         setToggle('useApiKeyToggle', data.enableAPIKey);
         setToggle('enableLogToggle', data.enableLog);
@@ -1637,7 +1646,7 @@
 
     async function openConfig() {
       document.body.style.overflow = 'hidden';
-      await loadConfig();
+      await Promise.all([loadConfig(), loadContainers()]);
       setToggle('gridEditToggle', false);
       updateGridEditState();
       document.getElementById('configModal').classList.remove('hidden');
@@ -1756,8 +1765,52 @@ function toggleLog() {
       document.getElementById('configModal').classList.remove('flex');
     }
 
+    async function loadContainers() {
+      const select = document.getElementById('inferenceContainer');
+      const currentValue = select.value;
+      try {
+        const resp = await fetch(`${API_BASE}/containers`);
+        if (!resp.ok) {
+          const err = await resp.json().catch(() => ({}));
+          throw new Error(err.error || `HTTP ${resp.status}`);
+        }
+        const data = await resp.json();
+        const containers = (data.containers || []).filter(c => c.matched);
+        if (containers.length === 0) {
+          select.innerHTML = '<option value="">未找到推理引擎容器，请确认 Docker 中有 llama.cpp / vllm / tgi 等容器运行</option>';
+          select.disabled = true;
+        } else {
+          select.disabled = false;
+          select.innerHTML = containers.map(c =>
+            `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)} <${escapeHtml(c.image)}></option>`
+          ).join('');
+          if (currentValue && containers.some(c => c.name === currentValue)) {
+            select.value = currentValue;
+          }
+        }
+      } catch (err) {
+        select.innerHTML = `<option value="">Docker 不可用: ${escapeHtml(err.message)}</option>`;
+        select.disabled = true;
+      }
+      updateInferenceUrlPreview();
+    }
+
+    async function refreshContainers() {
+      await loadContainers();
+    }
+
+    function updateInferenceUrlPreview() {
+      const container = document.getElementById('inferenceContainer').value || '<container>';
+      const port = document.getElementById('inferencePort').value || '<port>';
+      document.getElementById('inferenceUrlPreview').textContent = `http://${container}:${port}`;
+    }
+
+    document.getElementById('inferenceContainer').addEventListener('change', updateInferenceUrlPreview);
+    document.getElementById('inferencePort').addEventListener('input', updateInferenceUrlPreview);
+
     async function testConnection() {
-      const url = document.getElementById('lmStudioUrl').value;
+      const container = document.getElementById('inferenceContainer').value;
+      const port = document.getElementById('inferencePort').value;
       const resultDiv = document.getElementById('testResult');
       const testBtn = document.getElementById('testBtn');
       
@@ -1769,7 +1822,7 @@ function toggleLog() {
         const response = await fetch(`${API_BASE}/test`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url })
+          body: JSON.stringify({ container, port: parseInt(port) })
         });
         const data = await response.json();
         
@@ -1793,7 +1846,8 @@ function toggleLog() {
     }
 
     async function saveConfig() {
-      const url = document.getElementById('lmStudioUrl').value;
+      const inferenceContainer = document.getElementById('inferenceContainer').value;
+      const inferencePort = document.getElementById('inferencePort').value;
       const useApiKey = isToggleOn('useApiKeyToggle');
       const enableLog = isToggleOn('enableLogToggle');
       const lmAuthEnabled = isToggleOn('lmAuthToggle');
@@ -1805,8 +1859,8 @@ function toggleLog() {
       const trendDays = document.getElementById('trendDays').value;
       const layoutGrid = document.getElementById('layoutGrid').value;
       
-      if (!url) {
-        alert('请输入 LM Studio 服务器地址');
+      if (!inferenceContainer) {
+        alert('请选择推理引擎容器');
         return;
       }
       
@@ -1815,7 +1869,8 @@ function toggleLog() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
-            lmStudioUrl: url,
+            inferenceContainer: inferenceContainer,
+            inferencePort: parseInt(inferencePort) || 1234,
             enableAPIKey: useApiKey,
             enableLog: enableLog,
             lmAuthEnabled: lmAuthEnabled,
