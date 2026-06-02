@@ -1463,11 +1463,16 @@ app.get('/api/efficiency', (req, res) => {
 
 app.get('/api/containers', async (req, res) => {
   try {
-    const { stdout } = await execAsync('docker ps --format "{{.Names}}"');
-    const containers = stdout.trim().split('\n').filter(c => c);
-    res.json(containers);
+    const { stdout } = await execAsync('docker ps --format "{{.Names}}\\t{{.Image}}"');
+    const lines = stdout.trim().split('\n').filter(l => l);
+    const containers = lines.map(line => {
+      const [name, ...imageParts] = line.split('\t');
+      const image = imageParts.join('\t');
+      return { name, image, matched: isInferenceContainer(name, image) };
+    });
+    res.json({ containers, keywords: INFERENCE_KEYWORDS });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(503).json({ error: 'docker 不可用: ' + error.message });
   }
 });
 
