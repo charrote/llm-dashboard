@@ -1090,10 +1090,11 @@ app.get('/api/logs/:date', (req, res) => {
 });
 
 app.get('/api/config', (req, res) => {
+  const inf = getInferenceConfig();
   res.json({
-    lmStudioContainer: config.lmStudio?.container || '',
-    lmStudioPort: config.lmStudio?.port || 1234,
-    lmStudioUrl: lmStudioUrl || '',
+    inferenceContainer: inf.container,
+    inferencePort: inf.port,
+    lmStudioUrl: inf.url,
     enableAPIKey: config.enableAPIKey || false,
     enableLog: config.enableLog || false,
     lmAuthEnabled: config.lmAuthEnabled || false,
@@ -1110,13 +1111,46 @@ app.get('/api/config', (req, res) => {
 });
 
 app.post('/api/config', (req, res) => {
-  const { lmStudioContainer, lmStudioPort, lmStudioUrl: url, defaultAPIKey, enableAPIKey, enableLog, lmAuthEnabled, lmAuthValue, simCostEnabled, simPromptCost, simCompletionCost, simCacheHitCost, trendDays, layoutGrid, cardWidths, cardOrder } = req.body;
-  
-  if (lmStudioContainer && lmStudioPort) {
-    config.lmStudio = { container: lmStudioContainer, port: parseInt(lmStudioPort) };
-    lmStudioUrl = `http://${lmStudioContainer}:${lmStudioPort}`;
-  } else if (url) {
-    lmStudioUrl = url;
+  const {
+    inferenceContainer, inferencePort, lmStudioUrl: url,
+    defaultAPIKey, enableAPIKey, enableLog,
+    lmAuthEnabled, lmAuthValue,
+    simCostEnabled, simPromptCost, simCompletionCost, simCacheHitCost,
+    trendDays, layoutGrid, cardWidths, cardOrder
+  } = req.body;
+
+  // Handle inference container/port. Accept either new fields or legacy lmStudioUrl parse for backward compat.
+  let containerChanged = false;
+  if (typeof inferenceContainer === 'string' && inferenceContainer.trim()) {
+    const trimmed = inferenceContainer.trim();
+    if (trimmed !== config.inferenceContainer) {
+      config.inferenceContainer = trimmed;
+      containerChanged = true;
+    }
+  }
+  if (inferencePort !== undefined && inferencePort !== null) {
+    const port = parseInt(inferencePort);
+    if (Number.isFinite(port) && port >= 1 && port <= 65535) {
+      if (port !== config.inferencePort) {
+        config.inferencePort = port;
+        containerChanged = true;
+      }
+    } else {
+      return res.status(400).json({ error: 'inferencePort 必须是 1-65535 的整数' });
+    }
+  }
+  if (containerChanged) {
+    // Backward compat: if old client only sent lmStudioUrl, parse it
+    if (!inferenceContainer && url) {
+      const m = url.match(/^https?:\/\/([^:/]+):(\d+)/);
+      if (m) {
+        config.inferenceContainer = m[1];
+        config.inferencePort = parseInt(m[2]);
+      }
+    }
+    // Re-derive lmStudioUrl from current inference config
+    const inf = getInferenceConfig();
+    lmStudioUrl = inf.url;
   }
   
   if (defaultAPIKey !== undefined || enableAPIKey !== undefined || enableLog !== undefined || lmAuthEnabled !== undefined || lmAuthValue !== undefined || simCostEnabled !== undefined || simPromptCost !== undefined || simCompletionCost !== undefined || simCacheHitCost !== undefined || trendDays !== undefined || layoutGrid !== undefined || cardWidths !== undefined || cardOrder !== undefined) {
