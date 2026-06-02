@@ -1428,7 +1428,7 @@ app.get('/api/resource-monitor', async (req, res) => {
     return res.json({ enabled: false });
   }
 
-  const dockerContainer = resourceConfig.dockerContainer || 'llamacppserver_llama-server_1';
+  const dockerContainer = getInferenceConfig().container;
   const maxConcurrent = resourceConfig.maxConcurrent || 4;
   
   let result = {
@@ -1534,8 +1534,7 @@ app.get('/api/containers', async (req, res) => {
 
 app.get('/api/container-logs', async (req, res) => {
   try {
-    const resourceConfig = config.resourceMonitor || {};
-    const dockerContainer = resourceConfig.dockerContainer || 'llamacppserver_llama-server_1';
+    const dockerContainer = getInferenceConfig().container;
     const safeName = dockerContainer.replace(/[^a-zA-Z0-9_.-]/g, '');
     const { stdout } = await execAsync(`docker logs --tail 10 ${safeName}`);
     const lines = stdout.replace(/\r\n/g, '\n').split('\n').filter(l => l);
@@ -1684,13 +1683,11 @@ app.post('/api/benchmark/cancel', (req, res) => {
   res.json({ success: true, message: 'Benchmark cancelled' });
 });
 
-const LLM_CONTAINER = 'llamacppserver-mtp-llama-server-1';
-
 app.get('/api/model-config', async (req, res) => {
   const { model } = req.query;
   if (!model) return res.status(400).json({ error: 'model required' });
   try {
-    const { stdout } = await execAsync(`docker exec ${LLM_CONTAINER} cat /app/models.ini`);
+    const { stdout } = await execAsync(`docker exec ${getInferenceConfig().container} cat /app/models.ini`);
     const lines = stdout.split('\n');
     const sectionStart = lines.findIndex(l => l.trim() === `[${model}]`);
     if (sectionStart === -1) return res.status(404).json({ error: 'model section not found' });
@@ -1712,7 +1709,7 @@ app.post('/api/model-config', async (req, res) => {
   const { model, content } = req.body;
   if (!model || !content) return res.status(400).json({ error: 'model and content required' });
   try {
-    const { stdout } = await execAsync(`docker exec ${LLM_CONTAINER} cat /app/models.ini`);
+    const { stdout } = await execAsync(`docker exec ${getInferenceConfig().container} cat /app/models.ini`);
     const lines = stdout.split('\n');
     const sectionStart = lines.findIndex(l => l.trim() === `[${model}]`);
     if (sectionStart === -1) return res.status(404).json({ error: 'model section not found' });
@@ -1734,16 +1731,13 @@ app.post('/api/model-config', async (req, res) => {
 });
 
 app.post('/api/reload-model', async (req, res) => {
+  const dockerContainer = getInferenceConfig().container;
+  const safeName = dockerContainer.replace(/[^a-zA-Z0-9_.-]/g, '');
   try {
-    await execAsync('docker compose restart');
-    res.json({ success: true, message: 'Docker compose restarted' });
+    await execAsync(`docker restart ${safeName}`);
+    res.json({ success: true, message: `Container ${safeName} restarted` });
   } catch (err) {
-    try {
-      await execAsync('docker restart llamacppserver-mtp-llama-server-1');
-      res.json({ success: true, message: 'Container restarted' });
-    } catch (err2) {
-      res.status(500).json({ error: err2.message });
-    }
+    res.status(500).json({ error: err.message });
   }
 });
 
