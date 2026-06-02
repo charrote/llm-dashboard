@@ -162,6 +162,14 @@ if (!config.inferenceContainer || !config.inferencePort) {
     }
   }
 
+  if (!migratedContainer && process.env.LMSTUDIO_URL) {
+    const m = process.env.LMSTUDIO_URL.match(/^https?:\/\/([^:/]+):(\d+)/);
+    if (m) {
+      migratedContainer = m[1];
+      if (!migratedPort) migratedPort = parseInt(m[2]);
+    }
+  }
+
   if (!migratedContainer && config.resourceMonitor?.dockerContainer) {
     migratedContainer = config.resourceMonitor.dockerContainer;
   }
