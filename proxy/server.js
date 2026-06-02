@@ -1215,8 +1215,20 @@ app.post('/api/prompt-config', (req, res) => {
 });
 
 app.post('/api/test', async (req, res) => {
-  const { url } = req.body;
-  const testUrl = url || lmStudioUrl;
+  const { container, port, url } = req.body;
+  let testUrl;
+  if (typeof container === 'string' && container.trim() && port) {
+    const safeName = container.trim().replace(/[^a-zA-Z0-9_.-]/g, '');
+    const safePort = parseInt(port);
+    if (safePort < 1 || safePort > 65535) {
+      return res.status(400).json({ success: false, error: 'port 必须在 1-65535 之间' });
+    }
+    testUrl = `http://${safeName}:${safePort}`;
+  } else if (url) {
+    testUrl = url;
+  } else {
+    testUrl = lmStudioUrl;
+  }
   const startTime = Date.now();
   console.log(`[TEST] Testing URL: ${testUrl}`);
   try {
@@ -1230,16 +1242,16 @@ app.post('/api/test', async (req, res) => {
     if (response.ok) {
       const data = await response.json();
       console.log(`[TEST] Success: ${latency}ms`);
-      res.json({ 
-        success: true, 
+      res.json({
+        success: true,
         latency,
         models: data.data?.map(m => m.id) || [],
         message: `连接成功 (${latency}ms)`
       });
     } else {
       console.log(`[TEST] HTTP ${response.status}`);
-      res.status(response.status).json({ 
-        success: false, 
+      res.status(response.status).json({
+        success: false,
         error: `HTTP ${response.status}`,
         latency
       });
@@ -1247,8 +1259,8 @@ app.post('/api/test', async (req, res) => {
   } catch (error) {
     const latency = Date.now() - startTime;
     console.log(`[TEST] Error: ${error.message}`);
-    res.status(500).json({ 
-      success: false, 
+    res.status(500).json({
+      success: false,
       error: error.message,
       latency
     });
