@@ -58,7 +58,6 @@ http://localhost:9234/v1
 {
   "resourceMonitor": {
     "enabled": true,
-    "dockerContainer": "llamacppserver-mtp-llama-server-1",
     "maxConcurrent": 4,
     "gpuModel": "Radeon 8060S (ROCm)"
   }
