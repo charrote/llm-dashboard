@@ -32,8 +32,12 @@ npm start
 
 ## 配置
 
-### LM Studio 地址
-点击仪表盘右上角的 **设置** 按钮，配置 LM Studio 服务器地址并测试连接。
+### 推理引擎容器
+点击仪表盘右上角的 **设置** 按钮，从已运行的 Docker 容器列表中选择推理引擎（llama.cpp / vLLM / TGI / SGLang / Ollama 等），并填写其 HTTP 端口。URL 会自动派生为 `http://<容器名>:<端口>`。
+
+容器名 / 镜像名匹配以下任一关键字会被识别为推理引擎：`llama`、`llamacpp`、`llama-server`、`llama.cpp`、`vllm`、`tgi`、`text-generation-inference`、`sglang`、`ollama`、`inference`、`llm-server`。如果你的容器名不含上述关键字，请重命名容器或修改 `proxy/server.js` 中的 `INFERENCE_KEYWORDS` 数组。
+
+> **端口默认值 1234 是 LM Studio 的约定。** vLLM 用户填 8000，Ollama 填 11434，TGI 填 8080。
 
 ### API 客户端配置
 将 AI 应用的 API Base URL 指向代理服务：
@@ -48,7 +52,7 @@ http://localhost:9234/v1
 仪表盘所有卡片采用统一 CSS Grid 布局，默认 6 列。可在 **设置** 中调整列数，每个卡片右上角的 ⊞ 按钮可单独设置栅格宽度（1~布局栅格值），设置自动保存。
 
 ### 资源监控配置
-编辑 `proxy/config.json`，启用并配置资源监控：
+资源监控读取 **推理引擎容器**（即设置面板中所选容器）的 GPU / CPU / 内存，无需单独配置。`proxy/config.json` 中的 `resourceMonitor` 字段仅保留以下子键：
 
 ```json
 {
@@ -64,9 +68,10 @@ http://localhost:9234/v1
 | 字段 | 说明 |
 |------|------|
 | `enabled` | 启用/禁用资源监控 |
-| `dockerContainer` | LLM 服务容器名，用于采集 GPU 数据 |
 | `maxConcurrent` | 最大并发请求数 |
 | `gpuModel` | GPU 型号名（容器内无法自动检测时使用） |
+
+> **LLM 服务容器**（旧 `resourceMonitor.dockerContainer`）已合并到 `inferenceContainer`，由设置面板的"推理引擎容器"下拉控制。旧字段在配置文件中仍可存在但被忽略。
 
 > GPU 温度/功耗/负载通过 `docker exec` 读取容器内 sysfs，需要将宿主机 Docker socket 挂载到容器中（docker-compose.yml 已配置）。
 
