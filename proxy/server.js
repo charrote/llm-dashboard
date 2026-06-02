@@ -31,6 +31,28 @@ config.layoutGrid = config.layoutGrid || 6;
 config.cardWidths = config.cardWidths || {};
 config.cardOrder = config.cardOrder || [];
 
+const INFERENCE_KEYWORDS = [
+  'llama', 'llamacpp', 'llama-server', 'llama.cpp',
+  'vllm', 'tgi', 'text-generation-inference',
+  'sglang', 'ollama', 'inference', 'llm-server'
+];
+
+function isInferenceContainer(name, image) {
+  const lower = (s) => (s || '').toLowerCase();
+  const text = lower(name) + ' ' + lower(image);
+  return INFERENCE_KEYWORDS.some(kw => text.includes(kw));
+}
+
+function getInferenceConfig() {
+  const container = config.inferenceContainer || 'llamacppserver_llama-server_1';
+  const port = parseInt(config.inferencePort) || 1234;
+  return {
+    container,
+    port,
+    url: `http://${container}:${port}`
+  };
+}
+
 function loadApiKeys() {
   try {
     if (fs.existsSync(APIKEYS_FILE)) {
