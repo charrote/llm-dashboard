@@ -1220,7 +1220,7 @@ app.post('/api/test', async (req, res) => {
   if (typeof container === 'string' && container.trim() && port) {
     const safeName = container.trim().replace(/[^a-zA-Z0-9_.-]/g, '');
     const safePort = parseInt(port);
-    if (safePort < 1 || safePort > 65535) {
+    if (!Number.isFinite(safePort) || safePort < 1 || safePort > 65535) {
       return res.status(400).json({ success: false, error: 'port 必须在 1-65535 之间' });
     }
     testUrl = `http://${safeName}:${safePort}`;
