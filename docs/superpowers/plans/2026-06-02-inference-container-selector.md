@@ -99,8 +99,11 @@ const app = express();
 const PORT = process.env.PORT || 9234;
 
 // Migrate legacy config fields to inferenceContainer/inferencePort.
-// Priority: new fields > lmStudio.container/port > lmStudioUrl parse > resourceMonitor.dockerContainer > defaults
-if (!config.inferenceContainer || !config.inferencePort) {
+// Priority: new fields > lmStudio.container/port > lmStudioUrl parse > LMSTUDIO_URL env > resourceMonitor.dockerContainer > defaults
+if (
+  typeof config.inferenceContainer !== 'string' || !config.inferenceContainer ||
+  !Number.isFinite(parseInt(config.inferencePort))
+) {
   let migratedContainer = config.inferenceContainer || '';
   let migratedPort = config.inferencePort;
 

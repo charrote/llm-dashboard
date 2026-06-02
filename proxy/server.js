@@ -44,7 +44,8 @@ function isInferenceContainer(name, image) {
 }
 
 function getInferenceConfig() {
-  const container = config.inferenceContainer || 'llamacppserver_llama-server_1';
+  const raw = config.inferenceContainer || 'llamacppserver_llama-server_1';
+  const container = raw.replace(/[^a-zA-Z0-9_.-]/g, '');
   const port = parseInt(config.inferencePort) || 1234;
   return {
     container,
@@ -144,8 +145,11 @@ const app = express();
 const PORT = process.env.PORT || 9234;
 
 // Migrate legacy config fields to inferenceContainer/inferencePort.
-// Priority: new fields > lmStudio.container/port > lmStudioUrl parse > resourceMonitor.dockerContainer > defaults
-if (!config.inferenceContainer || !config.inferencePort) {
+// Priority: new fields > lmStudio.container/port > lmStudioUrl parse > LMSTUDIO_URL env > resourceMonitor.dockerContainer > defaults
+if (
+  typeof config.inferenceContainer !== 'string' || !config.inferenceContainer ||
+  !Number.isFinite(parseInt(config.inferencePort))
+) {
   let migratedContainer = config.inferenceContainer || '';
   let migratedPort = config.inferencePort;
 
@@ -1123,6 +1127,9 @@ app.post('/api/config', (req, res) => {
 
   if (typeof inferenceContainer === 'string' && inferenceContainer.trim()) {
     const trimmed = inferenceContainer.trim();
+    if (!/^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,127}$/.test(trimmed)) {
+      return res.status(400).json({ error: 'inferenceContainer 必须匹配 ^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,127}$' });
+    }
     if (trimmed !== config.inferenceContainer) {
       config.inferenceContainer = trimmed;
       inferenceChanged = true;
@@ -1170,12 +1177,6 @@ app.post('/api/config', (req, res) => {
     simCostEnabled !== undefined || simPromptCost !== undefined || simCompletionCost !== undefined || simCacheHitCost !== undefined ||
     trendDays !== undefined || layoutGrid !== undefined || cardWidths !== undefined || cardOrder !== undefined
   ) {
-    if (inferenceContainer !== undefined && typeof inferenceContainer === 'string' && inferenceContainer.trim()) {
-      config.inferenceContainer = inferenceContainer.trim();
-    }
-    if (inferencePort !== undefined && inferencePort !== null && inferencePort !== '') {
-      config.inferencePort = parseInt(inferencePort) || 1234;
-    }
     if (defaultAPIKey !== undefined) config.defaultAPIKey = defaultAPIKey;
     if (enableAPIKey !== undefined) config.enableAPIKey = enableAPIKey;
     if (enableLog !== undefined) config.enableLog = enableLog;
@@ -1217,7 +1218,7 @@ app.post('/api/prompt-config', (req, res) => {
 app.post('/api/test', async (req, res) => {
   const { container, port, url } = req.body;
   let testUrl;
-  if (typeof container === 'string' && container.trim() && port) {
+  if (typeof container === 'string' && container.trim() && port !== undefined && port !== null && port !== '') {
     const safeName = container.trim().replace(/[^a-zA-Z0-9_.-]/g, '');
     const safePort = parseInt(port);
     if (!Number.isFinite(safePort) || safePort < 1 || safePort > 65535) {
@@ -1269,7 +1270,7 @@ app.post('/api/test', async (req, res) => {
 
 app.get('/api/models', async (req, res) => {
   try {
-    const response = await fetch(`${lmStudioUrl}/v1/models`);
+    const response = await fetch(`${getInferenceConfig().url}/v1/models`);
     const data = await response.json();
     res.json(data);
   } catch (error) {

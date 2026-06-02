@@ -1783,7 +1783,7 @@ function toggleLog() {
         } else {
           select.disabled = false;
           select.innerHTML = containers.map(c =>
-            `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)} <${escapeHtml(c.image)}></option>`
+            `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)} &lt;${escapeHtml(c.image)}&gt;</option>`
           ).join('');
           if (currentValue && containers.some(c => c.name === currentValue)) {
             select.value = currentValue;
