@@ -29,23 +29,25 @@
     "apikey-table": 3,
     "model-table": 3,
     "model-performance": 2,
-    "cost-trend": 6,
+    "cost-trend": 8,
     "logs-section": 8,
-    "container-logs": 4,
-    "model-realtime": 2
+    "container-logs": 8,
+    "model-realtime": 4
   },
   "cardOrder": [
-    "container-logs",
+    "today-requests",
     "resource-monitor",
     "model-realtime",
+    "container-logs",
     "trend-chart",
     "hourly-chart",
-    "today-requests",
     "cost-trend",
     "model-table",
     "apikey-table",
     "model-performance",
     "logs-section"
   ],
-  "simCacheHitCost": 0.02
+  "simCacheHitCost": 0.02,
+  "inferenceContainer": "llamacppserver-turboquant-llama-server-1",
+  "inferencePort": 1234
 }

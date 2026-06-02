@@ -142,8 +142,8 @@
 
     <!-- Config Modal -->
     <div id="configModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
-      <div class="bg-gray-800 rounded-xl p-6 w-full max-w-md mx-4">
-        <div class="flex items-center justify-between mb-4">
+      <div class="bg-gray-800 rounded-xl p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto scrollbar-thin">
+        <div class="flex items-center justify-between mb-4 sticky top-0 bg-gray-800 -mt-6 pt-6 -mx-6 px-6 pb-4 border-b border-gray-700 z-10">
           <h2 class="text-xl font-bold">模型设置</h2>
           <button onclick="closeConfig()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
         </div>
@@ -151,7 +151,7 @@
           <div>
             <label class="block text-sm text-gray-400 mb-2">推理引擎容器</label>
             <div class="flex gap-2 mb-2">
-              <select id="inferenceContainer" class="flex-1 bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:border-blue-500 focus:outline-none">
+              <select id="inferenceContainer" class="flex-1 min-w-0 bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:border-blue-500 focus:outline-none truncate">
                 <option value="">加载中...</option>
               </select>
               <button type="button" onclick="refreshContainers()" class="bg-gray-600 hover:bg-gray-700 px-3 py-2 rounded-lg text-sm transition" title="重新加载容器列表">↻ 刷新</button>
@@ -1783,7 +1783,7 @@ function toggleLog() {
         } else {
           select.disabled = false;
           select.innerHTML = containers.map(c =>
-            `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)} &lt;${escapeHtml(c.image)}&gt;</option>`
+            `<option value="${escapeHtml(c.name)}" title="${escapeHtml(c.name)} &lt;${escapeHtml(c.image)}&gt;">${escapeHtml(c.name)}</option>`
           ).join('');
           if (currentValue && containers.some(c => c.name === currentValue)) {
             select.value = currentValue;
