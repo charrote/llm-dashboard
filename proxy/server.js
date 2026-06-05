@@ -1169,7 +1169,8 @@ app.post('/api/config', (req, res) => {
     defaultAPIKey, enableAPIKey, enableLog,
     lmAuthEnabled, lmAuthValue,
     simCostEnabled, simPromptCost, simCompletionCost, simCacheHitCost,
-    trendDays, layoutGrid, cardWidths, cardOrder
+    trendDays, layoutGrid, cardWidths, cardOrder,
+    composeProjectDir
   } = req.body;
 
   let inferenceChanged = false;
@@ -1193,6 +1194,20 @@ app.post('/api/config', (req, res) => {
       }
     } else {
       return res.status(400).json({ error: 'inferencePort 必须是 1-65535 的整数' });
+    }
+  }
+  if (composeProjectDir !== undefined) {
+    if (typeof composeProjectDir !== 'string') {
+      return res.status(400).json({ error: 'composeProjectDir 必须是字符串' });
+    }
+    const trimmed = composeProjectDir.trim();
+    if (trimmed) {
+      if (/[;&|$`<>(){}]/.test(trimmed)) {
+        return res.status(400).json({ error: 'composeProjectDir 含有非法字符' });
+      }
+      config.composeProjectDir = trimmed;
+    } else {
+      delete config.composeProjectDir;
     }
   }
 
@@ -1224,7 +1239,8 @@ app.post('/api/config', (req, res) => {
     defaultAPIKey !== undefined || enableAPIKey !== undefined || enableLog !== undefined ||
     lmAuthEnabled !== undefined || lmAuthValue !== undefined ||
     simCostEnabled !== undefined || simPromptCost !== undefined || simCompletionCost !== undefined || simCacheHitCost !== undefined ||
-    trendDays !== undefined || layoutGrid !== undefined || cardWidths !== undefined || cardOrder !== undefined
+    trendDays !== undefined || layoutGrid !== undefined || cardWidths !== undefined || cardOrder !== undefined ||
+    composeProjectDir !== undefined
   ) {
     if (defaultAPIKey !== undefined) config.defaultAPIKey = defaultAPIKey;
     if (enableAPIKey !== undefined) config.enableAPIKey = enableAPIKey;
