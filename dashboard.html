@@ -1920,6 +1920,16 @@ function toggleLog() {
       }
     }
 
+    document.getElementById('composeProjectDir').addEventListener('input', () => {
+      const input = document.getElementById('composeProjectDir');
+      const status = document.getElementById('composeProjectDirStatus');
+      if (input.dataset.source === 'auto') {
+        input.dataset.source = 'manual';
+        status.textContent = '已手动修改（保存时覆盖自动值）';
+        status.className = 'text-yellow-400';
+      }
+    });
+
     async function saveConfig() {
       const inferenceContainer = document.getElementById('inferenceContainer').value;
       const inferencePort = document.getElementById('inferencePort').value;
