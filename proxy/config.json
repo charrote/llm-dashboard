@@ -25,14 +25,14 @@
     "today-requests": 2,
     "trend-chart": 4,
     "hourly-chart": 4,
-    "resource-monitor": 2,
+    "resource-monitor": 3,
     "apikey-table": 3,
     "model-table": 3,
     "model-performance": 2,
     "cost-trend": 8,
     "logs-section": 8,
     "container-logs": 8,
-    "model-realtime": 4
+    "model-realtime": 3
   },
   "cardOrder": [
     "today-requests",
@@ -48,7 +48,7 @@
     "logs-section"
   ],
   "simCacheHitCost": 0.02,
-  "inferenceContainer": "llamacppserver-turboquant-llama-server-1",
+  "inferenceContainer": "llamacppserver-llama-server-1",
   "inferencePort": 1234,
   "composeProjectDir": "/home/uantek/dev/llama.cpp.server"
 }

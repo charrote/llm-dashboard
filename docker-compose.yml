@@ -15,6 +15,7 @@ services:
       - ./proxy/server.js:/app/proxy/server.js
       - ./dashboard.html:/app/dashboard.html
       - /var/run/docker.sock:/var/run/docker.sock
+      - /home/uantek/dev:/home/uantek/dev:ro
     restart: unless-stopped
     networks:
       - lmstudio-proxy

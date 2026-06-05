@@ -177,9 +177,12 @@ async function getModelsIni() {
   } catch (_) { /* fall through to missing */ }
 
   const reasonParts = [];
-  if (!compose) reasonParts.push('未配置 composeProjectDir 且自动探测不可用');
-  else reasonParts.push(`宿主路径 ${path.join(compose.projectDir, 'models.ini')} 不存在`);
-  reasonParts.push(`容器 ${container} 未运行或无 /app/models.ini`);
+  if (!compose) {
+    reasonParts.push('未配置 composeProjectDir 且自动探测不可用');
+  } else {
+    reasonParts.push(`Compose 项目目录 ${path.join(compose.projectDir, 'models.ini')} 不存在或不可读`);
+  }
+  reasonParts.push(`容器 ${container} 兜底也失败：未运行或无 /app/models.ini`);
   return {
     source: 'missing',
     reason: reasonParts.join('；'),
@@ -1891,6 +1894,15 @@ app.get('/api/model-config', async (req, res) => {
 app.post('/api/model-config', async (req, res) => {
   const { model, content } = req.body;
   if (!model || !content) return res.status(400).json({ error: 'model and content required' });
+
+  const compose = await getComposeConfig();
+  if (!compose) {
+    return res.status(404).json({ available: false, reason: '未配置 composeProjectDir 且自动探测不可用' });
+  }
+  if (/[;&|$`<>(){}\\]/.test(compose.projectDir)) {
+    return res.status(400).json({ error: 'composeProjectDir 含有非法字符' });
+  }
+
   try {
     const { stdout } = await execAsync(`docker exec ${getInferenceConfig().container} cat /app/models.ini`);
     const lines = stdout.split('\n');
@@ -1906,7 +1918,8 @@ app.post('/api/model-config', async (req, res) => {
     const newLines = [...lines.slice(0, sectionStart), ...content.split('\n'), ...lines.slice(sectionEnd)];
     const newContent = newLines.join('\n');
     const b64 = Buffer.from(newContent, 'utf-8').toString('base64');
-    await execAsync(`docker run --rm -i -v /home/uantek/dev/llama.cpp.server-mtp:/target busybox sh -c 'echo ${b64} | base64 -d > /target/models.ini'`);
+    const safeDir = '"' + compose.projectDir.replace(/"/g, '\\"') + '"';
+    await execAsync(`docker run --rm -i -v ${safeDir}:/target busybox sh -c 'echo ${b64} | base64 -d > /target/models.ini'`);
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });

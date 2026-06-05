@@ -1814,18 +1814,27 @@ function toggleLog() {
           throw new Error(err.error || `HTTP ${resp.status}`);
         }
         const data = await resp.json();
-        const containers = (data.containers || []).filter(c => c.matched);
-        if (containers.length === 0) {
+        const allContainers = (data.containers || []);
+        const runningMatched = allContainers.filter(c => c.matched);
+
+        let optionsHtml = '';
+        if (currentValue && !runningMatched.some(c => c.name === currentValue)) {
+          const exists = allContainers.some(c => c.name === currentValue);
+          const label = exists ? `${currentValue} — 已停止` : `${currentValue} — 无此容器`;
+          const title = exists ? '容器存在但未运行，请重新选择' : '容器不存在，请检查 config 或重新选择';
+          optionsHtml += `<option value="${escapeHtml(currentValue)}" title="${escapeHtml(title)}" style="color:#fbbf24">${escapeHtml(label)}</option>`;
+        }
+        optionsHtml += runningMatched.map(c =>
+          `<option value="${escapeHtml(c.name)}" title="${escapeHtml(c.name)} &lt;${escapeHtml(c.image)}&gt;">${escapeHtml(c.name)}</option>`
+        ).join('');
+
+        if (!optionsHtml) {
           select.innerHTML = '<option value="">未找到推理引擎容器，请确认 Docker 中有 llama.cpp / vllm / tgi 等容器运行</option>';
           select.disabled = true;
         } else {
           select.disabled = false;
-          select.innerHTML = containers.map(c =>
-            `<option value="${escapeHtml(c.name)}" title="${escapeHtml(c.name)} &lt;${escapeHtml(c.image)}&gt;">${escapeHtml(c.name)}</option>`
-          ).join('');
-          if (currentValue && containers.some(c => c.name === currentValue)) {
-            select.value = currentValue;
-          }
+          select.innerHTML = optionsHtml;
+          if (currentValue) select.value = currentValue;
         }
       } catch (err) {
         select.innerHTML = `<option value="">Docker 不可用: ${escapeHtml(err.message)}</option>`;

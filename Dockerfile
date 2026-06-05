@@ -14,7 +14,7 @@ COPY roocode-guide.html ./
 COPY opencode-guide.html ./
 COPY openclaw-guide.html ./
 
-RUN mkdir -p /app/proxy/logs && touch /app/proxy/apikeys.json
+RUN mkdir -p /app/proxy/logs /home/uantek/dev && touch /app/proxy/apikeys.json
 
 EXPOSE 9234
 
