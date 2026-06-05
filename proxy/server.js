@@ -1256,7 +1256,7 @@ app.get('/api/config', (req, res) => {
   });
 });
 
-app.post('/api/config', (req, res) => {
+app.post('/api/config', async (req, res) => {
   const {
     inferenceContainer, inferencePort, lmStudioUrl: url,
     defaultAPIKey, enableAPIKey, enableLog,
@@ -1325,6 +1325,16 @@ app.post('/api/config', (req, res) => {
   if (inferenceChanged) {
     const inf = getInferenceConfig();
     lmStudioUrl = inf.url;
+    // Auto-derive composeProjectDir when the user changed container but did not
+    // explicitly set composeProjectDir in this request. Empty string ("") and
+    // undefined both leave the field alone unless a value is provided.
+    if (composeProjectDir === undefined) {
+      const probed = await probeComposeFor(inf.container);
+      if (probed) {
+        config.composeProjectDir = probed.projectDir;
+        console.log(`[AUTO-DERIVE] composeProjectDir=${probed.projectDir} (from ${inf.container})`);
+      }
+    }
   }
 
   if (
