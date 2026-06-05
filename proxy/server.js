@@ -94,6 +94,25 @@ async function getComposeConfig() {
   };
 }
 
+async function probeComposeFor(container) {
+  const safeName = container.replace(/[^a-zA-Z0-9_.-]/g, '');
+  try {
+    const { stdout } = await execAsync(`docker inspect ${safeName} --format '{{json .Config.Labels}}'`);
+    if (!stdout.trim()) return null;
+    const labels = JSON.parse(stdout);
+    const workingDir = labels['com.docker.compose.project.working_dir'];
+    if (workingDir && !/[;&|$`<>(){}\\]/.test(workingDir)) {
+      return {
+        container,
+        projectDir: workingDir,
+        composeFile: path.join(workingDir, 'docker-compose.yml'),
+        source: 'auto'
+      };
+    }
+  } catch (_) { /* ignore */ }
+  return null;
+}
+
 function parseModelsIni(text) {
   const models = [];
   let current = null;
@@ -1894,16 +1913,28 @@ app.post('/api/reload-model', async (req, res) => {
 });
 
 app.get('/api/compose-config', async (req, res) => {
-  const compose = await getComposeConfig();
-  if (!compose) {
-    return res.status(404).json({ available: false, reason: '未找到 compose 标签或 composeProjectDir 配置' });
-  }
-  // Lazy auto-fill: only when auto-detect succeeded and the config field is empty.
-  // User-set values are preserved — they can clear the field to trigger re-detection.
-  if (compose.source === 'auto' && !config.composeProjectDir) {
-    config.composeProjectDir = compose.projectDir;
-    fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
-    console.log(`[AUTO-FILL] composeProjectDir=${compose.projectDir}`);
+  const overrideContainer = typeof req.query.container === 'string' ? req.query.container.trim() : '';
+  let compose;
+  if (overrideContainer) {
+    compose = await probeComposeFor(overrideContainer);
+    if (!compose) {
+      return res.status(200).json({
+        available: false,
+        reason: `容器 ${overrideContainer} 反推失败：无 compose Labels 或 working_dir`
+      });
+    }
+  } else {
+    compose = await getComposeConfig();
+    if (!compose) {
+      return res.status(404).json({ available: false, reason: '未找到 compose 标签或 composeProjectDir 配置' });
+    }
+    // Lazy auto-fill: only when auto-detect succeeded and the config field is empty.
+    // User-set values are preserved — they can clear the field to re-trigger detection.
+    if (compose.source === 'auto' && !config.composeProjectDir) {
+      config.composeProjectDir = compose.projectDir;
+      fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
+      console.log(`[AUTO-FILL] composeProjectDir=${compose.projectDir}`);
+    }
   }
   try {
     const content = fs.readFileSync(compose.composeFile, 'utf-8');
