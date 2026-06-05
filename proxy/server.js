@@ -567,9 +567,13 @@ function updateStats(data) {
   saveCurrentStats();
 }
 
-function finalizeRequest(requestId, completionTokens, latency, status, error, ttft = null, forwardTime = 0, llmTime = 0, cachedTokens = 0) {
+function finalizeRequest(requestId, completionTokens, latency, status, error, ttft = null, forwardTime = 0, llmTime = 0, cachedTokens = 0, promptTokens = null) {
   const pending = pendingRequests.get(requestId);
   if (!pending) return;
+  
+  if (promptTokens !== null && promptTokens > 0) {
+    pending.tokens.prompt = promptTokens;
+  }
   
   const tpot = (ttft && completionTokens > 0 && latency > ttft) ? Math.round((latency - ttft) / completionTokens) : (completionTokens > 0 ? Math.round(latency / completionTokens) : null);
   
@@ -606,7 +610,7 @@ function extractTokenUsage(resData, reqBody = null, estimatedPrompt = 0) {
     }
   }
   
-  const prompt = estimatedPrompt || (resData.usage?.prompt_tokens || 0);
+  const prompt = resData.usage?.prompt_tokens || estimatedPrompt || 0;
   const cached = resData.usage?.prompt_tokens_details?.cached_tokens || 0;
   
   return { prompt, completion, total: prompt + completion, cached };
@@ -658,6 +662,7 @@ async function proxyRequest(req, res) {
     timestamp: new Date(startTime).toISOString(),
     apiKey: clientApiKey.substring(0, 16) + '...',
     apiKeyFull: clientApiKey,
+    userId: (apiKeys.find(k => k.apiKey === clientApiKey) || {}).userId || null,
     model,
     method: req.method,
     path: req.path,
@@ -765,21 +770,25 @@ async function proxyRequest(req, res) {
               const llmTime = endTime - llmStart;
 
               let cachedTokens = 0;
+              let streamPromptTokens = 0;
               const lines = streamContent.split('\n');
               for (let i = lines.length - 1; i >= 0; i--) {
                 const line = lines[i].trim();
                 if (line.startsWith('data: ') && !line.includes('[DONE]')) {
                   try {
                     const data = JSON.parse(line.slice(6));
+                    if (data.usage?.prompt_tokens) {
+                      streamPromptTokens = data.usage.prompt_tokens;
+                    }
                     if (data.usage?.prompt_tokens_details?.cached_tokens) {
                       cachedTokens = data.usage.prompt_tokens_details.cached_tokens;
-                      break;
                     }
+                    if (data.usage) break;
                   } catch (_) {}
                 }
               }
 
-              finalizeRequest(requestId, completionTokens, Math.max(0, endTime - startTime), response.status, null, ttft, forwardTime, llmTime, cachedTokens);
+              finalizeRequest(requestId, completionTokens, Math.max(0, endTime - startTime), response.status, null, ttft, forwardTime, llmTime, cachedTokens, streamPromptTokens);
               
               break;
             }
@@ -825,7 +834,7 @@ async function proxyRequest(req, res) {
     
     const tokens = extractTokenUsage(data, req.body, promptTokens);
     const llmTime = Date.now() - llmStart;
-    finalizeRequest(requestId, tokens.completion, latency, response.status, null, null, forwardTime, llmTime, tokens.cached);
+    finalizeRequest(requestId, tokens.completion, latency, response.status, null, null, forwardTime, llmTime, tokens.cached, tokens.prompt);
     
     res.status(response.status).json(data);
     
@@ -945,7 +954,7 @@ app.get('/api/weekly-trend', (req, res) => {
     }
     
     if (config.simCostEnabled && (config.simPromptCost > 0 || config.simCompletionCost > 0 || config.simCacheHitCost > 0)) {
-      const hitRate = dayData.promptTokens > 0 ? dayData.cachedTokens / dayData.promptTokens : 0;
+      const hitRate = dayData.promptTokens > 0 ? Math.min(dayData.cachedTokens / dayData.promptTokens, 1) : 0;
       const uncachedPromptCost = (dayData.promptTokens / 1000000) * config.simPromptCost * (1 - hitRate);
       const cachedPromptCost = (dayData.promptTokens / 1000000) * (config.simCacheHitCost || 0) * hitRate;
       const completionCost = (dayData.completionTokens / 1000000) * config.simCompletionCost;
@@ -1084,7 +1093,7 @@ app.get('/api/logs', (req, res) => {
         const cachedTokens = stats.totalTokens?.cached || 0;
         let cost = 0;
         if (config.simCostEnabled && (config.simPromptCost > 0 || config.simCompletionCost > 0 || config.simCacheHitCost > 0)) {
-          const hitRate = promptTokens > 0 ? cachedTokens / promptTokens : 0;
+          const hitRate = promptTokens > 0 ? Math.min(cachedTokens / promptTokens, 1) : 0;
           const uncachedPromptCost = (promptTokens / 1000000) * config.simPromptCost * (1 - hitRate);
           const cachedPromptCost = (promptTokens / 1000000) * (config.simCacheHitCost || 0) * hitRate;
           const completionCost = (completionTokens / 1000000) * config.simCompletionCost;
@@ -1789,64 +1798,6 @@ app.post('/api/reload-model', async (req, res) => {
   try {
     await execAsync(`docker restart ${safeName}`);
     res.json({ success: true, message: `Container ${safeName} restarted` });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.get('/api/compose-config', async (req, res) => {
-  const compose = await getComposeConfig();
-  if (!compose) {
-    return res.status(404).json({ available: false, reason: '未找到 compose 标签或 composeProjectDir 配置' });
-  }
-  // Lazy auto-fill: if auto-detect succeeded and config field is empty/mismatched, persist it
-  if (compose.source === 'auto' && config.composeProjectDir !== compose.projectDir) {
-    config.composeProjectDir = compose.projectDir;
-    fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
-    console.log(`[AUTO-FILL] composeProjectDir=${compose.projectDir}`);
-  }
-  try {
-    const content = fs.readFileSync(compose.composeFile, 'utf-8');
-    res.json({
-      available: true,
-      container: compose.container,
-      projectDir: compose.projectDir,
-      composeFile: compose.composeFile,
-      source: compose.source,
-      content
-    });
-  } catch (err) {
-    res.status(500).json({ available: false, reason: `读取文件失败: ${err.message}` });
-  }
-});
-
-app.post('/api/compose-config', async (req, res) => {
-  const { content } = req.body;
-  if (typeof content !== 'string') return res.status(400).json({ error: 'content required' });
-
-  const compose = await getComposeConfig();
-  if (!compose) {
-    return res.status(404).json({ available: false, reason: 'compose 配置不可用' });
-  }
-
-  // 1. YAML 语法校验
-  try {
-    yaml.load(content);
-  } catch (e) {
-    return res.status(400).json({ error: 'YAML 语法错误', detail: e.message });
-  }
-
-  // 2. 路径安全（防御性二次检查）
-  if (/[;&|$`<>(){}]/.test(compose.projectDir)) {
-    return res.status(400).json({ error: 'projectDir 含有非法字符' });
-  }
-
-  // 3. 写入（双引号包裹 projectDir，逃逸内嵌 "）
-  try {
-    const safeDir = '"' + compose.projectDir.replace(/"/g, '\\"') + '"';
-    const b64 = Buffer.from(content, 'utf-8').toString('base64');
-    await execAsync(`docker run --rm -i -v ${safeDir}:/target busybox sh -c 'echo ${b64} | base64 -d > /target/docker-compose.yml'`);
-    res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
