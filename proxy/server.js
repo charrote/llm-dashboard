@@ -94,6 +94,41 @@ async function getComposeConfig() {
   };
 }
 
+function parseModelsIni(text) {
+  const models = [];
+  let current = null;
+  const lines = text.split(/\r?\n/);
+  for (const raw of lines) {
+    const line = raw.trim();
+    if (!line || line.startsWith(';') || line.startsWith('#')) continue;
+    const sectionMatch = line.match(/^\[([^\]]+)\]$/);
+    if (sectionMatch) {
+      if (current) models.push(current);
+      current = {
+        id: sectionMatch[1] === '*' ? 'default' : sectionMatch[1],
+        alias: null,
+        ctxSize: null,
+        model: null,
+        extra: {}
+      };
+      continue;
+    }
+    if (!current) continue;
+    const eq = line.indexOf('=');
+    if (eq === -1) continue;
+    const key = line.slice(0, eq).trim().toLowerCase();
+    const value = line.slice(eq + 1).trim();
+    const num = Number(value);
+    const finalValue = (value !== '' && Number.isFinite(num) && /^-?\d+(\.\d+)?$/.test(value)) ? num : value;
+    if (key === 'alias') current.alias = finalValue;
+    else if (key === 'ctx-size') current.ctxSize = finalValue;
+    else if (key === 'model') current.model = finalValue;
+    else current.extra[key] = finalValue;
+  }
+  if (current) models.push(current);
+  return models;
+}
+
 function loadApiKeys() {
   try {
     if (fs.existsSync(APIKEYS_FILE)) {
