@@ -84,7 +84,7 @@ async function getComposeConfig() {
   if (!projectDir) return null;
 
   // 3) 安全校验
-  if (/[;&|$`<>(){}]/.test(projectDir)) return null;
+  if (/[;&|$`<>(){}\\]/.test(projectDir)) return null;
 
   return {
     container,
@@ -1202,7 +1202,7 @@ app.post('/api/config', (req, res) => {
     }
     const trimmed = composeProjectDir.trim();
     if (trimmed) {
-      if (/[;&|$`<>(){}]/.test(trimmed)) {
+      if (/[;&|$`<>(){}\\]/.test(trimmed)) {
         return res.status(400).json({ error: 'composeProjectDir 含有非法字符' });
       }
       config.composeProjectDir = trimmed;
@@ -1824,8 +1824,9 @@ app.get('/api/compose-config', async (req, res) => {
   if (!compose) {
     return res.status(404).json({ available: false, reason: '未找到 compose 标签或 composeProjectDir 配置' });
   }
-  // Lazy auto-fill: if auto-detect succeeded and config field is empty/mismatched, persist it
-  if (compose.source === 'auto' && config.composeProjectDir !== compose.projectDir) {
+  // Lazy auto-fill: only when auto-detect succeeded and the config field is empty.
+  // User-set values are preserved — they can clear the field to trigger re-detection.
+  if (compose.source === 'auto' && !config.composeProjectDir) {
     config.composeProjectDir = compose.projectDir;
     fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
     console.log(`[AUTO-FILL] composeProjectDir=${compose.projectDir}`);
@@ -1862,7 +1863,7 @@ app.post('/api/compose-config', async (req, res) => {
   }
 
   // 2. 路径安全（防御性二次检查）
-  if (/[;&|$`<>(){}]/.test(compose.projectDir)) {
+  if (/[;&|$`<>(){}\\]/.test(compose.projectDir)) {
     return res.status(400).json({ error: 'projectDir 含有非法字符' });
   }
 

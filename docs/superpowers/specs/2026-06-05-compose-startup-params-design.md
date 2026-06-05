@@ -61,7 +61,7 @@ docker inspect <container> --format '{{json .Config.Labels}}'
 ```js
 app.get('/api/compose-config', async (req, res) => {
   const compose = await getComposeConfig();
-  if (compose && compose.source === 'auto' && config.composeProjectDir !== compose.projectDir) {
+  if (compose && compose.source === 'auto' && !config.composeProjectDir) {
     config.composeProjectDir = compose.projectDir;
     fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
     console.log(`[AUTO-FILL] composeProjectDir=${compose.projectDir}`);
@@ -70,9 +70,9 @@ app.get('/api/compose-config', async (req, res) => {
 });
 ```
 
-- **不写盘条件**：`config.composeProjectDir === compose.projectDir`（值已匹配，可能是用户主动填的，也可能是上次回填的）
-- **首次探测成功 + 字段为空** → 回填
-- **用户已设置其他值** → 保留用户值（用户配置优先）
+- **不写盘条件**：用户已显式设置 `composeProjectDir`（任何值都保留，用户配置优先）
+- **首次探测成功 + 字段为空** → 回填（一次性回填，之后该值由用户掌控）
+- **用户已设置其他值** → 保留用户值（用户配置优先；如需重置可在「设置」中清空该字段，下次 `GET` 会重新回填）
 - **不依赖服务启动时机**：用户首次打开模态触发回填，符合「用到再写」原则
 
 ## 设计
@@ -120,7 +120,7 @@ app.get('/api/compose-config', async (req, res) => {
 - 处理流程：
   1. `getComposeConfig()` 解析路径；失败 → 404
   2. `yaml.load(content)` 校验语法；失败 → 400 + 解析 detail
-  3. 路径安全二次校验（`/[;&|$`<>(){}]/`）；失败 → 400
+  3. 路径安全二次校验（`/[;&|$`<>(){}\\]/`）；失败 → 400
   4. base64 编码 + `docker run --rm -i -v "${projectDir}":/target busybox sh -c 'echo ${b64} | base64 -d > /target/docker-compose.yml'`
   5. 成功 → `{success: true}`
 - 错误响应：
