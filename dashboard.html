@@ -2987,18 +2987,21 @@ function toggleLog() {
 
     async function loadModels() {
       try {
-        const resp = await fetch(`${API_BASE}/models`);
+        const resp = await fetch(`${API_BASE}/models-ini`);
         if (!resp.ok) throw new Error('HTTP ' + resp.status);
         const json = await resp.json();
-        const models = json.data || [];
+        if (json.source === 'missing') {
+          throw new Error(json.reason || '未找到 models.ini');
+        }
+        const models = json.models || [];
         const tbody = document.getElementById('modelQueryList');
         if (models.length === 0) {
           tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-gray-500">暂无模型</td></tr>';
         } else {
           tbody.innerHTML = models.map(m => {
-            const alias = (m.aliases || []).filter(a => a !== m.id).join(', ') || '-';
-            const ctx = parseCtxSize(m.status && m.status.args);
-            const type = getModelType(m);
+            const alias = m.alias || '-';
+            const ctx = formatCtxSize(m.ctxSize);
+            const type = getModelTypeIni(m);
             return '<tr class="border-b border-gray-700/50 hover:bg-gray-700/30">'
               + '<td class="py-2 px-3 text-white">' + escapeHtml(m.id) + '</td>'
               + '<td class="py-2 px-3 text-gray-300">' + escapeHtml(alias) + '</td>'
@@ -3012,7 +3015,7 @@ function toggleLog() {
       } catch (err) {
         document.getElementById('modelQueryLoading').classList.add('hidden');
         document.getElementById('modelQueryError').classList.remove('hidden');
-        document.getElementById('modelQueryError').textContent = '加载失败: ' + err.message;
+        document.getElementById('modelQueryError').textContent = '加载失败：' + err.message + '（请确认设置面板已选择推理引擎容器）';
       }
     }
 
@@ -3020,6 +3023,21 @@ function toggleLog() {
       const id = (model.id || '').toLowerCase();
       const aliases = (model.aliases || []).join(' ').toLowerCase();
       const combined = id + ' ' + aliases;
+      if (/embed|rerank/.test(combined)) return '嵌入';
+      if (/summarize|summary/.test(combined)) return '摘要';
+      return '文本生成';
+    }
+
+    function formatCtxSize(n) {
+      if (n == null) return '-';
+      if (n >= 1024) return Math.round(n / 1024) + 'K';
+      return String(n);
+    }
+
+    function getModelTypeIni(model) {
+      const id = (model.id || '').toLowerCase();
+      const alias = (model.alias || '').toLowerCase();
+      const combined = id + ' ' + alias;
       if (/embed|rerank/.test(combined)) return '嵌入';
       if (/summarize|summary/.test(combined)) return '摘要';
       return '文本生成';
