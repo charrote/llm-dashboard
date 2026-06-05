@@ -49,5 +49,6 @@
   ],
   "simCacheHitCost": 0.02,
   "inferenceContainer": "llamacppserver-turboquant-llama-server-1",
-  "inferencePort": 1234
+  "inferencePort": 1234,
+  "composeProjectDir": "/home/uantek/dev/llama.cpp.server"
 }

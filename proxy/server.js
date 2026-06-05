@@ -1794,6 +1794,32 @@ app.post('/api/reload-model', async (req, res) => {
   }
 });
 
+app.get('/api/compose-config', async (req, res) => {
+  const compose = await getComposeConfig();
+  if (!compose) {
+    return res.status(404).json({ available: false, reason: '未找到 compose 标签或 composeProjectDir 配置' });
+  }
+  // Lazy auto-fill: if auto-detect succeeded and config field is empty/mismatched, persist it
+  if (compose.source === 'auto' && config.composeProjectDir !== compose.projectDir) {
+    config.composeProjectDir = compose.projectDir;
+    fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
+    console.log(`[AUTO-FILL] composeProjectDir=${compose.projectDir}`);
+  }
+  try {
+    const content = fs.readFileSync(compose.composeFile, 'utf-8');
+    res.json({
+      available: true,
+      container: compose.container,
+      projectDir: compose.projectDir,
+      composeFile: compose.composeFile,
+      source: compose.source,
+      content
+    });
+  } catch (err) {
+    res.status(500).json({ available: false, reason: `读取文件失败: ${err.message}` });
+  }
+});
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`LM Studio Proxy running on http://0.0.0.0:${PORT}`);
   console.log(`Forwarding requests to ${lmStudioUrl}`);
