@@ -514,6 +514,31 @@
       </div>
     </div>
 
+    <!-- Compose Config Modal -->
+    <div id="composeConfigModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+      <div class="bg-gray-800 rounded-xl p-6 w-full max-w-4xl mx-4 max-h-[85vh] flex flex-col">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-bold">🐳 启动参数 - <span id="composeConfigContainer" class="text-green-400"></span></h2>
+          <button onclick="closeComposeConfig()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+        </div>
+        <div id="composeConfigLoading" class="text-center py-8 text-gray-400">加载中...</div>
+        <div id="composeConfigEditor" class="hidden flex-1 flex flex-col min-h-0">
+          <div class="text-xs text-gray-500 mb-2 flex items-center gap-2 flex-wrap">
+            <span>文件: <code id="composeConfigPath" class="text-blue-400"></code></span>
+            <span id="composeConfigSource" class="px-1.5 py-0.5 rounded text-[10px]"></span>
+          </div>
+          <div class="text-xs text-yellow-500 mb-2">⚠️ 修改需重启容器（点击"重载模型"按钮）才能生效。</div>
+          <textarea id="composeConfigText" class="flex-1 bg-gray-900 border border-gray-700 rounded-lg p-3 text-xs font-mono text-green-300 resize-none scrollbar-thin min-h-[400px]"></textarea>
+          <div id="composeConfigError" class="hidden mt-2 p-2 bg-red-900/30 border border-red-700 rounded text-xs text-red-300"></div>
+          <div class="flex justify-end gap-3 mt-4">
+            <button onclick="closeComposeConfig()" class="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded-lg text-sm transition">取消</button>
+            <button id="composeConfigSaveBtn" onclick="saveComposeConfig()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm transition">保存</button>
+          </div>
+        </div>
+        <div id="composeConfigLoadError" class="hidden text-center py-8 text-red-400"></div>
+      </div>
+    </div>
+
     <!-- Cards Grid -->
     <div id="cardsGrid" class="grid gap-4 mb-6" style="min-width:0">
       <!-- Today Request Card: Width x2 -->
@@ -2483,6 +2508,79 @@ function toggleLog() {
       } catch (err) {
         btn.disabled = true;
         btn.title = '加载失败: ' + err.message;
+      }
+    }
+
+    function openComposeConfig() {
+      document.getElementById('composeConfigModal').classList.remove('hidden');
+      document.getElementById('composeConfigModal').classList.add('flex');
+      document.getElementById('composeConfigLoading').classList.remove('hidden');
+      document.getElementById('composeConfigEditor').classList.add('hidden');
+      document.getElementById('composeConfigLoadError').classList.add('hidden');
+      document.getElementById('composeConfigError').classList.add('hidden');
+      document.body.style.overflow = 'hidden';
+      loadComposeConfigContent();
+    }
+
+    function closeComposeConfig() {
+      document.body.style.overflow = '';
+      document.getElementById('composeConfigModal').classList.add('hidden');
+      document.getElementById('composeConfigModal').classList.remove('flex');
+    }
+
+    async function loadComposeConfigContent() {
+      try {
+        const resp = await fetch(`${API_BASE}/compose-config`);
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        const data = await resp.json();
+        if (!data.available) throw new Error(data.reason || '不可用');
+        document.getElementById('composeConfigContainer').textContent = data.container;
+        document.getElementById('composeConfigPath').textContent = data.composeFile;
+        const srcBadge = document.getElementById('composeConfigSource');
+        if (data.source === 'auto') {
+          srcBadge.textContent = '自动探测';
+          srcBadge.className = 'px-1.5 py-0.5 rounded text-[10px] bg-green-900/40 text-green-300';
+        } else {
+          srcBadge.textContent = '手动配置';
+          srcBadge.className = 'px-1.5 py-0.5 rounded text-[10px] bg-blue-900/40 text-blue-300';
+        }
+        document.getElementById('composeConfigText').value = data.content;
+        document.getElementById('composeConfigLoading').classList.add('hidden');
+        document.getElementById('composeConfigEditor').classList.remove('hidden');
+      } catch (err) {
+        document.getElementById('composeConfigLoading').classList.add('hidden');
+        document.getElementById('composeConfigLoadError').classList.remove('hidden');
+        document.getElementById('composeConfigLoadError').textContent = '加载失败: ' + err.message;
+      }
+    }
+
+    async function saveComposeConfig() {
+      const content = document.getElementById('composeConfigText').value;
+      const btn = document.getElementById('composeConfigSaveBtn');
+      const errBox = document.getElementById('composeConfigError');
+      errBox.classList.add('hidden');
+      btn.disabled = true;
+      btn.textContent = '保存中...';
+      try {
+        const resp = await fetch(`${API_BASE}/compose-config`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content })
+        });
+        const data = await resp.json();
+        if (!resp.ok) {
+          errBox.classList.remove('hidden');
+          errBox.textContent = (data.error || '保存失败') + (data.detail ? ` — ${data.detail}` : '');
+          return;
+        }
+        alert('保存成功！需要重载模型才能生效。');
+        closeComposeConfig();
+      } catch (err) {
+        errBox.classList.remove('hidden');
+        errBox.textContent = '保存失败: ' + err.message;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '保存';
       }
     }
 
