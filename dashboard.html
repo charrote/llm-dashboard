@@ -2493,16 +2493,7 @@ function toggleLog() {
       closePromptOptimization();
     }
 
-    function parseCtxSize(args) {
-      if (!args || !Array.isArray(args)) return '';
-      const idx = args.indexOf('--ctx-size');
-      if (idx !== -1 && idx + 1 < args.length) {
-        const val = parseInt(args[idx + 1]);
-        if (val >= 1024) return (val / 1024).toFixed(0) + 'K';
-        return val.toString();
-      }
-      return '';
-    }
+
 
     function openModelQuery() {
       document.body.style.overflow = 'hidden';
