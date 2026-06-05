@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url';
 import { TrimCompressor } from 'slimcontext';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import yaml from 'js-yaml';
 
 const execAsync = promisify(exec);
 
@@ -51,6 +52,45 @@ function getInferenceConfig() {
     container,
     port,
     url: `http://${container}:${port}`
+  };
+}
+
+async function getComposeConfig() {
+  const container = getInferenceConfig().container;
+  let projectDir = null;
+  let source = null;
+
+  // 1) docker inspect compose 标签
+  try {
+    const safeName = container.replace(/[^a-zA-Z0-9_.-]/g, '');
+    const { stdout } = await execAsync(`docker inspect ${safeName} --format '{{json .Config.Labels}}'`);
+    if (stdout.trim()) {
+      const labels = JSON.parse(stdout);
+      const configFiles = labels['com.docker.compose.project.config_files'];
+      const workingDir  = labels['com.docker.compose.project.working_dir'];
+      if (workingDir && configFiles) {
+        projectDir = workingDir;
+        source = 'auto';
+      }
+    }
+  } catch (_) { /* 忽略，回退到 config */ }
+
+  // 2) 回退到 config.composeProjectDir
+  if (!projectDir && config.composeProjectDir) {
+    projectDir = config.composeProjectDir;
+    source = 'config';
+  }
+
+  if (!projectDir) return null;
+
+  // 3) 安全校验
+  if (/[;&|$`<>(){}]/.test(projectDir)) return null;
+
+  return {
+    container,
+    projectDir,
+    composeFile: path.join(projectDir, 'docker-compose.yml'),
+    source
   };
 }
 
