@@ -1844,7 +1844,10 @@ function toggleLog() {
       document.getElementById('inferenceUrlPreview').textContent = `http://${container}:${port}`;
     }
 
-    document.getElementById('inferenceContainer').addEventListener('change', updateInferenceUrlPreview);
+    document.getElementById('inferenceContainer').addEventListener('change', () => {
+      updateInferenceUrlPreview();
+      prefillComposeProjectDir();
+    });
     document.getElementById('inferencePort').addEventListener('input', updateInferenceUrlPreview);
 
     async function testConnection() {
@@ -1882,6 +1885,39 @@ function toggleLog() {
       }
       
       testBtn.disabled = false;
+    }
+
+    async function prefillComposeProjectDir() {
+      const container = document.getElementById('inferenceContainer').value;
+      const input = document.getElementById('composeProjectDir');
+      const status = document.getElementById('composeProjectDirStatus');
+      if (!container) {
+        input.value = '';
+        input.dataset.source = 'none';
+        status.textContent = '请先选择推理引擎容器';
+        status.className = 'text-gray-500';
+        return;
+      }
+      status.textContent = '正在反推 compose 目录...';
+      status.className = 'text-gray-400';
+      try {
+        const r = await fetch(`${API_BASE}/compose-config?container=${encodeURIComponent(container)}`);
+        const j = await r.json();
+        if (j.available) {
+          input.value = j.projectDir;
+          input.dataset.source = 'auto';
+          status.textContent = '✓ 已自动探测（可手动覆盖）';
+          status.className = 'text-blue-400';
+        } else {
+          input.value = '';
+          input.dataset.source = 'none';
+          status.textContent = '✗ 未自动探测：' + (j.reason || '未知原因');
+          status.className = 'text-yellow-400';
+        }
+      } catch (e) {
+        status.textContent = '✗ 探测失败：' + e.message;
+        status.className = 'text-red-400';
+      }
     }
 
     async function saveConfig() {
