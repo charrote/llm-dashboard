@@ -83,7 +83,7 @@ GET /api/models-ini
 }
 ```
 
-**响应 404（`source: "missing"`）：**
+**响应 200（`source: "missing"` — 全部失败）：**
 
 ```json
 {
@@ -92,6 +92,8 @@ GET /api/models-ini
   "models": []
 }
 ```
+
+> **为什么不是 404：** 200 + `source: "missing"` 让前端用同一个响应路径处理三种情况（host/container/missing），减少 HTTP 状态码分支。错误处理见 §5。
 
 **数据源策略（按优先级）：**
 
