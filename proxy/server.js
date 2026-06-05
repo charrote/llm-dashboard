@@ -1820,6 +1820,38 @@ app.get('/api/compose-config', async (req, res) => {
   }
 });
 
+app.post('/api/compose-config', async (req, res) => {
+  const { content } = req.body;
+  if (typeof content !== 'string') return res.status(400).json({ error: 'content required' });
+
+  const compose = await getComposeConfig();
+  if (!compose) {
+    return res.status(404).json({ available: false, reason: 'compose 配置不可用' });
+  }
+
+  // 1. YAML 语法校验
+  try {
+    yaml.load(content);
+  } catch (e) {
+    return res.status(400).json({ error: 'YAML 语法错误', detail: e.message });
+  }
+
+  // 2. 路径安全（防御性二次检查）
+  if (/[;&|$`<>(){}]/.test(compose.projectDir)) {
+    return res.status(400).json({ error: 'projectDir 含有非法字符' });
+  }
+
+  // 3. 写入（双引号包裹 projectDir，逃逸内嵌 "）
+  try {
+    const safeDir = '"' + compose.projectDir.replace(/"/g, '\\"') + '"';
+    const b64 = Buffer.from(content, 'utf-8').toString('base64');
+    await execAsync(`docker run --rm -i -v ${safeDir}:/target busybox sh -c 'echo ${b64} | base64 -d > /target/docker-compose.yml'`);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`LM Studio Proxy running on http://0.0.0.0:${PORT}`);
   console.log(`Forwarding requests to ${lmStudioUrl}`);
