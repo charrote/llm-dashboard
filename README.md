@@ -137,6 +137,10 @@ lmstudio-dashboard/
 └── README.md
 ```
 
+## 设置 (Settings)
+
+- **推理引擎容器联动**: 切换容器后实时反推 compose 目录、跟随容器日志、刷新目标模型列表（无需重启 dashboard）
+
 ## API 接口
 
 | 方法 | 路径 | 说明 |
@@ -158,6 +162,7 @@ lmstudio-dashboard/
 | GET | `/api/model-config` | 读取模型配置（models.ini） |
 | POST | `/api/model-config` | 保存模型配置 |
 | GET/POST | `/api/compose-config` | 读写 docker-compose.yml |
+| GET | `/api/models-ini` | 列出 docker-compose 项目目录下的 models.ini 中配置的模型 |
 | POST | `/api/reload-model` | 重启 LLM 容器重载模型 |
 
 ## 工作原理
