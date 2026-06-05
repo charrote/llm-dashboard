@@ -1325,9 +1325,10 @@ app.post('/api/config', async (req, res) => {
   if (inferenceChanged) {
     const inf = getInferenceConfig();
     lmStudioUrl = inf.url;
-    // Auto-derive composeProjectDir when the user changed container but did not
-    // explicitly set composeProjectDir in this request. Empty string ("") and
-    // undefined both leave the field alone unless a value is provided.
+    // Auto-derive composeProjectDir when the user changed the container but did
+    // not include composeProjectDir in this request. The "": clear and "/path":
+    // honor cases are handled by the explicit parse block above; this branch
+    // only fires for the undefined (omitted) case.
     if (composeProjectDir === undefined) {
       const probed = await probeComposeFor(inf.container);
       if (probed) {
