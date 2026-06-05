@@ -104,6 +104,7 @@ http://localhost:9234/v1
 - **对比图表**: 双 Y 轴折线图（左: 延迟 ms, 右: 生成 TPS），含冷启动/缓存命中对比
 - **结果表格**: 每项上下文显示 Prompt Tokens、冷启动/缓存命中延迟、生成 TPS、TPOT 及测试用时
 - **模型调整**: 读写模型配置文件（models.ini），需重启模型生效
+- **启动参数**: 在线编辑 `docker-compose.yml`，自动定位到启动推理引擎容器的 compose 文件（也可在「设置」中手动指定 `composeProjectDir`）；保存后点击"重载模型"使新参数生效
 - **一键重载模型**: `docker restart` 重启 LLM 容器
 - **测试中自动屏蔽外部请求**: 返回 503 "模型服务准备中"
 
@@ -156,6 +157,7 @@ lmstudio-dashboard/
 | POST | `/api/benchmark/cancel` | 取消正在进行的性能测试 |
 | GET | `/api/model-config` | 读取模型配置（models.ini） |
 | POST | `/api/model-config` | 保存模型配置 |
+| GET/POST | `/api/compose-config` | 读写 docker-compose.yml |
 | POST | `/api/reload-model` | 重启 LLM 容器重载模型 |
 
 ## 工作原理
