@@ -54,21 +54,26 @@ docker inspect <container> --format '{{json .Config.Labels}}'
 
 主文件路径 = `working_dir + '/' + config_files.split(':')[0]`，本设计固定编辑 `docker-compose.yml`（`config_files` 第一个文件即为主文件，多数情况就是它）。
 
-### 自动回填
+### 自动回填（Lazy）
 
-服务启动时（`proxy/server.js` 顶部，迁移逻辑后、API 注册前）：
+`getComposeConfig()` 自身**始终不写盘**。回填发生在 `GET /api/compose-config` 处理路径上：
 
 ```js
-const compose = getComposeConfig();
-if (compose && compose.source === 'auto' && !config.composeProjectDir) {
-  config.composeProjectDir = compose.projectDir;
-  fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
-  console.log(`[AUTO-FILL] composeProjectDir=${compose.projectDir}`);
-}
+app.get('/api/compose-config', async (req, res) => {
+  const compose = await getComposeConfig();
+  if (compose && compose.source === 'auto' && config.composeProjectDir !== compose.projectDir) {
+    config.composeProjectDir = compose.projectDir;
+    fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
+    console.log(`[AUTO-FILL] composeProjectDir=${compose.projectDir}`);
+  }
+  // ... 原有响应逻辑
+});
 ```
 
-- **只回填一次**：用户已设置 `composeProjectDir` 时不覆盖（用户配置优先）
-- **不删除回填值**：即便后续容器被 `docker stop`，回填值仍在 `config.json` 中，下次启动仍可用
+- **不写盘条件**：`config.composeProjectDir === compose.projectDir`（值已匹配，可能是用户主动填的，也可能是上次回填的）
+- **首次探测成功 + 字段为空** → 回填
+- **用户已设置其他值** → 保留用户值（用户配置优先）
+- **不依赖服务启动时机**：用户首次打开模态触发回填，符合「用到再写」原则
 
 ## 设计
 
@@ -80,11 +85,11 @@ if (compose && compose.source === 'auto' && !config.composeProjectDir) {
 |------|------|------|------|------|
 | `composeProjectDir` | string | 否 | `''` | 备用宿主机目录绝对路径，指向 `docker-compose.yml` 所在目录。自动探测失败时使用 |
 
-启动时按以下优先级回填（与现有 `inferenceContainer` 迁移链类似）：
+`composeProjectDir` 填充时机（lazy，详见「自动回填」一节）：
 
 1. `config.composeProjectDir`（已存在 → 保留）
-2. **首次启动时**：自动探测成功 → 回填（见上文）
-3. 用户后续手动编辑 → 优先于自动探测结果
+2. **首次 `GET /api/compose-config` 调用时**：自动探测成功且字段为空 → 回填
+3. 用户在设置面板手动编辑 → 优先于自动探测结果（值不同则不覆盖）
 
 ### 2. 后端 API
 
@@ -130,7 +135,7 @@ if (compose && compose.source === 'auto' && !config.composeProjectDir) {
 ### 3. `getComposeConfig()` 派生函数
 
 ```js
-function getComposeConfig() {
+async function getComposeConfig() {
   const container = getInferenceConfig().container;
   let projectDir = null;
   let source = null;
@@ -168,6 +173,8 @@ function getComposeConfig() {
   };
 }
 ```
+
+> 函数是 `async`（`docker inspect` 异步）；GET / POST 处理器用 `await getComposeConfig()`。
 
 > 注：实现中 `execAsync` 已用 `util.promisify`，无需新增；`fs.readFileSync` / `fs.writeFileSync` 同样已有。
 
@@ -295,8 +302,8 @@ function getComposeConfig() {
 
 1. `proxy/package.json`：加 `js-yaml@^4.1.0`，`npm install`
 2. `proxy/server.js`：
-   - 新增 `getComposeConfig()` 函数（含安全校验）
-   - 启动时自动回填 `composeProjectDir`（迁移逻辑后）
+   - 新增 `async getComposeConfig()` 函数（含安全校验）
+   - `GET /api/compose-config` 内实现 lazy 自动回填
    - 新增 `GET /api/compose-config`、`POST /api/compose-config`
    - `POST /api/config` 接收 `composeProjectDir` 字段
 3. `dashboard.html`：
