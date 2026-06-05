@@ -1920,6 +1920,18 @@ app.get('/api/compose-config', async (req, res) => {
   }
 });
 
+app.get('/api/models-ini', async (req, res) => {
+  try {
+    const result = await getModelsIni();
+    if (result.source === 'missing') {
+      return res.status(200).json(result);
+    }
+    res.json(result);
+  } catch (e) {
+    res.status(500).json({ source: 'missing', reason: e.message, models: [] });
+  }
+});
+
 app.post('/api/compose-config', async (req, res) => {
   const { content } = req.body;
   if (typeof content !== 'string') return res.status(400).json({ error: 'content required' });
