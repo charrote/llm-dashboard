@@ -160,6 +160,13 @@
             <input type="number" id="inferencePort" min="1" max="65535" value="1234"
                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:border-blue-500 focus:outline-none">
             <p class="text-xs text-gray-500 mt-1">URL: <span id="inferenceUrlPreview" class="text-blue-400">http://...:1234</span>（自动派生）</p>
+            <label class="block text-sm text-gray-400 mb-2 mt-3">Compose 项目目录</label>
+            <input type="text" id="composeProjectDir" placeholder="/path/to/docker-compose-dir"
+                   class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:border-blue-500 focus:outline-none font-mono text-sm">
+            <p class="text-xs text-gray-500 mt-1">
+              备用路径：自动探测失败时使用。留空则「启动参数」按钮禁用。
+              <span id="composeProjectDirStatus" class="text-gray-600"></span>
+            </p>
           </div>
           <div class="flex items-center justify-between">
             <label class="text-sm text-gray-400">启用 APIKey</label>
@@ -1616,6 +1623,7 @@
         console.log('loadConfig data:', data);
         document.getElementById('inferenceContainer').value = data.inferenceContainer || '';
         document.getElementById('inferencePort').value = data.inferencePort || 1234;
+        document.getElementById('composeProjectDir').value = data.composeProjectDir || '';
         updateInferenceUrlPreview();
         
         setToggle('useApiKeyToggle', data.enableAPIKey);
@@ -1849,6 +1857,7 @@ function toggleLog() {
     async function saveConfig() {
       const inferenceContainer = document.getElementById('inferenceContainer').value;
       const inferencePort = document.getElementById('inferencePort').value;
+      const composeProjectDir = document.getElementById('composeProjectDir').value.trim();
       const useApiKey = isToggleOn('useApiKeyToggle');
       const enableLog = isToggleOn('enableLogToggle');
       const lmAuthEnabled = isToggleOn('lmAuthToggle');
@@ -1872,6 +1881,7 @@ function toggleLog() {
             body: JSON.stringify({ 
             inferenceContainer: inferenceContainer,
             inferencePort: parseInt(inferencePort) || 1234,
+            composeProjectDir: composeProjectDir,
             enableAPIKey: useApiKey,
             enableLog: enableLog,
             lmAuthEnabled: lmAuthEnabled,
@@ -1905,6 +1915,19 @@ function toggleLog() {
       } catch (error) {
         alert('保存失败: ' + error.message);
       }
+      // Probe the new value to update status hint
+      try {
+        const probe = await fetch(`${API_BASE}/compose-config`);
+        const probeData = await probe.json();
+        const status = document.getElementById('composeProjectDirStatus');
+        if (probeData.available) {
+          status.textContent = `✓ 当前配置可用 (${probeData.source === 'auto' ? '自动探测' : '手动配置'})`;
+          status.className = 'text-green-400';
+        } else {
+          status.textContent = '✗ 路径无效，自动探测亦不可用';
+          status.className = 'text-red-400';
+        }
+      } catch (_) { /* ignore */ }
     }
 
     async function openApiKeyManager() {
