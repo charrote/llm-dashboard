@@ -129,6 +129,45 @@ function parseModelsIni(text) {
   return models;
 }
 
+async function getModelsIni() {
+  const compose = await getComposeConfig();
+  const container = getInferenceConfig().container;
+
+  if (compose) {
+    const hostPath = path.join(compose.projectDir, 'models.ini');
+    try {
+      const text = fs.readFileSync(hostPath, 'utf-8');
+      return {
+        source: 'host',
+        projectDir: compose.projectDir,
+        composeFile: compose.composeFile,
+        models: parseModelsIni(text)
+      };
+    } catch (_) { /* fall through to container */ }
+  }
+
+  try {
+    const safeName = container.replace(/[^a-zA-Z0-9_.-]/g, '');
+    const { stdout } = await execAsync(`docker exec ${safeName} cat /app/models.ini`);
+    return {
+      source: 'container',
+      projectDir: compose ? compose.projectDir : null,
+      composeFile: compose ? compose.composeFile : null,
+      models: parseModelsIni(stdout)
+    };
+  } catch (_) { /* fall through to missing */ }
+
+  const reasonParts = [];
+  if (!compose) reasonParts.push('未配置 composeProjectDir 且自动探测不可用');
+  else reasonParts.push(`宿主路径 ${path.join(compose.projectDir, 'models.ini')} 不存在`);
+  reasonParts.push(`容器 ${container} 未运行或无 /app/models.ini`);
+  return {
+    source: 'missing',
+    reason: reasonParts.join('；'),
+    models: []
+  };
+}
+
 function loadApiKeys() {
   try {
     if (fs.existsSync(APIKEYS_FILE)) {
