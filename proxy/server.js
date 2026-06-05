@@ -1241,6 +1241,7 @@ app.get('/api/config', (req, res) => {
     inferenceContainer: inf.container,
     inferencePort: inf.port,
     lmStudioUrl: inf.url,
+    composeProjectDir: config.composeProjectDir || '',
     enableAPIKey: config.enableAPIKey || false,
     enableLog: config.enableLog || false,
     lmAuthEnabled: config.lmAuthEnabled || false,
