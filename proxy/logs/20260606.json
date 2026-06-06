@@ -125,7 +125,7 @@
       "errors": 0
     }
   ],
-  "hourlyStatsBase": 3,
+  "hourlyStatsBase": 1,
   "totalTokens": {
     "prompt": 0,
     "completion": 0,
@@ -138,6 +138,6 @@
     "max": 0
   },
   "errors": 0,
-  "date": "20260607",
+  "date": "20260606",
   "errorLogs": []
 }

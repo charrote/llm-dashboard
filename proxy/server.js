@@ -570,7 +570,7 @@ function updateStats(data) {
   }
   
   if (!stats.byModel[data.model]) {
-    stats.byModel[data.model] = { requests: 0, promptTokens: 0, completionTokens: 0, tokens: 0, errors: 0, apiKeys: {}, latency: { sum: 0, count: 0 }, contextLength: { sum: 0, count: 0 }, ttft: { sum: 0, count: 0 }, tpot: { sum: 0, count: 0 }, tps: { sum: 0, count: 0 } };
+    stats.byModel[data.model] = { requests: 0, promptTokens: 0, completionTokens: 0, tokens: 0, errors: 0, apiKeys: {}, latency: { sum: 0, count: 0 }, contextLength: { sum: 0, count: 0 }, ttft: { sum: 0, count: 0 }, tpot: { sum: 0, count: 0 }, tps: { sum: 0, count: 0 }, draft: { sum: 0, count: 0, accepted: 0 } };
   }
   stats.byModel[data.model].requests++;
   stats.byModel[data.model].promptTokens += data.tokens.prompt;
@@ -618,6 +618,15 @@ function updateStats(data) {
     stats.byModel[data.model].contextLength.count++;
   }
   
+  if (data.draftN > 0) {
+    if (!stats.byModel[data.model].draft) {
+      stats.byModel[data.model].draft = { sum: 0, count: 0, accepted: 0 };
+    }
+    stats.byModel[data.model].draft.sum += data.draftN;
+    stats.byModel[data.model].draft.accepted += data.draftNAccepted;
+    stats.byModel[data.model].draft.count++;
+  }
+  
   if (data.apiKey) {
     if (!stats.byModel[data.model].apiKeys[data.apiKey]) {
       stats.byModel[data.model].apiKeys[data.apiKey] = { requests: 0, tokens: 0 };
@@ -663,7 +672,7 @@ function updateStats(data) {
   saveCurrentStats();
 }
 
-function finalizeRequest(requestId, completionTokens, latency, status, error, ttft = null, forwardTime = 0, llmTime = 0, cachedTokens = 0, promptTokens = null) {
+function finalizeRequest(requestId, completionTokens, latency, status, error, ttft = null, forwardTime = 0, llmTime = 0, cachedTokens = 0, promptTokens = null, draftN = 0, draftNAccepted = 0) {
   const pending = pendingRequests.get(requestId);
   if (!pending) return;
   
@@ -683,6 +692,8 @@ function finalizeRequest(requestId, completionTokens, latency, status, error, tt
   pending.tpot = tpot;
   pending.requestTime = forwardTime;
   pending.llmTime = llmTime;
+  pending.draftN = draftN;
+  pending.draftNAccepted = draftNAccepted;
   
   updateStats(pending);
   pendingRequests.delete(requestId);
@@ -709,7 +720,13 @@ function extractTokenUsage(resData, reqBody = null, estimatedPrompt = 0) {
   const prompt = resData.usage?.prompt_tokens || estimatedPrompt || 0;
   const cached = resData.usage?.prompt_tokens_details?.cached_tokens || 0;
   
-  return { prompt, completion, total: prompt + completion, cached };
+  const completionDetails = resData.usage?.completion_tokens_details || {};
+  const accepted = completionDetails.accepted_prediction_tokens || 0;
+  const rejected = completionDetails.rejected_prediction_tokens || 0;
+  const draftN = accepted + rejected;
+  const draftNAccepted = accepted;
+  
+  return { prompt, completion, total: prompt + completion, cached, draftN, draftNAccepted };
 }
 
 const requestStartTimes = new Map();
@@ -867,6 +884,8 @@ async function proxyRequest(req, res) {
 
               let cachedTokens = 0;
               let streamPromptTokens = 0;
+              let streamDraftN = 0;
+              let streamDraftNAccepted = 0;
               const lines = streamContent.split('\n');
               for (let i = lines.length - 1; i >= 0; i--) {
                 const line = lines[i].trim();
@@ -879,12 +898,17 @@ async function proxyRequest(req, res) {
                     if (data.usage?.prompt_tokens_details?.cached_tokens) {
                       cachedTokens = data.usage.prompt_tokens_details.cached_tokens;
                     }
+                    const completionDetails = data.usage?.completion_tokens_details || {};
+                    const accepted = completionDetails.accepted_prediction_tokens || 0;
+                    const rejected = completionDetails.rejected_prediction_tokens || 0;
+                    streamDraftN = accepted + rejected;
+                    streamDraftNAccepted = accepted;
                     if (data.usage) break;
                   } catch (_) {}
                 }
               }
 
-              finalizeRequest(requestId, completionTokens, Math.max(0, endTime - startTime), response.status, null, ttft, forwardTime, llmTime, cachedTokens, streamPromptTokens);
+              finalizeRequest(requestId, completionTokens, Math.max(0, endTime - startTime), response.status, null, ttft, forwardTime, llmTime, cachedTokens, streamPromptTokens, streamDraftN, streamDraftNAccepted);
               
               break;
             }
@@ -930,7 +954,7 @@ async function proxyRequest(req, res) {
     
     const tokens = extractTokenUsage(data, req.body, promptTokens);
     const llmTime = Date.now() - llmStart;
-    finalizeRequest(requestId, tokens.completion, latency, response.status, null, null, forwardTime, llmTime, tokens.cached, tokens.prompt);
+    finalizeRequest(requestId, tokens.completion, latency, response.status, null, null, forwardTime, llmTime, tokens.cached, tokens.prompt, tokens.draftN, tokens.draftNAccepted);
     
     res.status(response.status).json(data);
     
@@ -1926,13 +1950,59 @@ app.post('/api/model-config', async (req, res) => {
   }
 });
 
+let reloadProgress = { percent: 0, message: '', running: false };
+
+app.get('/api/reload-status', (req, res) => {
+  res.json(reloadProgress);
+});
+
 app.post('/api/reload-model', async (req, res) => {
   const dockerContainer = getInferenceConfig().container;
   const safeName = dockerContainer.replace(/[^a-zA-Z0-9_.-]/g, '');
+  reloadProgress = { percent: 10, message: '正在重启容器...', running: true };
+
+  const updateProgress = async () => {
+    try {
+      const { stdout } = await execAsync(`docker inspect -f '{{.State.Status}}' ${safeName}`);
+      const status = stdout.trim();
+      if (status === 'running') {
+        reloadProgress = { percent: 60, message: '容器已启动，正在加载模型...', running: true };
+      } else if (status === 'restarting') {
+        reloadProgress = { percent: 30, message: '容器重启中...', running: true };
+      } else {
+        reloadProgress = { percent: 15, message: `容器状态: ${status}`, running: true };
+      }
+    } catch (_) {}
+  };
+
+  const pollInterval = setInterval(updateProgress, 2000);
+
   try {
     await execAsync(`docker restart ${safeName}`);
+    reloadProgress = { percent: 50, message: '容器重启完成，等待服务就绪...', running: true };
+
+    for (let i = 0; i < 30; i++) {
+      await new Promise(r => setTimeout(r, 2000));
+      try {
+        const resp = await fetch(`http://${dockerContainer}:${getInferenceConfig().port}/v1/models`);
+        if (resp.ok) {
+          const body = await resp.json();
+          if (body.data && body.data.length > 0) {
+            reloadProgress = { percent: 100, message: '模型已就绪', running: false };
+            clearInterval(pollInterval);
+            return res.json({ success: true, message: `Container ${safeName} restarted and model ready` });
+          }
+        }
+      } catch (_) {}
+      reloadProgress = { percent: Math.min(50 + i * 2, 90), message: `等待服务就绪 (${i + 1}/${30})...`, running: true };
+    }
+
+    clearInterval(pollInterval);
+    reloadProgress = { percent: 100, message: '就绪（模型可能还未完全加载）', running: false };
     res.json({ success: true, message: `Container ${safeName} restarted` });
   } catch (err) {
+    clearInterval(pollInterval);
+    reloadProgress = { percent: 0, message: `重载失败: ${err.message}`, running: false };
     res.status(500).json({ error: err.message });
   }
 });

@@ -79,6 +79,8 @@
       header > div:first-child { flex: 1; min-width: 0; }
       header h1 { font-size: 1.25rem; }
     }
+    .modal-draggable { cursor: grab; user-select: none; }
+    .modal-draggable:active { cursor: grabbing; }
   </style>
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen">
@@ -404,7 +406,7 @@
     <!-- Benchmark Modal -->
     <div id="benchmarkModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
       <div class="bg-gray-800 rounded-xl p-6 w-full max-w-4xl mx-4 max-h-[90vh] flex flex-col">
-        <div class="flex items-center justify-between mb-4">
+        <div id="benchmarkHeader" class="flex items-center justify-between mb-4">
           <h2 class="text-xl font-bold">⚡ 性能测试</h2>
           <button onclick="closeBenchmark()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
         </div>
@@ -446,9 +448,12 @@
                   title="启动参数">
             启动参数
           </button>
-          <button onclick="reloadModel()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-sm transition h-fit">
-            重载模型
-          </button>
+          <div id="reloadBtnWrap" class="relative inline-flex h-fit">
+            <button onclick="reloadModel()" id="reloadBtn" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-sm transition relative overflow-hidden">
+              <span id="reloadBtnText" class="relative z-10">重载模型</span>
+              <div id="reloadProgressBar" class="absolute inset-0 bg-red-400/30 transition-all duration-500" style="width:0%"></div>
+            </button>
+          </div>
           <div id="benchmarkMask" class="hidden absolute inset-0 bg-gray-900/85 backdrop-blur-sm rounded-lg flex flex-col items-center justify-center z-10 gap-2">
             <div class="flex items-center gap-2">
               <div class="w-4 h-4 border-2 border-pink-500 border-t-transparent rounded-full animate-spin"></div>
@@ -654,10 +659,11 @@
                 <th class="text-right py-2 px-2">TTFT</th>
                 <th class="text-right py-2 px-2">TPOT</th>
                 <th class="text-right py-2 px-2">TPS</th>
+                <th class="text-right py-2 px-2">草稿接受率</th>
               </tr>
             </thead>
             <tbody id="modelRealtimeTable" class="scrollbar-thin">
-              <tr><td colspan="4" class="text-center py-8 text-gray-500">暂无数据</td></tr>
+<tr><td colspan="5" class="text-center py-8 text-gray-500">暂无数据</td></tr>
             </tbody>
           </table>
         </div>
@@ -1355,7 +1361,7 @@
 
       const requests = stats.requests || [];
       if (requests.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" class="text-center py-8 text-gray-500">暂无数据</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center py-8 text-gray-500">暂无数据</td></tr>';
         return;
       }
 
@@ -1393,22 +1399,26 @@
             const completionTokens = req.tokens?.completion || 0;
             const latency = req.latency || 0;
             const tps = completionTokens > 0 && latency > 0 ? (completionTokens / (latency / 1000)).toFixed(1) : '-';
+            const draftRate = req.draftN > 0 ? ((req.draftNAccepted / req.draftN) * 100).toFixed(1) + '%' : '-';
             return `<tr class="border-b border-gray-700/50 hover:bg-gray-700/30${activeClass}">
               <td class="py-2 px-2 text-green-400 truncate max-w-[140px]" title="${name}">${name.length > 18 ? name.substring(0, 18) + '...' : name}</td>
               <td class="py-2 px-2 text-right text-blue-400 font-mono">${ttft}</td>
               <td class="py-2 px-2 text-right text-green-400 font-mono">${tpot}</td>
               <td class="py-2 px-2 text-right text-purple-400 font-mono">${tps}</td>
+              <td class="py-2 px-2 text-right text-orange-400 font-mono">${draftRate}</td>
             </tr>`;
           }
           const data = byModel[name];
           const ttft = data.ttft?.count > 0 ? Math.round(data.ttft.sum / data.ttft.count) + 'ms' : '-';
           const tpot = data.tpot?.count > 0 ? (data.tpot.sum / data.tpot.count).toFixed(1) + 'ms' : '-';
           const tps = data.tps?.count > 0 ? (data.tps.sum / data.tps.count).toFixed(1) : '-';
+          const draftRate = data.draft?.count > 0 && data.draft.sum > 0 ? ((data.draft.accepted / data.draft.sum) * 100).toFixed(1) + '%' : '-';
           return `<tr class="border-b border-gray-700/50 hover:bg-gray-700/30${activeClass}">
             <td class="py-2 px-2 text-green-400 truncate max-w-[140px]" title="${name}">${name.length > 18 ? name.substring(0, 18) + '...' : name}</td>
             <td class="py-2 px-2 text-right text-blue-400 font-mono">${ttft}</td>
             <td class="py-2 px-2 text-right text-green-400 font-mono">${tpot}</td>
             <td class="py-2 px-2 text-right text-purple-400 font-mono">${tps}</td>
+            <td class="py-2 px-2 text-right text-orange-400 font-mono">${draftRate}</td>
           </tr>`;
         }).join('');
     }
@@ -1431,11 +1441,12 @@
           <span class="text-gray-500 w-20">${formatTime(req.timestamp)}</span>
           <span class="${getStatusColor(req.status)} w-12">${req.status}</span>
           <span class="text-purple-400 w-8">${req.method}</span>
-          <span class="text-green-400 truncate max-w-[200px]" title="${req.model}">${req.model}</span>
+          <span class="text-green-400 truncate max-w-[160px]" title="${req.model}">${req.model}</span>
           <span class="text-gray-400">${formatNumber(req.tokens?.total || 0)} tok</span>
           <span class="text-yellow-400">${req.latency}ms</span>
-          <span class="text-blue-400 truncate max-w-[120px]" title="${req.apiKey}">${maskApiKey(req.apiKey)}</span>
-          ${req.error ? `<span class="text-red-400 text-xs">${req.error}</span>` : ''}
+          <span class="text-cyan-400 truncate max-w-[90px]" title="${req.userId || ''}">${req.userId || '-'}</span>
+          <span class="text-blue-400 truncate max-w-[100px]" title="${req.apiKey}">${maskApiKey(req.apiKey)}</span>
+          ${req.error ? `<span class="text-red-400 text-xs truncate max-w-[100px]">${req.error}</span>` : ''}
         </div>
       `).join('');
     }
@@ -2406,9 +2417,10 @@ function toggleLog() {
               <span class="text-gray-500 w-20">${formatTime(req.timestamp)}</span>
               <span class="${getStatusColor(req.status)} w-12">${req.status}</span>
               <span class="text-purple-400 w-8">${req.method}</span>
-              <span class="text-green-400 truncate max-w-[200px]" title="${req.model}">${req.model}</span>
+              <span class="text-green-400 truncate max-w-[160px]" title="${req.model}">${req.model}</span>
               <span class="text-gray-400">${formatNumber(req.tokens?.total || 0)} tok</span>
 <span class="text-yellow-400">${Math.max(0, req.latency)}ms</span>
+              <span class="text-cyan-400 truncate max-w-[90px]" title="${req.userId || ''}">${req.userId || '-'}</span>
               ${req.error ? `<span class="text-red-400 text-xs truncate max-w-[150px]">${escapeHtml(req.error)}</span>` : ''}
             </div>
           `).join('');
@@ -2522,9 +2534,62 @@ function toggleLog() {
 
     let benchmarkChartInstance = null;
 
+    const draggableModals = new Set();
+
+    function makeModalDraggable(modalId, handleSelector) {
+      if (draggableModals.has(modalId)) return;
+      draggableModals.add(modalId);
+      const modal = document.getElementById(modalId);
+      const panel = modal.querySelector(':scope > div');
+      const handle = modal.querySelector(handleSelector);
+      let isDragging = false, startX, startY, origX, origY;
+
+      handle.classList.add('modal-draggable');
+      handle.addEventListener('mousedown', startDrag);
+      document.addEventListener('mousemove', doDrag);
+      document.addEventListener('mouseup', stopDrag);
+
+      function startDrag(e) {
+        if (e.target.closest('button, select, input')) return;
+        isDragging = true;
+        const rect = panel.getBoundingClientRect();
+        startX = e.clientX; startY = e.clientY;
+        origX = rect.left; origY = rect.top;
+        modal.style.justifyContent = 'flex-start';
+        modal.style.alignItems = 'flex-start';
+        panel.style.position = 'fixed';
+        panel.style.top = rect.top + 'px';
+        panel.style.left = rect.left + 'px';
+        panel.style.margin = '0';
+        panel.style.transform = 'none';
+      }
+
+      function doDrag(e) {
+        if (!isDragging) return;
+        panel.style.left = (origX + e.clientX - startX) + 'px';
+        panel.style.top = (origY + e.clientY - startY) + 'px';
+      }
+
+      function stopDrag() {
+        isDragging = false;
+      }
+    }
+
     function openBenchmark() {
-      document.getElementById('benchmarkModal').classList.remove('hidden');
-      document.getElementById('benchmarkModal').classList.add('flex');
+      const bm = document.getElementById('benchmarkModal');
+      bm.classList.remove('hidden');
+      bm.classList.add('flex');
+      bm.style.justifyContent = '';
+      bm.style.alignItems = '';
+      const panel = bm.querySelector(':scope > div');
+      if (panel) {
+        panel.style.position = '';
+        panel.style.top = '';
+        panel.style.left = '';
+        panel.style.margin = '';
+        panel.style.transform = '';
+      }
+      makeModalDraggable('benchmarkModal', '#benchmarkHeader');
       document.getElementById('benchmarkResult').classList.add('hidden');
       document.getElementById('benchmarkLoading').classList.add('hidden');
       document.getElementById('benchmarkError').classList.add('hidden');
@@ -2965,24 +3030,64 @@ function toggleLog() {
       btn.textContent = '保存';
     }
 
+    let reloadStatusTimer = null;
+
+    async function pollReloadStatus() {
+      try {
+        const resp = await fetch(`${API_BASE}/reload-status`);
+        const data = await resp.json();
+        const bar = document.getElementById('reloadProgressBar');
+        const text = document.getElementById('reloadBtnText');
+        if (bar) bar.style.width = data.percent + '%';
+        if (text && data.message) text.textContent = data.message;
+        if (data.percent >= 100 || !data.running) {
+          clearInterval(reloadStatusTimer);
+          reloadStatusTimer = null;
+          if (data.percent >= 100) {
+            setTimeout(() => {
+              const bar = document.getElementById('reloadProgressBar');
+              const btn = document.getElementById('reloadBtn');
+              const text = document.getElementById('reloadBtnText');
+              if (bar) bar.style.width = '0%';
+              if (btn) btn.disabled = false;
+              if (text) text.textContent = '重载模型';
+            }, 3000);
+          }
+        }
+      } catch (_) {}
+    }
+
     async function reloadModel() {
       if (!confirm('确定要重载模型吗？所有进行中的请求将被中断。')) return;
-      const btn = event.target;
+      const btn = document.getElementById('reloadBtn');
+      const bar = document.getElementById('reloadProgressBar');
+      const text = document.getElementById('reloadBtnText');
       btn.disabled = true;
-      btn.textContent = '重载中...';
+      if (bar) bar.style.width = '5%';
+      if (text) text.textContent = '正在发送重启指令...';
+      if (reloadStatusTimer) clearInterval(reloadStatusTimer);
+      reloadStatusTimer = setInterval(pollReloadStatus, 2000);
       try {
         const resp = await fetch(`${API_BASE}/reload-model`, { method: 'POST' });
         const data = await resp.json();
-        if (data.success) {
-          alert('重载成功！模型已重启。');
-        } else {
+        if (!data.success) {
+          if (bar) bar.style.width = '0%';
+          if (text) text.textContent = '重载失败';
           alert('重载失败: ' + (data.error || '未知错误'));
+          setTimeout(() => {
+            if (btn) btn.disabled = false;
+            if (text) text.textContent = '重载模型';
+          }, 3000);
         }
       } catch (err) {
+        if (bar) bar.style.width = '0%';
+        if (text) text.textContent = '重载失败';
         alert('重载失败: ' + err.message);
+        setTimeout(() => {
+          if (btn) btn.disabled = false;
+          if (text) text.textContent = '重载模型';
+        }, 3000);
       }
-      btn.disabled = false;
-      btn.textContent = '重载模型';
     }
 
     async function loadModels() {
